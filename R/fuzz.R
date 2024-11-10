@@ -6,7 +6,17 @@ get_exported_functions <- function(package, ignore.names) {
 }
 
 fuzz <- function(funs, what, ignore.patterns = NULL) {
-  header <- function(count) if (count == 0) cat("\tCAUGHT BY THE FUZZ!\n\n")
+  # \U0001f6a8 is 🚨
+  header <- function(count) {
+    if (count > 0) return()
+    cat("\n\t\U0001f6a8   CAUGHT BY THE FUZZ!   \U0001f6a8\n\n")
+  }
+  # \U0001f3c3 is 🏃
+  footer <- function(count) {
+    if (count > 0) return()
+    cat("\U0001f3c3 You didn't get caught by the fuzz!\n")
+  }
+
   count <- 0
   ignore.patterns <- paste0(c(ignore.patterns,
                               "is missing, with no default"),
@@ -29,6 +39,5 @@ fuzz <- function(funs, what, ignore.patterns = NULL) {
                }
              })
   }
-  if (count == 0)
-    cat("You didn't get caught by the fuzz\n")
+  footer(count)
 }
