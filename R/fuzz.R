@@ -5,7 +5,8 @@ get_exported_functions <- function(package, ignore.names) {
   return(funs)
 }
 
-fuzz <- function(funs, what, ignore.patterns = NULL) {
+fuzz <- function(funs, what, ignore.patterns = NULL,
+                 ignore.warnings = FALSE) {
   # \U0001f6a8 is 🚨
   header <- function(count) {
     if (count > 0) return()
@@ -32,7 +33,7 @@ fuzz <- function(funs, what, ignore.patterns = NULL) {
                }
              },
              warning = function(w) {
-               if (!grepl(ignore.patterns, w)) {
+               if (!ignore.warnings && !grepl(ignore.patterns, w)) {
                  header(count)
                  cat("WARN:", f, "\n   ", w$message, "\n\n")
                  count <<- count + 1
