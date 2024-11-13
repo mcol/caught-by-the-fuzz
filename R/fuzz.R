@@ -66,7 +66,7 @@ fuzz <- function(funs, what, ignore.patterns = NULL,
     if (is.null(package))
       get
     else
-      function(x) getFromNamespace(x, package)
+      function(x) utils::getFromNamespace(x, package)
   }
 
   count <- 0
@@ -76,7 +76,7 @@ fuzz <- function(funs, what, ignore.patterns = NULL,
   package <- attr(funs, "package")
   for (f in funs) {
     fun <- getter()(f)
-    tryCatch(capture.output(suppressMessages(fun(what))),
+    tryCatch(utils::capture.output(suppressMessages(fun(what))),
              error = function(e) {
                if (!grepl(f, e) &&
                    !grepl(ignore.patterns, e)) {
