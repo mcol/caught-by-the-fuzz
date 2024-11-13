@@ -7,14 +7,12 @@ get_exported_functions <- function(package, ignore.names = NULL) {
 
 fuzz <- function(funs, what, ignore.patterns = NULL,
                  ignore.warnings = FALSE) {
-  # \U0001f6a8 is 🚨
   header <- function(count) {
     if (count > 0) return()
     cat("\n\t\U0001f6a8   CAUGHT BY THE FUZZ!   \U0001f6a8\n\n")
   }
-  # \U0001f3c3 is 🏃
   footer <- function(count) {
-    if (count > 0) return()
+    if (count > 0) return(invisible())
     cat("\U0001f3c3 You didn't get caught by the fuzz!\n")
   }
 
