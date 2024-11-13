@@ -1,0 +1,6 @@
+.*~$
+\.html$
+\.svg$
+\.tar\.gz$
+README.Rmd
+README.html
