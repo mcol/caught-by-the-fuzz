@@ -1,4 +1,4 @@
-get_exported_functions <- function(package, ignore.names) {
+get_exported_functions <- function(package, ignore.names = NULL) {
   funs <- sort(getNamespaceExports(package))
   funs <- grep(".__", funs, fixed = TRUE, invert = TRUE, value = TRUE)
   funs <- setdiff(funs, ignore.names)
