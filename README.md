@@ -1,5 +1,5 @@
 
-# Caught by the Fuzz (cbtf) <a href="https://www.youtube.com/watch?v=uJ-mpul94eo"><img src="man/figures/logo.png" align="right" height="120" /></a>
+# CBTF: Caught by the Fuzz\! <a href="https://www.youtube.com/watch?v=uJ-mpul94eo"><img src="man/figures/logo.png" align="right" height="120" /></a>
 
 A very simple mechanism to fuzz-test the exported functions of an R
 package. At the moment this is extremely limited: it operates only on
@@ -9,7 +9,7 @@ it’s convenient when there are a large number of functions to test.
 ## Usage
 
 ``` r
-library(cbtf)
+library(CBTF)
 funs <- get_exported_functions("glue")
 what <- TRUE
 fuzz(funs, what)
