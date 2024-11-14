@@ -1,0 +1,9 @@
+url: https://mcol.github.io/caught-by-the-fuzz
+
+home:
+  title: CBTF - Caught by the Fuzz!
+  description: A minimal fuzz-test runner for R
+
+template:
+  bootstrap: 5
+  light-switch: true
