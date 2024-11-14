@@ -4,7 +4,7 @@ Version: 0.1.0
 Authors@R:
     person("Marco", "Colombo", , "mar.colombo13@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-6672-0623"))
-Description: A very simple mechanism to fuzz test the exported functions
+Description: A minimal runner to fuzz-test the exported functions
   of an R package.
 URL: https://mcol.github.io/caught-by-the-fuzz
 BugReports: https://github.com/mcol/caught-by-the-fuzz/issues
