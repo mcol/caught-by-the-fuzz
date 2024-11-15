@@ -47,3 +47,6 @@ jobs:
           clean: false
           branch: gh-pages
           folder: docs
+
+      - name: Delete website tag
+        uses: prompt/actions-delete-tag@v1
