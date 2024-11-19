@@ -76,6 +76,8 @@ fuzz <- function(funs, what, ignore.patterns = NULL,
   package <- attr(funs, "package")
   for (f in funs) {
     fun <- getter()(f)
+    if (!is.function(fun))
+      next
     tryCatch(utils::capture.output(suppressMessages(fun(what))),
              error = function(e) {
                if (!grepl(f, e) &&
