@@ -13,7 +13,12 @@ when there are a large number of functions to test.
 
 ```{r}
 library(CBTF)
-funs <- get_exported_functions("glue")
+funs <- get_exported_functions("mime")
 what <- TRUE
 fuzz(funs, what)
 ```
+
+The first occurrence is a false positive, as the message returned indicates
+that the input was checked and the function returned cleanly. The second case
+instead reveals that the function didn't validate its input: indeed, it
+expected an environment, and used the `$` operation on it without checking.

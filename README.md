@@ -10,7 +10,7 @@ it’s convenient when there are a large number of functions to test.
 
 ``` r
 library(CBTF)
-funs <- get_exported_functions("glue")
+funs <- get_exported_functions("mime")
 what <- TRUE
 fuzz(funs, what)
 ```
@@ -18,20 +18,14 @@ fuzz(funs, what)
     ## 
     ##  🚨   CAUGHT BY THE FUZZ!   🚨
     ## 
-    ## FAIL: glue_data ( logical )
-    ##     names(x) must be a character vector of the same length as x 
+    ## FAIL: guess_type ( logical )
+    ##     a character vector argument expected 
     ## 
-    ## FAIL: glue_data_col ( logical )
-    ##     names(x) must be a character vector of the same length as x 
-    ## 
-    ## FAIL: glue_data_safe ( logical )
-    ##     names(x) must be a character vector of the same length as x 
-    ## 
-    ## FAIL: glue_data_sql ( logical )
-    ##     there is no package called 'DBI' 
-    ## 
-    ## FAIL: glue_sql ( logical )
-    ##     there is no package called 'DBI' 
-    ## 
-    ## FAIL: glue_sql_collapse ( logical )
-    ##     there is no package called 'DBI'
+    ## FAIL: parse_multipart ( logical )
+    ##     $ operator is invalid for atomic vectors
+
+The first occurrence is a false positive, as the message returned
+indicates that the input was checked and the function returned cleanly.
+The second case instead reveals that the function didn’t validate its
+input: indeed, it expected an environment, and used the `$` operation on
+it without checking.
