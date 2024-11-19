@@ -1,5 +1,6 @@
 .*~$
 \.html$
+\.RData$
 \.svg$
 \.tar\.gz$
 README.Rmd
