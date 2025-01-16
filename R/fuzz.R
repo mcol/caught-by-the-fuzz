@@ -62,6 +62,11 @@ fuzz <- function(funs, what, ignore.patterns = NULL,
     if (count > 0) return(invisible())
     cat("\U0001f3c3 You didn't get caught by the fuzz!\n")
   }
+  report <- function(label, msg, count) {
+    header(count)
+    cat(label, f, "(", class(what), ")\n   ", msg, "\n\n")
+    count <<- count + 1
+  }
   getter <- function() {
     if (is.null(package))
       get
@@ -82,16 +87,12 @@ fuzz <- function(funs, what, ignore.patterns = NULL,
              error = function(e) {
                if (!grepl(f, e) &&
                    !grepl(ignore.patterns, e)) {
-                 header(count)
-                 cat("FAIL:", f, "(", class(what), ")\n   ", e$message, "\n\n")
-                 count <<- count + 1
+                 report("FAIL:", e$message, count)
                }
              },
              warning = function(w) {
                if (!ignore.warnings && !grepl(ignore.patterns, w)) {
-                 header(count)
-                 cat("WARN:", f, "\n   ", w$message, "\n\n")
-                 count <<- count + 1
+                 report("WARN:", w$message, count)
                }
              })
   }
