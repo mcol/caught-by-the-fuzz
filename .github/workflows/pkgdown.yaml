@@ -1,9 +1,6 @@
 # Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
 # Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
 on:
-  push:
-    tags: website
-  pull_request:
   release:
     types: [published]
   workflow_dispatch:
@@ -47,6 +44,3 @@ jobs:
           clean: false
           branch: gh-pages
           folder: docs
-
-      - name: Delete website tag
-        uses: prompt/actions-delete-tag@v1
