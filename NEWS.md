@@ -1,5 +1,8 @@
 # Current development version
 
+- Return an object with the raw results from `fuzz()` and provide S3 methods
+  for `summary()` and `print()` (#1).
+
 # CBTF 0.1.0 (2024-11-14)
 
 - First version of the package.

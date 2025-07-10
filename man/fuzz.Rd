@@ -20,6 +20,10 @@ to match the messages to ignore.}
 \item{ignore.warnings}{Whether warnings should be ignored (\code{FALSE} by
 default).}
 }
+\value{
+A list of class \code{cbtf} that stores the results obtained for each of the
+functions tested.
+}
 \description{
 This function calls each of the functions it receives with the object
 specified in \code{what}.

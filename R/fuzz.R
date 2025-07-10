@@ -51,6 +51,10 @@ get_exported_functions <- function(package, ignore.names = NULL) {
 #' @param ignore.warnings Whether warnings should be ignored (`FALSE` by
 #'        default).
 #'
+#' @return
+#' A list of class `cbtf` that stores the results obtained for each of the
+#' functions tested.
+#'
 #' @export
 fuzz <- function(funs, what, ignore.patterns = NULL,
                  ignore.warnings = FALSE) {
@@ -59,10 +63,12 @@ fuzz <- function(funs, what, ignore.patterns = NULL,
     cat("\n\t\U0001f6a8   CAUGHT BY THE FUZZ!   \U0001f6a8\n\n")
   }
   footer <- function(count) {
-    if (count > 0) return(invisible())
+    if (count > 0) return()
     cat("\U0001f3c3 You didn't get caught by the fuzz!\n")
   }
   report <- function(label, msg, count) {
+    out.res[[idx]]["res"] <<- label
+    out.res[[idx]]["msg"] <<- msg
     header(count)
     cat(paste0(label, ":"), f, "(", class(what), ")\n   ", msg, "\n\n")
     count <<- count + 1
@@ -79,10 +85,21 @@ fuzz <- function(funs, what, ignore.patterns = NULL,
                               "is missing, with no default"),
                             collapse = "|")
   package <- attr(funs, "package")
-  for (f in funs) {
+  out.res <- lapply(funs, function(x) {
+    ## the default result is SKIP as `funs` may contain non-functions
+    data.frame(fun = x, res = "SKIP", msg = "")
+  })
+
+  ## loop over the functions to fuzz
+  for (idx in seq_along(funs)) {
+    f <- funs[idx]
     fun <- getter()(f)
+
+    ## skip non-functions
     if (!is.function(fun))
       next
+
+    out.res[[idx]]["res"] <- "OK"
     tryCatch(utils::capture.output(suppressMessages(fun(what))),
              error = function(e) {
                if (!grepl(f, e) &&
@@ -97,4 +114,10 @@ fuzz <- function(funs, what, ignore.patterns = NULL,
              })
   }
   footer(count)
+
+  ## complete the returned object
+  attr(out.res, "what") <- deparse(as.list(match.call())$what)
+  attr(out.res, "package") <- package
+  class(out.res) <- "cbtf"
+  invisible(out.res)
 }
