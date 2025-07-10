@@ -3,6 +3,7 @@
 \.RData$
 \.svg$
 \.tar\.gz$
+LICENSE.md
 README.Rmd
 README.html
 ^_pkgdown\.yml$
