@@ -1,6 +1,6 @@
 ##===========================================================================
 ##
-## Copyright (c) 2024 Marco Colombo
+## Copyright (c) 2024-2025 Marco Colombo
 ##
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -64,7 +64,7 @@ fuzz <- function(funs, what, ignore.patterns = NULL,
   }
   report <- function(label, msg, count) {
     header(count)
-    cat(label, f, "(", class(what), ")\n   ", msg, "\n\n")
+    cat(paste0(label, ":"), f, "(", class(what), ")\n   ", msg, "\n\n")
     count <<- count + 1
   }
   getter <- function() {
@@ -87,12 +87,12 @@ fuzz <- function(funs, what, ignore.patterns = NULL,
              error = function(e) {
                if (!grepl(f, e) &&
                    !grepl(ignore.patterns, e)) {
-                 report("FAIL:", e$message, count)
+                 report("FAIL", e$message, count)
                }
              },
              warning = function(w) {
                if (!ignore.warnings && !grepl(ignore.patterns, w)) {
-                 report("WARN:", w$message, count)
+                 report("WARN", w$message, count)
                }
              })
   }
