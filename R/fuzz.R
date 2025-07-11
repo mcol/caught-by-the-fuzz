@@ -67,6 +67,7 @@ fuzz <- function(funs, what, ignore.patterns = NULL,
     cat("\U0001f3c3 You didn't get caught by the fuzz!\n")
   }
   report <- function(label, msg, count) {
+    msg <- gsub("\\n", " ", msg)
     out.res[[idx]]["res"] <<- label
     out.res[[idx]]["msg"] <<- msg
     header(count)
