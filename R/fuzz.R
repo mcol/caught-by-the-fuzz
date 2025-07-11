@@ -122,7 +122,7 @@ fuzz <- function(funs, what, ignore.patterns = NULL,
   footer(count)
 
   ## complete the returned object
-  attr(out.res, "what") <- deparse(as.list(match.call())$what)
+  attr(out.res, "what") <- deparse(substitute(what))
   attr(out.res, "package") <- package
   class(out.res) <- "cbtf"
   invisible(out.res)
