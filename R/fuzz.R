@@ -80,6 +80,10 @@ fuzz <- function(funs, what, ignore.patterns = NULL,
       function(x) utils::getFromNamespace(x, package)
   }
 
+  ## input validation
+  validate_class(funs, "character")
+  validate_not_missing(what)
+
   count <- 0
   ignore.patterns <- paste0(c(ignore.patterns,
                               "is missing, with no default"),

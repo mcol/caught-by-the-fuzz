@@ -17,6 +17,38 @@
 ##
 ##===========================================================================
 
+#' @title Validate that an argument is of the specified class
+#'
+#' @param arg Argument to validate.
+#' @param classes A vector of candidate classes or types.
+#'
+#' @return
+#' Nothing in case of success, otherwise an error is thrown.
+#'
+#' @noRd
+validate_class <- function(arg, classes) {
+  if (missing(arg) || sum(inherits(arg, classes)) == 0L) {
+    name <- sprintf("'%s'", all.vars(match.call())[1])
+    stop(paste0(name, " should be of class ",
+                paste(classes, collapse = ", ")), call. = FALSE)
+  }
+}
+
+#' @title Validate that an argument is not missing
+#'
+#' @param arg Argument to validate.
+#'
+#' @return
+#' Nothing in case of success, otherwise an error is thrown.
+#'
+#' @noRd
+validate_not_missing <- function(arg) {
+  if (missing(arg)) {
+    name <- sprintf("'%s'", all.vars(match.call())[1])
+    stop(paste0(name, " must be specified"), call. = FALSE)
+  }
+}
+
 #' Check if the body of a function contains calls to readline()
 #'
 #' @param fun An expression.
