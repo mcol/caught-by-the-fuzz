@@ -101,12 +101,16 @@ fuzz <- function(funs, what, ignore.patterns = NULL,
     ## skip non-existing names
     fun <- try(getter()(f), silent = TRUE)
     if(inherits(fun, "try-error")) {
+      out.res[[idx]]$msg <- "Object not found"
       next
     }
 
-    ## skip non-functions
-    if (!is.function(fun) || contains.readline(fun))
+    ## skip non-functions and those that wait for user input
+    if (!is.function(fun) || contains.readline(fun)) {
+      out.res[[idx]]$msg <- if (!is.function(fun))
+                              "Not a function" else "Contains readline()"
       next
+    }
 
     out.res[[idx]]["res"] <- "OK"
     tryCatch(utils::capture.output(suppressMessages(fun(what))),
