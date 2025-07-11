@@ -72,7 +72,7 @@ validate_fuzzable <- function(fun) {
     return("Doesn't accept arguments")
 
   ## skip functions that wait for user input
-  if (contains.readline(fun))
+  if (contains_readline(fun))
     return("Contains readline()")
 
   return(fun)
@@ -86,12 +86,12 @@ validate_fuzzable <- function(fun) {
 #' A logical value.
 #'
 #' @noRd
-contains.readline <- function(expr) {
+contains_readline <- function(expr) {
   if (is.function(expr))
     expr <- body(expr)
   any(sapply(expr, function(line) {
     if (length(line) > 1)
-      return(contains.readline(line))
+      return(contains_readline(line))
     any(grepl("^readline", deparse(line)))
   }))
 }

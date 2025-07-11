@@ -6,10 +6,10 @@ test_that("real calls to readline() are caught", {
   fun3 <- function() if (TRUE) input <- readline("Prompt")
   fun4 <- function() if (TRUE) while(TRUE) input <- readline("Prompt")
 
-  expect_true(contains.readline(fun1))
-  expect_true(contains.readline(fun2))
-  expect_true(contains.readline(fun3))
-  expect_true(contains.readline(fun4))
+  expect_true(contains_readline(fun1))
+  expect_true(contains_readline(fun2))
+  expect_true(contains_readline(fun3))
+  expect_true(contains_readline(fun4))
 })
 
 test_that("other uses of readline() are ignored", {
@@ -19,7 +19,7 @@ test_that("other uses of readline() are ignored", {
   fun2 <- function() "readline()"
   fun3 <- function() print("readline()")
 
-  expect_false(contains.readline(fun1))
-  expect_false(contains.readline(fun2))
-  expect_false(contains.readline(fun3))
+  expect_false(contains_readline(fun1))
+  expect_false(contains_readline(fun2))
+  expect_false(contains_readline(fun3))
 })
