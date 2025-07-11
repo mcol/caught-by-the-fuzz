@@ -97,7 +97,12 @@ fuzz <- function(funs, what, ignore.patterns = NULL,
   ## loop over the functions to fuzz
   for (idx in seq_along(funs)) {
     f <- funs[idx]
-    fun <- getter()(f)
+
+    ## skip non-existing names
+    fun <- try(getter()(f), silent = TRUE)
+    if(inherits(fun, "try-error")) {
+      next
+    }
 
     ## skip non-functions
     if (!is.function(fun) || contains.readline(fun))

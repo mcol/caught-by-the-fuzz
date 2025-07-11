@@ -20,6 +20,8 @@ test_that("check functionality", {
                 pass.msg)
   expect_output(fuzz("iris", NULL),
                 pass.msg)
+  expect_output(fuzz("error", NULL),
+                pass.msg)
 
   ## must use `assign` otherwise the name cannot be found by the `get` call
   assign("with.readline", function() readline("Prompt"), envir = .GlobalEnv)
