@@ -67,6 +67,10 @@ validate_fuzzable <- function(fun) {
   if (!is.function(fun))
     return("Not a function")
 
+  ## skip functions accept no arguments
+  if (suppressWarnings(length(formals(fun))) == 0)
+    return("Doesn't accept arguments")
+
   ## skip functions that wait for user input
   if (contains.readline(fun))
     return("Contains readline()")

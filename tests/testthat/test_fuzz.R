@@ -23,6 +23,10 @@ test_that("check functionality", {
   expect_output(fuzz("error", NULL),
                 pass.msg)
 
+  ## function with no arguments
+  expect_output(fuzz("Sys.Date", NULL),
+                pass.msg)
+
   ## must use `assign` otherwise the name cannot be found by the `get` call
   assign("with.readline", function() readline("Prompt"), envir = .GlobalEnv)
   expect_output(fuzz("with.readline", NULL),

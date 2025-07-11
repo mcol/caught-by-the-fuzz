@@ -4,6 +4,7 @@
   for `summary()` and `print()` (#1).
 - Skip functions that call `readline()`, as in an interactive session they
   stall waiting for user input (#4).
+- Skip non-existing function names and functions that accept no arguments.
 
 # CBTF 0.1.0 (2024-11-14)
 
