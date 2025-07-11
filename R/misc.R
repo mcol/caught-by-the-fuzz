@@ -49,6 +49,31 @@ validate_not_missing <- function(arg) {
   }
 }
 
+#' @title Validate that a function can be fuzzed
+#'
+#' @param fun Function to validate.
+#'
+#' @return
+#' In case of failure, a character string containing the reason why the
+#' function cannot be fuzzed; otherwise the function itself.
+#'
+#' @noRd
+validate_fuzzable <- function(fun) {
+  ## skip non-existing names
+  if (inherits(fun, "try-error"))
+    return("Object not found")
+
+  ## skip non-functions
+  if (!is.function(fun))
+    return("Not a function")
+
+  ## skip functions that wait for user input
+  if (contains.readline(fun))
+    return("Contains readline()")
+
+  return(fun)
+}
+
 #' Check if the body of a function contains calls to readline()
 #'
 #' @param fun An expression.

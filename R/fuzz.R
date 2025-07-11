@@ -99,17 +99,9 @@ fuzz <- function(funs, what, ignore.patterns = NULL,
   for (idx in seq_along(funs)) {
     f <- funs[idx]
 
-    ## skip non-existing names
-    fun <- try(getter()(f), silent = TRUE)
-    if(inherits(fun, "try-error")) {
-      out.res[[idx]]$msg <- "Object not found"
-      next
-    }
-
-    ## skip non-functions and those that wait for user input
-    if (!is.function(fun) || contains.readline(fun)) {
-      out.res[[idx]]$msg <- if (!is.function(fun))
-                              "Not a function" else "Contains readline()"
+    fun <- validate_fuzzable(try(getter()(f), silent = TRUE))
+    if (is.character(fun)) {
+      out.res[[idx]]$msg <- fun
       next
     }
 
