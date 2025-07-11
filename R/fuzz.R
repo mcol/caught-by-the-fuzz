@@ -96,7 +96,7 @@ fuzz <- function(funs, what, ignore.patterns = NULL,
     fun <- getter()(f)
 
     ## skip non-functions
-    if (!is.function(fun))
+    if (!is.function(fun) || contains.readline(fun))
       next
 
     out.res[[idx]]["res"] <- "OK"
