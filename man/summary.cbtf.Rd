@@ -22,10 +22,11 @@ If \code{TRUE}, all functions tested are printed.}
 \value{
 A data frame with the following columns:
 \item{Function}{The names of the function tested.}
-\item{Result}{One of "OK", "FAIL", "WARN" or "SKIP".}
-\item{Message}{The message received in case of error or warning. It is
-an empty string if the function succeeded or was skipped.}
+\item{Result}{One of "OK", "FAIL", "WARN" or "SKIP" for each function
+tested.}
+\item{Message}{The message received in case of error, warning or skip,
+or an empty string if the function succeeded.}
 }
 \description{
-Generates a data frame of summary results from a single run of \link{fuzz}.
+Generates a data frame of summary results from a single run of \code{\link[=fuzz]{fuzz()}}.
 }

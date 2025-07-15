@@ -6,8 +6,8 @@
 \alias{CBTF-package}
 \title{CBTF: Caught by the Fuzz! A minimal fuzz-test runner}
 \description{
-This package implements a very simple mechanism to fuzz-test the exported
-functions of an R package.
+This package implements a very simple mechanism to fuzz-test the public
+interface of an R package.
 }
 \details{
 Fuzz testing can be used in the first instance to identify functions that
@@ -20,7 +20,7 @@ sign-related errors.
 The core functionality of the package is \code{\link[=fuzz]{fuzz()}}, whose aim is to call
 each provided function with a certain input and record the output produced.
 If an error is generated, this is captured and reported to the user, unless
-the error message matches a pattern of errors to be whitelisted.
+the error message matches a pattern of whitelisted errors.
 
 The helper function \code{\link[=get_exported_functions]{get_exported_functions()}} identifies the functions
 in the public interface of a given package, facilitating the generation of

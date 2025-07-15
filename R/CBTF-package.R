@@ -20,8 +20,8 @@
 
 #' CBTF: Caught by the Fuzz! A minimal fuzz-test runner
 #'
-#' This package implements a very simple mechanism to fuzz-test the exported
-#' functions of an R package.
+#' This package implements a very simple mechanism to fuzz-test the public
+#' interface of an R package.
 #'
 #' Fuzz testing can be used in the first instance to identify functions that
 #' do not have sufficient argument validation. Besides, fuzz testing can
@@ -33,7 +33,7 @@
 #' The core functionality of the package is [fuzz()], whose aim is to call
 #' each provided function with a certain input and record the output produced.
 #' If an error is generated, this is captured and reported to the user, unless
-#' the error message matches a pattern of errors to be whitelisted.
+#' the error message matches a pattern of whitelisted errors.
 #'
 #' The helper function [get_exported_functions()] identifies the functions
 #' in the public interface of a given package, facilitating the generation of
@@ -42,5 +42,4 @@
 #' @author
 #' Marco Colombo \email{mar.colombo13@@gmail.com}
 #'
-#' @docType package
 "_PACKAGE"

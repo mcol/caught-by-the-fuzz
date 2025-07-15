@@ -19,7 +19,7 @@
 
 #' Results summary from a fuzz run
 #'
-#' Generates a data frame of summary results from a single run of [fuzz].
+#' Generates a data frame of summary results from a single run of [fuzz()].
 #'
 #' @param object,x An object of class `cbtf`.
 #' @param show.all Whether all results should be printed. If `FALSE` (default),
@@ -31,9 +31,10 @@
 #' @return
 #' A data frame with the following columns:
 #' \item{Function}{The names of the function tested.}
-#' \item{Result}{One of "OK", "FAIL", "WARN" or "SKIP".}
-#' \item{Message}{The message received in case of error or warning. It is
-#'       an empty string if the function succeeded or was skipped.}
+#' \item{Result}{One of "OK", "FAIL", "WARN" or "SKIP" for each function
+#'       tested.}
+#' \item{Message}{The message received in case of error, warning or skip,
+#'       or an empty string if the function succeeded.}
 #'
 #' @export
 summary.cbtf <- function(object, ...) {
