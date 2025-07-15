@@ -1,5 +1,3 @@
-pass.msg <- "You didn't get caught by the fuzz"
-
 test_that("input validation", {
   testthat::skip_on_cran()
 
@@ -16,22 +14,24 @@ test_that("input validation", {
 test_that("check functionality", {
   testthat::skip_on_cran()
 
-  expect_output(fuzz("list", NULL),
-                pass.msg)
-  expect_output(fuzz("iris", NULL),
-                pass.msg)
-  expect_output(fuzz("error", NULL),
-                pass.msg)
+  SW({
+  expect_skip_reason(fuzz("list", NULL),
+                     "Doesn't accept arguments")
+  expect_skip_reason(fuzz("iris", NULL),
+                     "Not a function")
+  expect_skip_reason(fuzz(".not.found.", NULL),
+                     "Object not found")
 
   ## function with no arguments
-  expect_output(fuzz("Sys.Date", NULL),
-                pass.msg)
+  expect_skip_reason(fuzz("Sys.Date", NULL),
+                     "Doesn't accept arguments")
 
   ## must use `assign` otherwise the name cannot be found by the `get` call
-  assign("with.readline", function() readline("Prompt"), envir = .GlobalEnv)
-  expect_output(fuzz("with.readline", NULL),
-                pass.msg)
+  assign("with.readline", function(val) readline("Prompt"), envir = .GlobalEnv)
+  expect_skip_reason(fuzz("with.readline", NULL),
+                     "Contains readline()")
   rm("with.readline", envir = .GlobalEnv)
+  })
 })
 
 test_that("check classes returned", {
@@ -61,8 +61,10 @@ test_that("check classes returned", {
 test_that("self fuzz", {
   testthat::skip_on_cran()
 
-  expect_output(fuzz("fuzz", list()),
+  SW({
+  expect_output(print(fuzz("fuzz", list())),
                 "'funs' should be of class character")
-  expect_output(fuzz("fuzz", NULL),
+  expect_output(print(fuzz("fuzz", NULL)),
                 "'funs' should be of class character")
+  })
 })
