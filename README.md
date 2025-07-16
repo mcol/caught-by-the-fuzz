@@ -21,11 +21,8 @@ fuzz(funs, TRUE)
 ```
 
     ## ✖  🚨   CAUGHT BY THE FUZZ!   🚨
-
     ## 
-
     ## ── Test input: TRUE
-
     ##       guess_type  FAIL  a character vector argument expected
     ##  parse_multipart  FAIL  $ operator is invalid for atomic vectors
     ## 
