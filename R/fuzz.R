@@ -121,9 +121,12 @@ fuzz <- function(funs, what, ignore.patterns = NULL,
   }
   footer(count)
 
-  ## complete the returned object
+  ## transform results to a data frame
+  out.res <- as.data.frame(do.call(rbind, out.res))
   attr(out.res, "what") <- deparse(substitute(what))
-  attr(out.res, "package") <- package
-  class(out.res) <- "cbtf"
-  invisible(out.res)
+
+  ## complete the returned object
+  structure(list(runs = list(out.res),
+                 package = if (!is.null(package)) package else NA),
+            class = "cbtf")
 }

@@ -30,17 +30,15 @@
 #'
 #' @return
 #' A data frame with the following columns:
-#' \item{Function}{The names of the function tested.}
-#' \item{Result}{One of "OK", "FAIL", "WARN" or "SKIP" for each function
+#' \item{fun}{The names of the function tested.}
+#' \item{res}{One of "OK", "FAIL", "WARN" or "SKIP" for each function
 #'       tested.}
-#' \item{Message}{The message received in case of error, warning or skip,
+#' \item{msg}{The message received in case of error, warning or skip,
 #'       or an empty string if the function succeeded.}
 #'
 #' @export
 summary.cbtf <- function(object, ...) {
-  summary <- as.data.frame(do.call(rbind, object))
-  names(summary) <- c("Function", "Result", "Message")
-  return(summary)
+  as.data.frame(do.call(rbind, object$runs))
 }
 
 #' @rdname summary.cbtf
@@ -48,7 +46,7 @@ summary.cbtf <- function(object, ...) {
 print.cbtf <- function(x, show.all = FALSE, ...) {
   summary <- summary(x)
   if (!show.all) {
-    summary <- summary[summary$Result %in% c("FAIL", "WARN"), ]
+    summary <- summary[summary$res %in% c("FAIL", "WARN"), ]
     row.names(summary) <- NULL
   }
   print(summary)

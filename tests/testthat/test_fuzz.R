@@ -11,7 +11,7 @@ test_that("input validation", {
                "'what' must be specified")
 })
 
-test_that("check functionality", {
+test_that("check skipped functions", {
   testthat::skip_on_cran()
 
   SW({
@@ -32,6 +32,37 @@ test_that("check functionality", {
                      "Contains readline()")
   rm("with.readline", envir = .GlobalEnv)
   })
+})
+
+test_that("check object returned", {
+  testthat::skip_on_cran()
+
+  funs <- c("list", "data.frame")
+  SW({
+  res <- fuzz(funs, NULL)
+  })
+  expect_s3_class(res,
+                  "cbtf")
+  expect_named(res,
+               c("runs", "package"))
+  expect_length(res$runs,
+                1)
+  expect_s3_class(res$runs[[1]],
+                  "data.frame")
+  expect_named(res$runs[[1]],
+               c("fun", "res", "msg"))
+  expect_equal(nrow(res$runs[[1]]),
+               length(funs))
+  expect_equal(res$package,
+               NA)
+
+  ## check that we store the package attribute correctly
+  funs <- structure(c("list", "data.frame"), package = "packagename")
+  SW({
+  res <- fuzz(funs, NULL)
+  })
+  expect_equal(res$package,
+               "packagename")
 })
 
 test_that("check classes returned", {

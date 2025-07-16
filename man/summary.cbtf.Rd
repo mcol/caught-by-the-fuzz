@@ -21,10 +21,10 @@ If \code{TRUE}, all functions tested are printed.}
 }
 \value{
 A data frame with the following columns:
-\item{Function}{The names of the function tested.}
-\item{Result}{One of "OK", "FAIL", "WARN" or "SKIP" for each function
+\item{fun}{The names of the function tested.}
+\item{res}{One of "OK", "FAIL", "WARN" or "SKIP" for each function
 tested.}
-\item{Message}{The message received in case of error, warning or skip,
+\item{msg}{The message received in case of error, warning or skip,
 or an empty string if the function succeeded.}
 }
 \description{
