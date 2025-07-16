@@ -18,8 +18,7 @@ when there are a large number of functions to test.
 ```{r}
 library(CBTF)
 funs <- get_exported_functions("mime")
-what <- TRUE
-fuzz(funs, what)
+fuzz(funs, TRUE)
 ```
 
 The first occurrence is a false positive, as the message returned indicates
