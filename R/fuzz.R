@@ -59,9 +59,8 @@ get_exported_functions <- function(package, ignore.names = NULL) {
 fuzz <- function(funs, what, ignore.patterns = NULL,
                  ignore.warnings = FALSE) {
   report <- function(label, msg) {
-    msg <- gsub("\\n", " ", msg)
     out.res[[idx]]["res"] <<- label
-    out.res[[idx]]["msg"] <<- msg
+    out.res[[idx]]["msg"] <<- gsub("\\n", " ", msg) # shorten multiline messages
   }
   getter <- function() {
     if (is.null(package))
@@ -79,8 +78,7 @@ fuzz <- function(funs, what, ignore.patterns = NULL,
                             collapse = "|")
   package <- attr(funs, "package")
   out.res <- lapply(funs, function(x) {
-    ## the default result is SKIP as `funs` may contain non-functions
-    data.frame(fun = x, res = "SKIP", msg = "")
+    data.frame(fun = x, res = "OK", msg = "")
   })
 
   ## string representation of the input
@@ -93,12 +91,11 @@ fuzz <- function(funs, what, ignore.patterns = NULL,
 
     fun <- validate_fuzzable(try(getter()(f), silent = TRUE))
     if (is.character(fun)) {
-      out.res[[idx]]$msg <- fun
+      report("SKIP", fun)
       cli::cli_progress_update()
       next
     }
 
-    out.res[[idx]]["res"] <- "OK"
     tryCatch(utils::capture.output(suppressMessages(fun(what))),
              error = function(e) {
                if (!grepl(f, e) &&
