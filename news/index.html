@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">CBTF</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,16 +34,25 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/mcol/caught-by-the-fuzz/blob/v0.1.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/mcol/caught-by-the-fuzz/blob/v0.2.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.2.0" id="cbtf-020-2025-07-16">CBTF 0.2.0 (2025-07-16)<a class="anchor" aria-label="anchor" href="#cbtf-020-2025-07-16"></a></h2>
+<ul><li>Return an object with the raw results from <code><a href="../reference/fuzz.html">fuzz()</a></code> and provide S3 methods for <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> and <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> (<a href="https://github.com/mcol/caught-by-the-fuzz/issues/1" class="external-link">#1</a>).</li>
+<li>Skip functions that call <code><a href="https://rdrr.io/r/base/readline.html" class="external-link">readline()</a></code>, as in an interactive session they stall waiting for user input (<a href="https://github.com/mcol/caught-by-the-fuzz/issues/4" class="external-link">#4</a>).</li>
+<li>Skip non-existing function names and functions that accept no arguments.</li>
+<li>Show a progress bar during fuzz().</li>
+<li>Prettify the output from fuzz(), summary() and print().</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="cbtf-010-2024-11-14">CBTF 0.1.0 (2024-11-14)<a class="anchor" aria-label="anchor" href="#cbtf-010-2024-11-14"></a></h2>
 <ul><li>First version of the package.</li>
 <li>The package website is now available at <a href="https://mcol.github.io/caught-by-the-fuzz/" class="uri">https://mcol.github.io/caught-by-the-fuzz/</a>
 </li>
 </ul></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
