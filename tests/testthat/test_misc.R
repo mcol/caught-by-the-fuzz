@@ -1,3 +1,22 @@
+test_that("tocolour", {
+  testthat::skip_on_cran()
+
+  expect_equal(tocolour("FAIL"),
+               as.character(cli::col_yellow("FAIL")))
+  expect_equal(tocolour("WARN"),
+               as.character(cli::col_magenta("WARN")))
+  expect_equal(tocolour("SKIP"),
+               as.character(cli::col_blue("SKIP")))
+  expect_equal(tocolour("OK"),
+               as.character(cli::col_green("OK")))
+  expect_equal(tocolour("FAIL", 0),
+               "FAIL 0")
+  expect_equal(tocolour("FAIL", 1),
+               paste(cli::col_yellow("FAIL"), 1))
+  expect_equal(tocolour("FAIL", 1, FALSE),
+               "FAIL 1")
+})
+
 test_that("real calls to readline() are caught", {
   testthat::skip_on_cran()
 

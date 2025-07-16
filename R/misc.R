@@ -78,7 +78,7 @@ validate_fuzzable <- function(fun) {
   return(fun)
 }
 
-#' Generate summary statistics from the results
+#' Generate coloured summary statistics from the results
 #'
 #' This computes summary statistics from the fuzzing results, prints a
 #' message for the overall success or failure, and returns a summary string.
@@ -86,7 +86,7 @@ validate_fuzzable <- function(fun) {
 #' @param object An object of class `cbtf`.
 #'
 #' @return
-#' A summary results string.
+#' A summary results string formatted with ANSI colour codes.
 #'
 #' @noRd
 compute_summary_stats <- function(object) {
@@ -98,11 +98,34 @@ compute_summary_stats <- function(object) {
     cli::cli_alert_danger(" \U0001F6A8   CAUGHT BY THE FUZZ!   \U0001F6A8")
 
   stats <- as.list(table(results))
-  summary.stats <- paste("FAIL", sum(stats$FAIL), " | ",
-                         "WARN", sum(stats$WARN), " | ",
-                         "SKIP", sum(stats$SKIP), " | ",
-                         "OK",   sum(stats$OK))
+  summary.stats <- paste(tocolour("FAIL", sum(stats$FAIL)),
+                         tocolour("WARN", sum(stats$WARN)),
+                         tocolour("SKIP", sum(stats$SKIP)),
+                         tocolour("OK",   sum(stats$OK), success),
+                         sep = " | ")
   paste("[", summary.stats, "]")
+}
+
+#' Add colour formatting to a string
+#'
+#' @param res A result string, one of "OK", "SKIP", "WARN" or "FAIL".
+#' @param num A numerical value: if it evaluates to a positive finite value
+#'        and `colour` is `TRUE`, then the string is coloured. The default
+#'        value (`Inf`) implies that colour is applied, but `num` is not
+#'        printed out.
+#' @param colour A logical value that determines if the colour should be
+#'        applied. If `FALSE`, nothing gets coloured independently of `num`.
+#'
+#' @return
+#' A string formatted with ANSI colour codes.
+#'
+#' @noRd
+tocolour <- function(res, num = Inf, colour = TRUE) {
+  if (num > 0 && colour) {
+    res <- list(FAIL = cli::col_yellow, WARN = cli::col_magenta,
+                SKIP = cli::col_blue, OK = cli::col_green)[[res]](res)
+  }
+  paste0(res, if (!is.infinite(num)) sprintf(" %d", num))
 }
 
 #' Check if the body of a function contains calls to readline()
