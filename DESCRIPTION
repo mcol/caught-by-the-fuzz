@@ -8,6 +8,8 @@ Description: A minimal runner to fuzz-test the exported functions
   of an R package.
 URL: https://mcol.github.io/caught-by-the-fuzz
 BugReports: https://github.com/mcol/caught-by-the-fuzz/issues
+Imports:
+    cli (>= 3.6.5),
 Suggests:
     testthat (>= 3.2.3),
 License: GPL-3

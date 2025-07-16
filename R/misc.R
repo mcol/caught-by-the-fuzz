@@ -78,6 +78,33 @@ validate_fuzzable <- function(fun) {
   return(fun)
 }
 
+#' Generate summary statistics from the results
+#'
+#' This computes summary statistics from the fuzzing results, prints a
+#' message for the overall success or failure, and returns a summary string.
+#'
+#' @param object An object of class `cbtf`.
+#'
+#' @return
+#' A summary results string.
+#'
+#' @noRd
+compute_summary_stats <- function(object) {
+  results <- unlist(lapply(object$runs, function(x) x$res))
+  success <- sum(results %in% c("FAIL", "WARN")) == 0
+  if (success)
+    cli::cli_alert_success(" \U0001F3C3 You didn't get caught by the fuzz!")
+  else
+    cli::cli_alert_danger(" \U0001F6A8   CAUGHT BY THE FUZZ!   \U0001F6A8")
+
+  stats <- as.list(table(results))
+  summary.stats <- paste("FAIL", sum(stats$FAIL), " | ",
+                         "WARN", sum(stats$WARN), " | ",
+                         "SKIP", sum(stats$SKIP), " | ",
+                         "OK",   sum(stats$OK))
+  paste("[", summary.stats, "]")
+}
+
 #' Check if the body of a function contains calls to readline()
 #'
 #' @param fun An expression.

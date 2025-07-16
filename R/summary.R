@@ -26,7 +26,7 @@
 #'        These are currently ignored.
 #'
 #' @return
-#' A data frame with the following columns:
+#' A data frame with the following columns is returned invisibly:
 #' \item{fun}{The names of the function tested.}
 #' \item{res}{One of "OK", "FAIL", "WARN" or "SKIP" for each function
 #'       tested.}
@@ -35,7 +35,10 @@
 #'
 #' @export
 summary.cbtf <- function(object, ...) {
-  as.data.frame(do.call(rbind, object$runs))
+  cli::cli_text("Fuzzed {nrow(object$runs[[1]])} function{?s} ",
+                "on {length(object$runs)} input{?s}: ",
+                compute_summary_stats(object))
+  invisible(as.data.frame(do.call(rbind, object$runs)))
 }
 
 #' Print the results from a fuzz run

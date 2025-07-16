@@ -58,21 +58,10 @@ get_exported_functions <- function(package, ignore.names = NULL) {
 #' @export
 fuzz <- function(funs, what, ignore.patterns = NULL,
                  ignore.warnings = FALSE) {
-  header <- function(count) {
-    if (count > 0) return()
-    cat("\n\t\U0001f6a8   CAUGHT BY THE FUZZ!   \U0001f6a8\n\n")
-  }
-  footer <- function(count) {
-    if (count > 0) return()
-    cat("\U0001f3c3 You didn't get caught by the fuzz!\n")
-  }
-  report <- function(label, msg, count) {
+  report <- function(label, msg) {
     msg <- gsub("\\n", " ", msg)
     out.res[[idx]]["res"] <<- label
     out.res[[idx]]["msg"] <<- msg
-    header(count)
-    cat(paste0(label, ":"), f, "(", class(what), ")\n   ", msg, "\n\n")
-    count <<- count + 1
   }
   getter <- function() {
     if (is.null(package))
@@ -85,7 +74,6 @@ fuzz <- function(funs, what, ignore.patterns = NULL,
   validate_class(funs, "character")
   validate_not_missing(what)
 
-  count <- 0
   ignore.patterns <- paste0(c(ignore.patterns,
                               "is missing, with no default"),
                             collapse = "|")
@@ -95,13 +83,18 @@ fuzz <- function(funs, what, ignore.patterns = NULL,
     data.frame(fun = x, res = "SKIP", msg = "")
   })
 
+  ## string representation of the input
+  what.char <- deparse(substitute(what))
+
   ## loop over the functions to fuzz
+  cli::cli_progress_bar(paste("Fuzzing input:", what.char), total = length(funs))
   for (idx in seq_along(funs)) {
     f <- funs[idx]
 
     fun <- validate_fuzzable(try(getter()(f), silent = TRUE))
     if (is.character(fun)) {
       out.res[[idx]]$msg <- fun
+      cli::cli_progress_update()
       next
     }
 
@@ -110,20 +103,21 @@ fuzz <- function(funs, what, ignore.patterns = NULL,
              error = function(e) {
                if (!grepl(f, e) &&
                    !grepl(ignore.patterns, e)) {
-                 report("FAIL", e$message, count)
+                 report("FAIL", e$message)
                }
              },
              warning = function(w) {
                if (!ignore.warnings && !grepl(ignore.patterns, w)) {
-                 report("WARN", w$message, count)
+                 report("WARN", w$message)
                }
              })
+    cli::cli_progress_update()
   }
-  footer(count)
+  cli::cli_progress_done()
 
   ## transform results to a data frame
   out.res <- as.data.frame(do.call(rbind, out.res))
-  attr(out.res, "what") <- deparse(substitute(what))
+  attr(out.res, "what") <- what.char
 
   ## complete the returned object
   structure(list(runs = list(out.res),

@@ -13,7 +13,7 @@
 These are currently ignored.}
 }
 \value{
-A data frame with the following columns:
+A data frame with the following columns is returned invisibly:
 \item{fun}{The names of the function tested.}
 \item{res}{One of "OK", "FAIL", "WARN" or "SKIP" for each function
 tested.}
