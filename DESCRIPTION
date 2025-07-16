@@ -1,6 +1,6 @@
 Package: CBTF
 Title: Caught by the Fuzz! A minimal fuzz-test runner
-Version: 0.2.0
+Version: 0.2.0.9000
 Date: 2025-07-16
 Authors@R:
     person("Marco", "Colombo", , "mar.colombo13@gmail.com", role = c("aut", "cre"),
