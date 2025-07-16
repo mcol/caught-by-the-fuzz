@@ -2,22 +2,15 @@
 % Please edit documentation in R/summary.R
 \name{summary.cbtf}
 \alias{summary.cbtf}
-\alias{print.cbtf}
 \title{Results summary from a fuzz run}
 \usage{
 \method{summary}{cbtf}(object, ...)
-
-\method{print}{cbtf}(x, show.all = FALSE, ...)
 }
 \arguments{
-\item{object, x}{An object of class \code{cbtf}.}
+\item{object}{An object of class \code{cbtf}.}
 
 \item{...}{Further arguments passed to or from other methods.
 These are currently ignored.}
-
-\item{show.all}{Whether all results should be printed. If \code{FALSE} (default),
-only the functions that reported an error or a warning are printed.
-If \code{TRUE}, all functions tested are printed.}
 }
 \value{
 A data frame with the following columns:

@@ -21,10 +21,7 @@
 #'
 #' Generates a data frame of summary results from a single run of [fuzz()].
 #'
-#' @param object,x An object of class `cbtf`.
-#' @param show.all Whether all results should be printed. If `FALSE` (default),
-#'        only the functions that reported an error or a warning are printed.
-#'        If `TRUE`, all functions tested are printed.
+#' @param object An object of class `cbtf`.
 #' @param ... Further arguments passed to or from other methods.
 #'        These are currently ignored.
 #'
@@ -41,7 +38,16 @@ summary.cbtf <- function(object, ...) {
   as.data.frame(do.call(rbind, object$runs))
 }
 
-#' @rdname summary.cbtf
+#' Print the results from a fuzz run
+#'
+#' @param x An object of class `cbtf`.
+#' @param show.all Whether all results should be printed. By default (`FALSE`),
+#'        only the functions that reported an error or a warning are printed.
+#'        If `TRUE`, all functions tested are printed, including those that
+#'        were skipped.
+#' @param ... Further arguments passed to or from other methods.
+#'        These are currently ignored.
+#'
 #' @export
 print.cbtf <- function(x, show.all = FALSE, ...) {
   summary <- summary(x)
