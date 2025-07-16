@@ -53,10 +53,19 @@ summary.cbtf <- function(object, ...) {
 #'
 #' @export
 print.cbtf <- function(x, show.all = FALSE, ...) {
-  summary <- summary(x)
-  if (!show.all) {
-    summary <- summary[summary$res %in% c("FAIL", "WARN"), ]
-    row.names(summary) <- NULL
+  summary.stats <- compute_summary_stats(x)
+  for (run in x$runs) {
+    if (!show.all)
+      run <- run[run$res %in% c("FAIL", "WARN"), ]
+    if (nrow(run) > 0) {
+      cli::cli_h3(paste("Test input:", attributes(run)$what))
+      max.name <- max(c(0, nchar(run$fun))) + 1
+      for (idx in seq_len(nrow(run))) {
+        row <- run[idx, ]
+        cat(sprintf("%*s  %s  %s\n",
+                    max.name, row$fun, tocolour(row$res), row$msg))
+      }
+    }
   }
-  print(summary)
+  cat("\n", summary.stats, "\n")
 }
