@@ -91,7 +91,8 @@ fuzz <- function(funs, what, package = NULL,
   what.char <- deparse(substitute(what))
 
   ## loop over the functions to fuzz
-  cli::cli_progress_bar(paste("Fuzzing input:", what.char), total = length(funs))
+  cli::cli_progress_bar(paste(cli::col_br_blue("ℹ"), "Fuzzing input:", what.char),
+                        total = length(funs))
   for (idx in seq_along(funs)) {
     f <- funs[idx]
     fun <- check_fuzzable(try(getter(f), silent = TRUE), package)
@@ -101,6 +102,7 @@ fuzz <- function(funs, what, package = NULL,
       next
     }
 
+    cli::cli_progress_update(status = f)
     tryCatch(utils::capture.output(suppressMessages(fun(what))),
              error = function(e) {
                if (!grepl(f, e) &&
@@ -115,7 +117,6 @@ fuzz <- function(funs, what, package = NULL,
                  report("WARN", w$message)
                }
              })
-    cli::cli_progress_update()
   }
   cli::cli_progress_done()
 
