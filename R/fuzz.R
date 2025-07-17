@@ -104,7 +104,9 @@ fuzz <- function(funs, what, ignore.patterns = NULL,
                }
              },
              warning = function(w) {
-               if (!ignore.warnings && !grepl(ignore.patterns, w)) {
+               if (!ignore.warnings &&
+                   !grepl(f, w) &&
+                   !grepl(ignore.patterns, w)) {
                  report("WARN", w$message)
                }
              })
