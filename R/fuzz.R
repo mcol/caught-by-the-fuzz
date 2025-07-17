@@ -43,9 +43,14 @@ get_exported_functions <- function(package, ignore.names = NULL) {
 #'
 #' @param funs A character vector of function names to test. If a `"package"`
 #'        attribute is set, the functions are loaded directly from the package
-#'        namespace; otherwise, the functions are searched in the workspace.
+#'        namespace; otherwise, the functions are searched in the global
+#'        namespace.
 #' @param what The object to be passed as first argument to each of the
 #'        functions in `funs`.
+#' @param package A character string specifying the name of the package to
+#'        search for function names. If `NULL` (default), the function will
+#'        first attempt to use the `"package"` attribute of `funs`, and if
+#'        that is not set, names will be searched in the global namespace.
 #' @param ignore.patterns A character string containing a regular expression
 #'        to match the messages to ignore.
 #' @param ignore.warnings Whether warnings should be ignored (`FALSE` by
@@ -56,27 +61,28 @@ get_exported_functions <- function(package, ignore.names = NULL) {
 #' functions tested.
 #'
 #' @export
-fuzz <- function(funs, what, ignore.patterns = NULL,
-                 ignore.warnings = FALSE) {
+fuzz <- function(funs, what, package = NULL,
+                 ignore.patterns = NULL, ignore.warnings = FALSE) {
   report <- function(label, msg) {
     out.res[[idx]]["res"] <<- label
     out.res[[idx]]["msg"] <<- gsub("\\n", " ", msg) # shorten multiline messages
-  }
-  getter <- function() {
-    if (is.null(package))
-      get
-    else
-      function(x) utils::getFromNamespace(x, package)
   }
 
   ## input validation
   validate_class(funs, "character")
   validate_not_missing(what)
 
+  ## define where functions names are searched
+  if (is.null(package))
+    package <- attr(funs, "package")
+  getter <- if (is.null(package)) get else {
+    validate_class(package, "character")
+    function(x) utils::getFromNamespace(x, package)
+  }
+
   ignore.patterns <- paste0(c(ignore.patterns,
                               "is missing, with no default"),
                             collapse = "|")
-  package <- attr(funs, "package")
   out.res <- lapply(funs, function(x) {
     data.frame(fun = x, res = "OK", msg = "")
   })
@@ -88,8 +94,7 @@ fuzz <- function(funs, what, ignore.patterns = NULL,
   cli::cli_progress_bar(paste("Fuzzing input:", what.char), total = length(funs))
   for (idx in seq_along(funs)) {
     f <- funs[idx]
-
-    fun <- validate_fuzzable(try(getter()(f), silent = TRUE))
+    fun <- validate_fuzzable(try(getter(f), silent = TRUE), package)
     if (is.character(fun)) {
       report("SKIP", fun)
       cli::cli_progress_update()

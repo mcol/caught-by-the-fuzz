@@ -20,7 +20,9 @@ test_that("check skipped functions", {
   expect_skip_reason(fuzz("iris", NULL),
                      "Not a function")
   expect_skip_reason(fuzz(".not.found.", NULL),
-                     "Object not found")
+                     "Object not found in the global namespace")
+  expect_skip_reason(fuzz(".not.found.", NULL, package = "CBTF"),
+                     "Object not found in the 'CBTF' namespace")
 
   ## function with no arguments
   expect_skip_reason(fuzz("Sys.Date", NULL),

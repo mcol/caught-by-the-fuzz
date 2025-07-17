@@ -4,15 +4,27 @@
 \alias{fuzz}
 \title{Fuzz-test the specified functions}
 \usage{
-fuzz(funs, what, ignore.patterns = NULL, ignore.warnings = FALSE)
+fuzz(
+  funs,
+  what,
+  package = NULL,
+  ignore.patterns = NULL,
+  ignore.warnings = FALSE
+)
 }
 \arguments{
 \item{funs}{A character vector of function names to test. If a \code{"package"}
 attribute is set, the functions are loaded directly from the package
-namespace; otherwise, the functions are searched in the workspace.}
+namespace; otherwise, the functions are searched in the global
+namespace.}
 
 \item{what}{The object to be passed as first argument to each of the
 functions in \code{funs}.}
+
+\item{package}{A character string specifying the name of the package to
+search for function names. If \code{NULL} (default), the function will
+first attempt to use the \code{"package"} attribute of \code{funs}, and if
+that is not set, names will be searched in the global namespace.}
 
 \item{ignore.patterns}{A character string containing a regular expression
 to match the messages to ignore.}

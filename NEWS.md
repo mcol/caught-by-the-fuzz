@@ -1,5 +1,9 @@
-## Current development version
+# Current development version
 
+- Warnings containing the name of the function being fuzzed are no longer
+  reported, to make their behaviour consistent with that of errors.
+- Add the `package` argument to `fuzz()` as an alternative and simpler way
+  to specify the namespace where function names are searched.
 
 # CBTF 0.2.0 (2025-07-16)
 

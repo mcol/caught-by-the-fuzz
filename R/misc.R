@@ -52,16 +52,20 @@ validate_not_missing <- function(arg) {
 #' @title Validate that a function can be fuzzed
 #'
 #' @param fun Function to validate.
+#' @param pkg Name of the package where functions are searched. A `NULL`
+#'        value corresponds to the global namespace. This is used only to
+#'        generate a better message.
 #'
 #' @return
 #' In case of failure, a character string containing the reason why the
 #' function cannot be fuzzed; otherwise the function itself.
 #'
 #' @noRd
-validate_fuzzable <- function(fun) {
+validate_fuzzable <- function(fun, pkg) {
   ## skip non-existing names
   if (inherits(fun, "try-error"))
-    return("Object not found")
+    return(sprintf("Object not found in the %s namespace",
+                   if (is.null(pkg)) "global" else sprintf("'%s'", pkg)))
 
   ## skip non-functions
   if (!is.function(fun))
