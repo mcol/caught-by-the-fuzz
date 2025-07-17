@@ -94,7 +94,7 @@ fuzz <- function(funs, what, package = NULL,
   cli::cli_progress_bar(paste("Fuzzing input:", what.char), total = length(funs))
   for (idx in seq_along(funs)) {
     f <- funs[idx]
-    fun <- validate_fuzzable(try(getter(f), silent = TRUE), package)
+    fun <- check_fuzzable(try(getter(f), silent = TRUE), package)
     if (is.character(fun)) {
       report("SKIP", fun)
       cli::cli_progress_update()

@@ -49,7 +49,7 @@ validate_not_missing <- function(arg) {
   }
 }
 
-#' @title Validate that a function can be fuzzed
+#' @title Check that a function can be fuzzed
 #'
 #' @param fun Function to validate.
 #' @param pkg Name of the package where functions are searched. A `NULL`
@@ -61,7 +61,7 @@ validate_not_missing <- function(arg) {
 #' function cannot be fuzzed; otherwise the function itself.
 #'
 #' @noRd
-validate_fuzzable <- function(fun, pkg) {
+check_fuzzable <- function(fun, pkg) {
   ## skip non-existing names
   if (inherits(fun, "try-error"))
     return(sprintf("Object not found in the %s namespace",
