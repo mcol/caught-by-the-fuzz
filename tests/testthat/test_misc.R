@@ -1,3 +1,12 @@
+test_that("fuzz_error", {
+  testthat::skip_on_cran()
+
+  expect_error(fuzz_error("message"),
+               "[fuzz] message", fixed = TRUE)
+  expect_error(fuzz_error("part 1", "part 2"),
+               "[fuzz] part 1 part 2", fixed = TRUE)
+})
+
 test_that("tocolour", {
   testthat::skip_on_cran()
 

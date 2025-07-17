@@ -95,9 +95,11 @@ test_that("self fuzz", {
   testthat::skip_on_cran()
 
   SW({
-  expect_output(print(fuzz("fuzz", list())),
-                "'funs' should be of class character")
-  expect_output(print(fuzz("fuzz", NULL)),
-                "'funs' should be of class character")
+  expect_message(expect_output(print(fuzz("fuzz", list())),
+                               "OK 1"),
+                 "You didn't get caught by the fuzz!")
+  expect_message(expect_output(print(fuzz("fuzz", NULL)),
+                               "OK 1"),
+                 "You didn't get caught by the fuzz!")
   })
 })

@@ -29,8 +29,7 @@
 validate_class <- function(arg, classes) {
   if (missing(arg) || sum(inherits(arg, classes)) == 0L) {
     name <- sprintf("'%s'", all.vars(match.call())[1])
-    stop(paste0(name, " should be of class ",
-                paste(classes, collapse = ", ")), call. = FALSE)
+    fuzz_error(name, "should be of class", paste(classes, collapse = ", "))
   }
 }
 
@@ -45,8 +44,17 @@ validate_class <- function(arg, classes) {
 validate_not_missing <- function(arg) {
   if (missing(arg)) {
     name <- sprintf("'%s'", all.vars(match.call())[1])
-    stop(paste0(name, " must be specified"), call. = FALSE)
+    fuzz_error(name, "must be specified")
   }
+}
+
+#' @title Stop with an error message
+#'
+#' @param ... Strings that are joined together in the error message.
+#'
+#' @noRd
+fuzz_error <- function(...) {
+  stop(do.call(paste, c("[fuzz]", list(...))), call. = FALSE)
 }
 
 #' @title Check that a function can be fuzzed
