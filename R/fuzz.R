@@ -91,7 +91,8 @@ fuzz <- function(funs, what, package = NULL,
   what.char <- deparse(substitute(what))
 
   ## loop over the functions to fuzz
-  cli::cli_progress_bar(paste(cli::col_br_blue("ℹ"), "Fuzzing input:", what.char),
+  cli::cli_progress_bar(paste(cli::col_br_blue("\U2139"), # ℹ
+                              "Fuzzing input:", what.char),
                         total = length(funs))
   for (idx in seq_along(funs)) {
     f <- funs[idx]
