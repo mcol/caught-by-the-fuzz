@@ -26,9 +26,10 @@ test_that("tocolour", {
                "FAIL 1")
 })
 
-test_that("real calls to readline() are caught", {
+test_that("contains_readline", {
   testthat::skip_on_cran()
 
+  ## check that real calls to readline() are caught
   fun1 <- function() readline("Prompt")
   fun2 <- function() input <- readline("Prompt")
   fun3 <- function() if (TRUE) input <- readline("Prompt")
@@ -38,11 +39,8 @@ test_that("real calls to readline() are caught", {
   expect_true(contains_readline(fun2))
   expect_true(contains_readline(fun3))
   expect_true(contains_readline(fun4))
-})
 
-test_that("other uses of readline() are ignored", {
-  testthat::skip_on_cran()
-
+  ## check that other uses of readline() are ignored
   fun1 <- function() print("")
   fun2 <- function() "readline()"
   fun3 <- function() print("readline()")
