@@ -18,8 +18,10 @@ attribute is set, the functions are loaded directly from the package
 namespace; otherwise, the functions are searched in the global
 namespace.}
 
-\item{what}{The object to be passed as first argument to each of the
-functions in \code{funs}.}
+\item{what}{A list objects to be passed, one at a time, as first argument
+to each of the functions in \code{funs}. Ideally, the list should be
+generated with \code{alist()}, so that each symbol used can be nicely
+reported.}
 
 \item{package}{A character string specifying the name of the package to
 search for function names. If \code{NULL} (default), the function will
@@ -33,10 +35,10 @@ to match the messages to ignore.}
 default).}
 }
 \value{
-A list of class \code{cbtf} that stores the results obtained for each of the
+An object of class \code{cbtf} that stores the results obtained for each of the
 functions tested.
 }
 \description{
-This function calls each of the functions it receives with the object
-specified in \code{what}.
+This function calls each of the functions it receives with each of the
+objects specified in \code{what}.
 }

@@ -6,6 +6,8 @@
   to specify the namespace where function names are searched.
 - Don't consider primitives (such as `list()` or `+`) to be functions with no
   arguments (#5).
+- Make the `what` argument to `fuzz()` accept a list of inputs, so that
+  the function can test multiple inputs in the same run.
 
 # CBTF 0.2.0 (2025-07-16)
 

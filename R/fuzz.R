@@ -38,15 +38,17 @@ get_exported_functions <- function(package, ignore.names = NULL) {
 
 #' Fuzz-test the specified functions
 #'
-#' This function calls each of the functions it receives with the object
-#' specified in `what`.
+#' This function calls each of the functions it receives with each of the
+#' objects specified in `what`.
 #'
 #' @param funs A character vector of function names to test. If a `"package"`
 #'        attribute is set, the functions are loaded directly from the package
 #'        namespace; otherwise, the functions are searched in the global
 #'        namespace.
-#' @param what The object to be passed as first argument to each of the
-#'        functions in `funs`.
+#' @param what A list objects to be passed, one at a time, as first argument
+#'        to each of the functions in `funs`. Ideally, the list should be
+#'        generated with `alist()`, so that each symbol used can be nicely
+#'        reported.
 #' @param package A character string specifying the name of the package to
 #'        search for function names. If `NULL` (default), the function will
 #'        first attempt to use the `"package"` attribute of `funs`, and if
@@ -57,26 +59,82 @@ get_exported_functions <- function(package, ignore.names = NULL) {
 #'        default).
 #'
 #' @return
-#' A list of class `cbtf` that stores the results obtained for each of the
+#' An object of class `cbtf` that stores the results obtained for each of the
 #' functions tested.
 #'
 #' @export
 fuzz <- function(funs, what, package = NULL,
                  ignore.patterns = NULL, ignore.warnings = FALSE) {
+
+  ## input validation
+  validate_class(funs, "character")
+  validate_class(what, "list")
+  if (is.null(package)) {
+    package <- attr(funs, "package")
+  } else {
+    validate_class(package, "character")
+  }
+
+  num.inputs <- length(what)
+  if (num.inputs == 0) {
+    fuzz_error("The 'what' list is empty")
+  }
+
+  ## loop over the inputs
+  runs <- list()
+  cli::cli_alert_info("Fuzzing {length(funs)} function{?s} on {num.inputs} input{?s}")
+  for (idx in seq_along(what)) {
+    ## string representation of the input
+    what.char <- deparse(what[[idx]])[[1]]
+
+    ## report progress if running interactively
+    if (cli::is_dynamic_tty())
+      cli::cli_progress_step(paste("Fuzzing input:", what.char))
+
+    ## fuzz this input
+    runs[[idx]] <- fuzzer(funs, what[[idx]], what.char, package,
+                          ignore.patterns, ignore.warnings)
+  }
+  cli::cli_progress_done()
+
+  ## returned object
+  structure(list(runs = runs,
+                 package = if (!is.null(package)) package else NA),
+            class = "cbtf")
+}
+
+#' Fuzzing engine
+#'
+#' This is where the actual fuzzing happens. This function supports only one
+#' input, which is passed to each of the functions in `funs`.
+#'
+#' @param funs A character vector of function names to test.
+#' @param what The object to be passed as first argument to each of the
+#'        functions in `funs`.
+#' @param what.char A string representation of the input in `what`, used for
+#'        pretty-printing the output.
+#' @param package A character string specifying the name of the package to
+#'        search for function names.
+#' @param ignore.patterns A character string containing a regular expression
+#'        to match the messages to ignore.
+#' @param ignore.warnings Whether warnings should be ignored (`FALSE` by
+#'        default).
+#'
+#' @return
+#' A data.frame of results obtained for each of the functions tested, with
+#' the attribute `what` set to contain the string representation of the input
+#' tested.
+#'
+#' @noRd
+fuzzer <- function(funs, what, what.char = "", package = NULL,
+                   ignore.patterns = NULL, ignore.warnings = FALSE) {
   report <- function(label, msg) {
     out.res[[idx]]["res"] <<- label
     out.res[[idx]]["msg"] <<- gsub("\\n", " ", msg) # shorten multiline messages
   }
 
-  ## input validation
-  validate_class(funs, "character")
-  validate_not_missing(what)
-
   ## define where functions names are searched
-  if (is.null(package))
-    package <- attr(funs, "package")
   getter <- if (is.null(package)) get else {
-    validate_class(package, "character")
     function(x) utils::getFromNamespace(x, package)
   }
 
@@ -86,9 +144,6 @@ fuzz <- function(funs, what, package = NULL,
   out.res <- lapply(funs, function(x) {
     data.frame(fun = x, res = "OK", msg = "")
   })
-
-  ## string representation of the input
-  what.char <- deparse(substitute(what))
 
   ## loop over the functions to fuzz
   cli::cli_progress_bar(paste(cli::col_br_blue("\U2139"), # ℹ
@@ -122,11 +177,6 @@ fuzz <- function(funs, what, package = NULL,
   cli::cli_progress_done()
 
   ## transform results to a data frame
-  out.res <- as.data.frame(do.call(rbind, out.res))
-  attr(out.res, "what") <- what.char
-
-  ## complete the returned object
-  structure(list(runs = list(out.res),
-                 package = if (!is.null(package)) package else NA),
-            class = "cbtf")
+  structure(as.data.frame(do.call(rbind, out.res)),
+            what = what.char)
 }

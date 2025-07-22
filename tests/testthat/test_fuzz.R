@@ -8,25 +8,25 @@ test_that("input validation", {
   expect_error(fuzz(what = NA),
                "'funs' should be of class character")
   expect_error(fuzz("list"),
-               "'what' must be specified")
+               "'what' should be of class list")
 })
 
 test_that("check skipped functions", {
   testthat::skip_on_cran()
 
   SW({
-  expect_skip_reason(fuzz("Sys.Date", NULL),
+  expect_skip_reason(fuzz("Sys.Date", list(NULL)),
                      "Doesn't accept arguments")
-  expect_skip_reason(fuzz("iris", NULL),
+  expect_skip_reason(fuzz("iris", list(NULL)),
                      "Not a function")
-  expect_skip_reason(fuzz(".not.found.", NULL),
+  expect_skip_reason(fuzz(".not.found.", list(NULL)),
                      "Object not found in the global namespace")
-  expect_skip_reason(fuzz(".not.found.", NULL, package = "CBTF"),
+  expect_skip_reason(fuzz(".not.found.", list(NULL), package = "CBTF"),
                      "Object not found in the 'CBTF' namespace")
 
   ## must use `assign` otherwise the name cannot be found by the `get` call
   assign("with.readline", function(val) readline("Prompt"), envir = .GlobalEnv)
-  expect_skip_reason(fuzz("with.readline", NULL),
+  expect_skip_reason(fuzz("with.readline", list(NULL)),
                      "Contains readline()")
   rm("with.readline", envir = .GlobalEnv)
   })
@@ -37,7 +37,7 @@ test_that("check object returned", {
 
   funs <- c("list", "data.frame", "+")
   SW({
-  res <- fuzz(funs, NULL)
+  res <- fuzz(funs, list(NULL))
   })
   expect_s3_class(res,
                   "cbtf")
@@ -59,7 +59,7 @@ test_that("check object returned", {
   ## check that we store the package attribute correctly
   funs <- structure(c("list", "data.frame"), package = "packagename")
   SW({
-  res <- fuzz(funs, NULL)
+  res <- fuzz(funs, list(NULL))
   })
   expect_equal(res$package,
                "packagename")
@@ -69,34 +69,47 @@ test_that("check classes returned", {
   testthat::skip_on_cran()
 
   SW({
-  expect_what(fuzz("list", NULL),
+  expect_what(fuzz("list", alist(NULL)),
               "NULL")
-  expect_what(fuzz("list", NA),
+  expect_what(fuzz("list", alist(NA)),
               "NA")
-  expect_what(fuzz("list", data.frame()),
+  expect_what(fuzz("list", alist(data.frame())),
               "data.frame()")
-  expect_what(fuzz("list", list()),
+  expect_what(fuzz("list", alist(list())),
               "list()")
-  expect_what(fuzz("list", 1:3),
+  expect_what(fuzz("list", alist(1:3)),
               "1:3")
-  expect_what(fuzz("list", letters),
+  expect_what(fuzz("list", alist(letters)),
               "letters")
 
   ## TODO: this seems unfortunate, could it be made to return `letters`?
   what <- letters
-  expect_what(fuzz("list", what),
+  expect_what(fuzz("list", alist(what)),
               "what")
   })
+})
+
+test_that("fuzzer", {
+  testthat::skip_on_cran()
+
+  res <- fuzzer("list", NULL)
+  expect_s3_class(res,
+                  "data.frame")
+  expect_equal(attr(res, "what"),
+               "")
+  res <- fuzzer("list", NULL, what.char = "NA")
+  expect_equal(attr(res, "what"),
+               "NA")
 })
 
 test_that("self fuzz", {
   testthat::skip_on_cran()
 
   SW({
-  expect_message(expect_output(print(fuzz("fuzz", list())),
+  expect_message(expect_output(print(fuzz("fuzz", list(list()))),
                                "OK 1"),
                  "You didn't get caught by the fuzz!")
-  expect_message(expect_output(print(fuzz("fuzz", NULL)),
+  expect_message(expect_output(print(fuzz("fuzz", list(NULL))),
                                "OK 1"),
                  "You didn't get caught by the fuzz!")
   })

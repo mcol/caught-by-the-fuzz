@@ -17,9 +17,10 @@ it’s convenient when there are a large number of functions to test.
 ``` r
 library(CBTF)
 funs <- get_exported_functions("mime")
-fuzz(funs, TRUE)
+fuzz(funs, list(TRUE))
 ```
 
+    ## ℹ Fuzzing 3 functions on 1 input
     ## ✖  🚨   CAUGHT BY THE FUZZ!   🚨
     ## 
     ## ── Test input: TRUE
