@@ -80,7 +80,7 @@ check_fuzzable <- function(fun, pkg) {
     return("Not a function")
 
   ## skip functions accept no arguments
-  if (suppressWarnings(length(formals(fun))) == 0)
+  if (suppressWarnings(length(formals(fun))) == 0 && !is.primitive(fun))
     return("Doesn't accept arguments")
 
   ## skip functions that wait for user input

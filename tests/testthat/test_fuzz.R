@@ -15,7 +15,7 @@ test_that("check skipped functions", {
   testthat::skip_on_cran()
 
   SW({
-  expect_skip_reason(fuzz("list", NULL),
+  expect_skip_reason(fuzz("Sys.Date", NULL),
                      "Doesn't accept arguments")
   expect_skip_reason(fuzz("iris", NULL),
                      "Not a function")
@@ -23,10 +23,6 @@ test_that("check skipped functions", {
                      "Object not found in the global namespace")
   expect_skip_reason(fuzz(".not.found.", NULL, package = "CBTF"),
                      "Object not found in the 'CBTF' namespace")
-
-  ## function with no arguments
-  expect_skip_reason(fuzz("Sys.Date", NULL),
-                     "Doesn't accept arguments")
 
   ## must use `assign` otherwise the name cannot be found by the `get` call
   assign("with.readline", function(val) readline("Prompt"), envir = .GlobalEnv)
@@ -39,7 +35,7 @@ test_that("check skipped functions", {
 test_that("check object returned", {
   testthat::skip_on_cran()
 
-  funs <- c("list", "data.frame")
+  funs <- c("list", "data.frame", "+")
   SW({
   res <- fuzz(funs, NULL)
   })
@@ -55,6 +51,8 @@ test_that("check object returned", {
                c("fun", "res", "msg"))
   expect_equal(nrow(res$runs[[1]]),
                length(funs))
+  expect_equal(res$runs[[1]]$res,
+               c("OK", "OK", "OK"))
   expect_equal(res$package,
                NA)
 

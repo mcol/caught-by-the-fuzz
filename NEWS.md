@@ -4,6 +4,8 @@
   reported, to make their behaviour consistent with that of errors.
 - Add the `package` argument to `fuzz()` as an alternative and simpler way
   to specify the namespace where function names are searched.
+- Don't consider primitives (such as `list()` or `+`) to be functions with no
+  arguments (#5).
 
 # CBTF 0.2.0 (2025-07-16)
 
