@@ -21,15 +21,17 @@
 #'
 #' @param arg Argument to validate.
 #' @param classes A vector of candidate classes or types.
+#' @param from Name of the caller function.
 #'
 #' @return
 #' Nothing in case of success, otherwise an error is thrown.
 #'
 #' @noRd
-validate_class <- function(arg, classes) {
+validate_class <- function(arg, classes, from = "fuzz") {
   if (missing(arg) || sum(inherits(arg, classes)) == 0L) {
     name <- sprintf("'%s'", all.vars(match.call())[1])
-    fuzz_error(name, "should be of class", paste(classes, collapse = ", "))
+    fuzz_error(name, "should be of class", paste(classes, collapse = ", "),
+               from = from)
   }
 }
 
@@ -51,10 +53,11 @@ validate_not_missing <- function(arg) {
 #' @title Stop with an error message
 #'
 #' @param ... Strings that are joined together in the error message.
+#' @param from Name of the caller function.
 #'
 #' @noRd
-fuzz_error <- function(...) {
-  stop(do.call(paste, c("[fuzz]", list(...))), call. = FALSE)
+fuzz_error <- function(..., from = "fuzz") {
+  stop(do.call(paste, c(sprintf("[%s]", from), list(...))), call. = FALSE)
 }
 
 #' @title Check that a function can be fuzzed

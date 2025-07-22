@@ -114,3 +114,23 @@ test_that("self fuzz", {
                  "You didn't get caught by the fuzz!")
   })
 })
+
+test_that("get_exported_functions", {
+  testthat::skip_on_cran()
+
+  expect_error(get_exported_functions(),
+               "[get_exported_functions] 'package' should be of class character",
+               fixed = TRUE)
+  expect_error(get_exported_functions(NA),
+               "'package' should be of class character")
+  expect_error(get_exported_functions("CBTF", NA),
+               "'ignore.names' should be of class character")
+
+  funs <- get_exported_functions("CBTF")
+  expect_type(funs,
+              "character")
+  expect_equal(as.character(funs),
+               c("fuzz", "get_exported_functions"))
+  expect_equal(attr(funs, "package"),
+               "CBTF")
+})

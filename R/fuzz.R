@@ -29,6 +29,9 @@
 #'
 #' @export
 get_exported_functions <- function(package, ignore.names = NULL) {
+  validate_class(package, "character", from = "get_exported_functions")
+  if (!is.null(ignore.names))
+    validate_class(ignore.names, "character", from = "get_exported_functions")
   funs <- sort(getNamespaceExports(package))
   funs <- grep(".__", funs, fixed = TRUE, invert = TRUE, value = TRUE)
   funs <- setdiff(funs, ignore.names)
