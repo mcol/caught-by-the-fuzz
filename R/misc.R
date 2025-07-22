@@ -38,21 +38,6 @@ validate_class <- function(arg, classes, from = "fuzz") {
   }
 }
 
-#' @title Validate that an argument is not missing
-#'
-#' @param arg Argument to validate.
-#'
-#' @return
-#' Nothing in case of success, otherwise an error is thrown.
-#'
-#' @noRd
-validate_not_missing <- function(arg) {
-  if (missing(arg)) {
-    name <- sprintf("'%s'", all.vars(match.call())[1])
-    fuzz_error(name, "must be specified")
-  }
-}
-
 #' @title Stop with an error message
 #'
 #' @param ... Strings that are joined together in the error message.
