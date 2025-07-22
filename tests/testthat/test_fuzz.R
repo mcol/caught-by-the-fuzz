@@ -73,23 +73,21 @@ test_that("check classes returned", {
   testthat::skip_on_cran()
 
   SW({
-  expect_what(fuzz("list", alist(NULL)),
+  expect_what(fuzz("list", list(NULL)),
               "NULL")
-  expect_what(fuzz("list", alist(NA)),
+  expect_what(fuzz("list", list(NA)),
               "NA")
-  expect_what(fuzz("list", alist(data.frame())),
+  expect_what(fuzz("list", list(`data.frame()` = data.frame())),
               "data.frame()")
-  expect_what(fuzz("list", alist(list())),
+  expect_what(fuzz("list", list(list())),
               "list()")
-  expect_what(fuzz("list", alist(1:3)),
+  expect_what(fuzz("list", list(1:3)),
               "1:3")
-  expect_what(fuzz("list", alist(letters)),
+  expect_what(fuzz("list", list(letters = letters)),
               "letters")
-
-  ## TODO: this seems unfortunate, could it be made to return `letters`?
   what <- letters
-  expect_what(fuzz("list", alist(what)),
-              "what")
+  expect_what(fuzz("list", list(input = what)),
+              "input")
   })
 })
 

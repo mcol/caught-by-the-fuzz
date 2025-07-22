@@ -50,8 +50,9 @@ get_exported_functions <- function(package, ignore.names = NULL) {
 #'        namespace.
 #' @param what A list objects to be passed, one at a time, as first argument
 #'        to each of the functions in `funs`. Ideally, the list should be
-#'        generated with `alist()`, so that each symbol used can be nicely
-#'        reported.
+#'        named, allowing each input tested to be pretty-printed with the name
+#'        provided. If the list is not named, a deparsed representation of the
+#'        input will be displayed, which may look unwieldy in some cases.
 #' @param package A character string specifying the name of the package to
 #'        search for function names. If `NULL` (default), the function will
 #'        first attempt to use the `"package"` attribute of `funs`, and if
@@ -81,9 +82,12 @@ fuzz <- function(funs, what, package = NULL,
   ## loop over the inputs
   runs <- list()
   cli::cli_alert_info("Fuzzing {length(funs)} function{?s} on {length(what)} input{?s}")
+  what.chars <- names(what)
   for (idx in seq_along(what)) {
     ## string representation of the input
-    what.char <- deparse(what[[idx]])[[1]]
+    what.char <- what.chars[idx]
+    if (is.null(what.char))
+      what.char <- deparse(what[[idx]])[[1]]
 
     ## report progress if running interactively
     if (cli::is_dynamic_tty())

@@ -20,8 +20,9 @@ namespace.}
 
 \item{what}{A list objects to be passed, one at a time, as first argument
 to each of the functions in \code{funs}. Ideally, the list should be
-generated with \code{alist()}, so that each symbol used can be nicely
-reported.}
+named, allowing each input tested to be pretty-printed with the name
+provided. If the list is not named, a deparsed representation of the
+input will be displayed, which may look unwieldy in some cases.}
 
 \item{package}{A character string specifying the name of the package to
 search for function names. If \code{NULL} (default), the function will
