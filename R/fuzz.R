@@ -78,14 +78,9 @@ fuzz <- function(funs, what, package = NULL,
     validate_class(package, "character")
   }
 
-  num.inputs <- length(what)
-  if (num.inputs == 0) {
-    fuzz_error("The 'what' list is empty")
-  }
-
   ## loop over the inputs
   runs <- list()
-  cli::cli_alert_info("Fuzzing {length(funs)} function{?s} on {num.inputs} input{?s}")
+  cli::cli_alert_info("Fuzzing {length(funs)} function{?s} on {length(what)} input{?s}")
   for (idx in seq_along(what)) {
     ## string representation of the input
     what.char <- deparse(what[[idx]])[[1]]

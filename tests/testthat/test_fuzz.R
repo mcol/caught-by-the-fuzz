@@ -7,8 +7,12 @@ test_that("input validation", {
                "'funs' should be of class character")
   expect_error(fuzz(what = NA),
                "'funs' should be of class character")
+  expect_error(fuzz(character(0), NULL),
+               "'funs' is empty")
   expect_error(fuzz("list"),
                "'what' should be of class list")
+  expect_error(fuzz("list", list()),
+               "'what' is empty")
 })
 
 test_that("check skipped functions", {
@@ -123,8 +127,12 @@ test_that("get_exported_functions", {
                fixed = TRUE)
   expect_error(get_exported_functions(NA),
                "'package' should be of class character")
+  expect_error(get_exported_functions(character(0)),
+               "'package' is empty")
   expect_error(get_exported_functions("CBTF", NA),
                "'ignore.names' should be of class character")
+  expect_error(get_exported_functions("CBTF", character(0)),
+               "'ignore.names' is empty")
 
   funs <- get_exported_functions("CBTF")
   expect_type(funs,
