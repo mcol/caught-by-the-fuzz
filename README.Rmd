@@ -30,3 +30,11 @@ The first occurrence is a false positive, as the message returned indicates
 that the input was checked and the function returned cleanly. The second case
 instead reveals that the function didn't validate its input: indeed, it
 expected an environment, and used the `$` operation on it without checking.
+
+## Funding
+
+Development of `CBTF` is partially supported through the DFG programme
+"REPLAY: REProducible Luminescence Data AnalYses"
+[No 528704761](https://gepris.dfg.de/gepris/projekt/528704761?language=en)
+led by Dr Sebastian Kreutzer (PI at Heidelberg University, DE) and Dr
+Thomas Kolb (PI at Justus-Liebig-University Giessen, DE).
