@@ -150,6 +150,7 @@ test_that("get_exported_functions", {
                "CBTF")
 
   ## tested with mime 0.13
+  skip_if_not_installed("mime")
   funs <- get_exported_functions("mime")
   expect_equal(as.character(funs),
                c("guess_type", "parse_multipart"))
