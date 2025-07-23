@@ -7,10 +7,28 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-A very simple mechanism to fuzz-test the exported functions of an R
-package. At the moment this is extremely limited: it operates only on
-the first argument and it doesn’t introduce any randomness. However,
-it’s convenient when there are a large number of functions to test.
+The `CBTF` package implementa a very simple mechanism for fuzz-testing
+functions in the public interface of an R package.
+
+Fuzz testing can be used in the first instance to identify functions
+that do not have sufficient argument validation. Besides, fuzz testing
+can identify sets of inputs that, while satisfying the implicit typing
+of a function signature, are problematic inside the function body. These
+often concern presence of missing values, `NULL` entries,
+dimensionality- or sign-related errors.
+
+The core functionality of the package is `fuzz()`, whose aim is to call
+each provided function with a certain input and record the output
+produced. If an error is generated, this is captured and reported to the
+user, unless the error message matches a pattern of whitelisted errors.
+
+The helper function `get_exported_functions()` identifies the functions
+in the public interface of a given package, facilitating the generation
+of the list of functions to be fuzzed.
+
+At the moment this is extremely limited: it operates only on the first
+argument and it doesn’t introduce any randomness. However, it’s
+convenient when there are a large number of functions to test.
 
 ## Usage
 

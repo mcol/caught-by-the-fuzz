@@ -20,8 +20,8 @@
 
 #' CBTF: Caught by the Fuzz! A minimal fuzz-test runner
 #'
-#' This package implements a very simple mechanism to fuzz-test the public
-#' interface of an R package.
+#' This package implements a very simple mechanism for fuzz-testing functions
+#' in the public interface of an R package.
 #'
 #' Fuzz testing can be used in the first instance to identify functions that
 #' do not have sufficient argument validation. Besides, fuzz testing can

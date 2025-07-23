@@ -6,8 +6,8 @@
 \alias{CBTF-package}
 \title{CBTF: Caught by the Fuzz! A minimal fuzz-test runner}
 \description{
-This package implements a very simple mechanism to fuzz-test the public
-interface of an R package.
+This package implements a very simple mechanism for fuzz-testing functions
+in the public interface of an R package.
 }
 \details{
 Fuzz testing can be used in the first instance to identify functions that
