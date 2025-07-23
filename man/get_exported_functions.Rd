@@ -4,13 +4,14 @@
 \alias{get_exported_functions}
 \title{Get the names of the exported functions of a package}
 \usage{
-get_exported_functions(package, ignore.names = NULL)
+get_exported_functions(package, ignore.names = "")
 }
 \arguments{
 \item{package}{Name of the package to fuzz-test.}
 
-\item{ignore.names}{Names of functions to ignore: unless set to \code{NULL}
-(default), these are removed from the names returned.}
+\item{ignore.names}{Names of functions to ignore: these are removed from
+the names returned. This can be helpful, for example, to discard
+function aliases.}
 }
 \value{
 A character vector of the names of the functions exported from the
