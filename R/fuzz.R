@@ -99,6 +99,7 @@ fuzz <- function(funs, what = input_list, package = NULL, listify.what = FALSE,
   ignore.patterns <- paste0(c(ignore.patterns,
                               "is missing, with no default"),
                             collapse = "|")
+  ignore.patterns <- gsub("^\\|", "", ignore.patterns) # remove extra |
 
   ## loop over the inputs
   runs <- list()
