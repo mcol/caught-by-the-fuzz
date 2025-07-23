@@ -148,4 +148,9 @@ test_that("get_exported_functions", {
                c("fuzz", "get_exported_functions"))
   expect_equal(attr(funs, "package"),
                "CBTF")
+
+  ## tested with mime 0.13
+  funs <- get_exported_functions("mime")
+  expect_equal(as.character(funs),
+               c("guess_type", "parse_multipart"))
 })
