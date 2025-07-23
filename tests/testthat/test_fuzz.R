@@ -11,6 +11,8 @@ test_that("input validation", {
                "'funs' is empty")
   expect_error(fuzz("list", list()),
                "'what' is empty")
+  expect_error(fuzz("list", ignore.patterns = TRUE),
+               "'ignore.patterns' should be of class character")
 })
 
 test_that("check skipped functions", {

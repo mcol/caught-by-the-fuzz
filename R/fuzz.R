@@ -61,8 +61,9 @@ get_exported_functions <- function(package, ignore.names = NULL) {
 #'        in its listified version (`FALSE` by default). When set to `TRUE`,
 #'        if `what` is `list(x = x)`, the function will operate as if `what`
 #'        were `list(x = x, "list(x)" = list(x))`, for any input object `x`.
-#' @param ignore.patterns A character string containing a regular expression
-#'        to match the messages to ignore.
+#' @param ignore.patterns One or more strings containing regular expressions
+#'        to match the errors to ignore. The string "is missing, with no
+#'        default" is always ignored.
 #' @param ignore.warnings Whether warnings should be ignored (`FALSE` by
 #'        default).
 #'
@@ -72,7 +73,7 @@ get_exported_functions <- function(package, ignore.names = NULL) {
 #'
 #' @export
 fuzz <- function(funs, what = input_list, package = NULL, listify.what = FALSE,
-                 ignore.patterns = NULL, ignore.warnings = FALSE) {
+                 ignore.patterns = "", ignore.warnings = FALSE) {
 
   ## input validation
   validate_class(funs, "character")
@@ -83,10 +84,16 @@ fuzz <- function(funs, what = input_list, package = NULL, listify.what = FALSE,
     validate_class(package, "character")
   }
   validate_class(listify.what, "logical")
+  validate_class(ignore.patterns, "character")
 
   ## expand the set of inputs with their listified version
   if (listify.what)
     what <- append_listified(what)
+
+  ## join all regular expression patterns
+  ignore.patterns <- paste0(c(ignore.patterns,
+                              "is missing, with no default"),
+                            collapse = "|")
 
   ## loop over the inputs
   runs <- list()
@@ -149,9 +156,6 @@ fuzzer <- function(funs, what, what.char = "", package = NULL,
     function(x) utils::getFromNamespace(x, package)
   }
 
-  ignore.patterns <- paste0(c(ignore.patterns,
-                              "is missing, with no default"),
-                            collapse = "|")
   out.res <- lapply(funs, function(x) {
     data.frame(fun = x, res = "OK", msg = "")
   })
