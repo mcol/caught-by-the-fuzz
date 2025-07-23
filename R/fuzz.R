@@ -50,18 +50,18 @@ get_exported_functions <- function(package, ignore.names = NULL) {
 #' objects specified in `what`.
 #'
 #' @param funs A character vector of function names to test. If a `"package"`
-#'        attribute is set, the functions are loaded directly from the package
-#'        namespace; otherwise, the functions are searched in the global
-#'        namespace.
-#' @param what A list objects to be passed, one at a time, as first argument
-#'        to each of the functions in `funs`. Ideally, the list should be
-#'        named, allowing each input tested to be pretty-printed with the name
-#'        provided. If the list is not named, a deparsed representation of the
-#'        input will be displayed, which may look unwieldy in some cases.
+#'        attribute is set, the functions are loaded from that package's
+#'        namespace; otherwise, they are searched in the global namespace.
+#' @param what A list of objects to be passed, one at a time, as the first
+#'        argument to each function in `funs`. Ideally, the list should be
+#'        named, so that each input tested can be pretty-printed with the
+#'        corresponding name. For unnamed lists, a deparsed representation of
+#'        the inputs will be used, which may appear unwieldy in some cases.
+#'        If nothing is provided, a default set of inputs will be used.
 #' @param package A character string specifying the name of the package to
-#'        search for function names. If `NULL` (default), the function will
-#'        first attempt to use the `"package"` attribute of `funs`, and if
-#'        that is not set, names will be searched in the global namespace.
+#'        search for functions. If `NULL` (default), the function will first
+#'        check the `"package"` attribute of `funs`, and if that is not set,
+#'        names will be searched in the global namespace.
 #' @param listify.what Whether each input in `what` should also be tested
 #'        in its listified version (`FALSE` by default). When set to `TRUE`,
 #'        if `what` is `list(x = x)`, the function will operate as if `what`
@@ -133,7 +133,7 @@ fuzz <- function(funs, what = input_list, package = NULL, listify.what = FALSE,
 #' input, which is passed to each of the functions in `funs`.
 #'
 #' @param funs A character vector of function names to test.
-#' @param what The object to be passed as first argument to each of the
+#' @param what The object to be passed as the first argument to each of the
 #'        functions in `funs`.
 #' @param what.char A string representation of the input in `what`, used for
 #'        pretty-printing the output.

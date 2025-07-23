@@ -15,20 +15,20 @@ fuzz(
 }
 \arguments{
 \item{funs}{A character vector of function names to test. If a \code{"package"}
-attribute is set, the functions are loaded directly from the package
-namespace; otherwise, the functions are searched in the global
-namespace.}
+attribute is set, the functions are loaded from that package's
+namespace; otherwise, they are searched in the global namespace.}
 
-\item{what}{A list objects to be passed, one at a time, as first argument
-to each of the functions in \code{funs}. Ideally, the list should be
-named, allowing each input tested to be pretty-printed with the name
-provided. If the list is not named, a deparsed representation of the
-input will be displayed, which may look unwieldy in some cases.}
+\item{what}{A list of objects to be passed, one at a time, as the first
+argument to each function in \code{funs}. Ideally, the list should be
+named, so that each input tested can be pretty-printed with the
+corresponding name. For unnamed lists, a deparsed representation of
+the inputs will be used, which may appear unwieldy in some cases.
+If nothing is provided, a default set of inputs will be used.}
 
 \item{package}{A character string specifying the name of the package to
-search for function names. If \code{NULL} (default), the function will
-first attempt to use the \code{"package"} attribute of \code{funs}, and if
-that is not set, names will be searched in the global namespace.}
+search for functions. If \code{NULL} (default), the function will first
+check the \code{"package"} attribute of \code{funs}, and if that is not set,
+names will be searched in the global namespace.}
 
 \item{listify.what}{Whether each input in \code{what} should also be tested
 in its listified version (\code{FALSE} by default). When set to \code{TRUE},
