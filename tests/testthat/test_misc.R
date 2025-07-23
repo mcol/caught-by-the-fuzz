@@ -60,3 +60,28 @@ test_that("add_names_to_alist", {
                     "iris" = iris,
                     "matrix(1, 0, 1)" = matrix(1, 0, 1)))
 })
+
+test_that("append_listified", {
+  testthat::skip_on_cran()
+
+  ## list
+  expect_equal(append_listified(list(NA)),
+               list(NA, list(NA)))
+  expect_equal(append_listified(list(list())),
+               list(list(), list(list())))
+  res <- append_listified(list(matrix = matrix()))
+  expect_equal(res,
+               list(matrix = matrix(), "list(matrix)" = list(matrix())))
+  res <- append_listified(list(`NULL` = NULL, `NA` = NA, `0L` = 0L))
+  expect_named(res,
+               c("NULL", "NA", "0L", "list(NULL)", "list(NA)", "list(0L)"))
+  res <- append_listified(list(m0 = matrix(0, 0, 0), m1 = matrix(1, 0, 1)))
+  expect_named(res,
+               c("m0", "m1", "list(m0)", "list(m1)"))
+
+  ## alist
+  expect_equal(append_listified(alist(NA)),
+               list(NA, list(NA)))
+  expect_equal(append_listified(alist(list())),
+               list(quote(list()), list(quote(list()))))
+})

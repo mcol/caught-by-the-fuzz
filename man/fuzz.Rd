@@ -8,6 +8,7 @@ fuzz(
   funs,
   what = input_list,
   package = NULL,
+  listify.what = FALSE,
   ignore.patterns = NULL,
   ignore.warnings = FALSE
 )
@@ -28,6 +29,11 @@ input will be displayed, which may look unwieldy in some cases.}
 search for function names. If \code{NULL} (default), the function will
 first attempt to use the \code{"package"} attribute of \code{funs}, and if
 that is not set, names will be searched in the global namespace.}
+
+\item{listify.what}{Whether each input in \code{what} should also be tested
+in its listified version (\code{FALSE} by default). When set to \code{TRUE},
+if \code{what} is \code{list(x = x)}, the function will operate as if \code{what}
+were \code{list(x = x, "list(x)" = list(x))}, for any input object \code{x}.}
 
 \item{ignore.patterns}{A character string containing a regular expression
 to match the messages to ignore.}

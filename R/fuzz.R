@@ -57,6 +57,10 @@ get_exported_functions <- function(package, ignore.names = NULL) {
 #'        search for function names. If `NULL` (default), the function will
 #'        first attempt to use the `"package"` attribute of `funs`, and if
 #'        that is not set, names will be searched in the global namespace.
+#' @param listify.what Whether each input in `what` should also be tested
+#'        in its listified version (`FALSE` by default). When set to `TRUE`,
+#'        if `what` is `list(x = x)`, the function will operate as if `what`
+#'        were `list(x = x, "list(x)" = list(x))`, for any input object `x`.
 #' @param ignore.patterns A character string containing a regular expression
 #'        to match the messages to ignore.
 #' @param ignore.warnings Whether warnings should be ignored (`FALSE` by
@@ -67,7 +71,7 @@ get_exported_functions <- function(package, ignore.names = NULL) {
 #' functions tested.
 #'
 #' @export
-fuzz <- function(funs, what = input_list, package = NULL,
+fuzz <- function(funs, what = input_list, package = NULL, listify.what = FALSE,
                  ignore.patterns = NULL, ignore.warnings = FALSE) {
 
   ## input validation
@@ -78,6 +82,11 @@ fuzz <- function(funs, what = input_list, package = NULL,
   } else {
     validate_class(package, "character")
   }
+  validate_class(listify.what, "logical")
+
+  ## expand the set of inputs with their listified version
+  if (listify.what)
+    what <- append_listified(what)
 
   ## loop over the inputs
   runs <- list()
