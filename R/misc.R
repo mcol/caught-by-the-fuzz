@@ -148,3 +148,17 @@ contains_readline <- function(expr) {
     any(grepl("^readline", deparse(line)))
   }))
 }
+
+#' Add names to an unnamed list of inputs
+#'
+#' @param what A list of inputs created with alist().
+#'
+#' @return
+#' A named list with its elements evaluated. The names automatically generated
+#' by deparsing the symbols in `what`.
+#'
+#' @noRd
+add_names_to_alist <- function(what) {
+  names(what) <- sapply(what, function(x) deparse(x))
+  lapply(what, eval)
+}

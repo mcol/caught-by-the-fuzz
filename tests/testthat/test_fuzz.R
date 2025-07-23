@@ -9,8 +9,6 @@ test_that("input validation", {
                "'funs' should be of class character")
   expect_error(fuzz(character(0), NULL),
                "'funs' is empty")
-  expect_error(fuzz("list"),
-               "'what' should be of class list")
   expect_error(fuzz("list", list()),
                "'what' is empty")
 })
@@ -67,6 +65,15 @@ test_that("check object returned", {
   })
   expect_equal(res$package,
                "packagename")
+
+  ## test with the default inputs
+  SW({
+  res <- fuzz("list")
+  })
+  expect_length(res$runs,
+                length(input_list))
+  expect_equal(res$package,
+               NA)
 })
 
 test_that("check classes returned", {

@@ -6,7 +6,7 @@
 \usage{
 fuzz(
   funs,
-  what,
+  what = input_list,
   package = NULL,
   ignore.patterns = NULL,
   ignore.warnings = FALSE

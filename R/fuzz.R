@@ -67,7 +67,7 @@ get_exported_functions <- function(package, ignore.names = NULL) {
 #' functions tested.
 #'
 #' @export
-fuzz <- function(funs, what, package = NULL,
+fuzz <- function(funs, what = input_list, package = NULL,
                  ignore.patterns = NULL, ignore.warnings = FALSE) {
 
   ## input validation

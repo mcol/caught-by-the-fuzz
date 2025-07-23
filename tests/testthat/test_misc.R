@@ -49,3 +49,14 @@ test_that("contains_readline", {
   expect_false(contains_readline(fun2))
   expect_false(contains_readline(fun3))
 })
+
+test_that("add_names_to_alist", {
+  testthat::skip_on_cran()
+
+  expect_equal(add_names_to_alist(alist(NA)),
+               list("NA" = NA))
+  expect_equal(add_names_to_alist(alist(12, iris, matrix(1, 0, 1))),
+               list("12" = 12,
+                    "iris" = iris,
+                    "matrix(1, 0, 1)" = matrix(1, 0, 1)))
+})
