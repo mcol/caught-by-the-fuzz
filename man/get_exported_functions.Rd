@@ -4,12 +4,12 @@
 \alias{get_exported_functions}
 \title{Get the names of the exported functions of a package}
 \usage{
-get_exported_functions(package, ignore.names = "")
+get_exported_functions(package, ignore_names = "")
 }
 \arguments{
 \item{package}{Name of the package to fuzz-test.}
 
-\item{ignore.names}{Names of functions to ignore: these are removed from
+\item{ignore_names}{Names of functions to ignore: these are removed from
 the names returned. This can be helpful, for example, to discard
 function aliases.}
 }

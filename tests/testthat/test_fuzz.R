@@ -11,8 +11,8 @@ test_that("input validation", {
                "'funs' is empty")
   expect_error(fuzz("list", list()),
                "'what' is empty")
-  expect_error(fuzz("list", ignore.patterns = TRUE),
-               "'ignore.patterns' should be of class character")
+  expect_error(fuzz("list", ignore_patterns = TRUE),
+               "'ignore_patterns' should be of class character")
 })
 
 test_that("check skipped functions", {
@@ -77,7 +77,7 @@ test_that("check object returned", {
   expect_equal(res$package,
                NA)
   SW({
-  res <- fuzz("list", listify.what = TRUE)
+  res <- fuzz("list", listify_what = TRUE)
   })
   expect_length(res,
                 length(input_list) * 2)
@@ -116,7 +116,7 @@ test_that("fuzzer", {
   expect_equal(attr(res, "what"),
                "")
 
-  res <- fuzzer("list", NULL, what.char = "NA")
+  res <- fuzzer("list", NULL, what_char = "NA")
   expect_equal(attr(res, "what"),
                "NA")
 
@@ -163,9 +163,9 @@ test_that("get_exported_functions", {
   expect_error(get_exported_functions(character(0)),
                "'package' is empty")
   expect_error(get_exported_functions("CBTF", NA),
-               "'ignore.names' should be of class character")
+               "'ignore_names' should be of class character")
   expect_error(get_exported_functions("CBTF", character(0)),
-               "'ignore.names' is empty")
+               "'ignore_names' is empty")
 
   funs <- get_exported_functions("CBTF")
   expect_type(funs,

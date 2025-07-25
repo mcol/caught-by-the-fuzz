@@ -20,7 +20,7 @@
 #' Get the names of the exported functions of a package
 #'
 #' @param package Name of the package to fuzz-test.
-#' @param ignore.names Names of functions to ignore: these are removed from
+#' @param ignore_names Names of functions to ignore: these are removed from
 #'        the names returned. This can be helpful, for example, to discard
 #'        function aliases.
 #'
@@ -29,9 +29,9 @@
 #' requested package, with the `"package"` attribute set.
 #'
 #' @export
-get_exported_functions <- function(package, ignore.names = "") {
+get_exported_functions <- function(package, ignore_names = "") {
   validate_class(package, "character", from = "get_exported_functions")
-  validate_class(ignore.names, "character", from = "get_exported_functions")
+  validate_class(ignore_names, "character", from = "get_exported_functions")
   funs <- sort(getNamespaceExports(package))
   funs <- grep(".__", funs, fixed = TRUE, invert = TRUE, value = TRUE)
 
@@ -39,7 +39,7 @@ get_exported_functions <- function(package, ignore.names = "") {
   keep.idx <- sapply(funs, function(x) {
     is.function(utils::getFromNamespace(x, package))
   })
-  funs <- setdiff(funs[keep.idx], ignore.names)
+  funs <- setdiff(funs[keep.idx], ignore_names)
   attr(funs, "package") <- package
   return(funs)
 }
@@ -62,14 +62,14 @@ get_exported_functions <- function(package, ignore.names = "") {
 #'        search for functions. If `NULL` (default), the function will first
 #'        check the `"package"` attribute of `funs`, and if that is not set,
 #'        names will be searched in the global namespace.
-#' @param listify.what Whether each input in `what` should also be tested
+#' @param listify_what Whether each input in `what` should also be tested
 #'        in its listified version (`FALSE` by default). When set to `TRUE`,
 #'        if `what` is `list(x = x)`, the function will operate as if `what`
 #'        were `list(x = x, "list(x)" = list(x))`, for any input object `x`.
-#' @param ignore.patterns One or more strings containing regular expressions
+#' @param ignore_patterns One or more strings containing regular expressions
 #'        to match the errors to ignore. The string "is missing, with no
 #'        default" is always ignored.
-#' @param ignore.warnings Whether warnings should be ignored (`FALSE` by
+#' @param ignore_warnings Whether warnings should be ignored (`FALSE` by
 #'        default).
 #'
 #' @return
@@ -77,8 +77,8 @@ get_exported_functions <- function(package, ignore.names = "") {
 #' functions tested.
 #'
 #' @export
-fuzz <- function(funs, what = input_list, package = NULL, listify.what = FALSE,
-                 ignore.patterns = "", ignore.warnings = FALSE) {
+fuzz <- function(funs, what = input_list, package = NULL, listify_what = FALSE,
+                 ignore_patterns = "", ignore_warnings = FALSE) {
 
   ## input validation
   validate_class(funs, "character")
@@ -88,18 +88,18 @@ fuzz <- function(funs, what = input_list, package = NULL, listify.what = FALSE,
   } else {
     validate_class(package, "character")
   }
-  validate_class(listify.what, "logical")
-  validate_class(ignore.patterns, "character")
+  validate_class(listify_what, "logical")
+  validate_class(ignore_patterns, "character")
 
   ## expand the set of inputs with their listified version
-  if (listify.what)
+  if (listify_what)
     what <- append_listified(what)
 
   ## join all regular expression patterns
-  ignore.patterns <- paste0(c(ignore.patterns,
+  ignore_patterns <- paste0(c(ignore_patterns,
                               "is missing, with no default"),
                             collapse = "|")
-  ignore.patterns <- gsub("^\\|", "", ignore.patterns) # remove extra |
+  ignore_patterns <- gsub("^\\|", "", ignore_patterns) # remove extra |
 
   ## loop over the inputs
   runs <- list()
@@ -117,7 +117,7 @@ fuzz <- function(funs, what = input_list, package = NULL, listify.what = FALSE,
 
     ## fuzz this input
     runs[[idx]] <- fuzzer(funs, what[[idx]], what.char, package,
-                          ignore.patterns, ignore.warnings)
+                          ignore_patterns, ignore_warnings)
   }
   cli::cli_progress_done()
 
@@ -135,13 +135,13 @@ fuzz <- function(funs, what = input_list, package = NULL, listify.what = FALSE,
 #' @param funs A character vector of function names to test.
 #' @param what The object to be passed as the first argument to each of the
 #'        functions in `funs`.
-#' @param what.char A string representation of the input in `what`, used for
+#' @param what_char A string representation of the input in `what`, used for
 #'        pretty-printing the output.
 #' @param package A character string specifying the name of the package to
 #'        search for function names.
-#' @param ignore.patterns A character string containing a regular expression
+#' @param ignore_patterns A character string containing a regular expression
 #'        to match the messages to ignore.
-#' @param ignore.warnings Whether warnings should be ignored (`FALSE` by
+#' @param ignore_warnings Whether warnings should be ignored (`FALSE` by
 #'        default).
 #'
 #' @return
@@ -150,9 +150,9 @@ fuzz <- function(funs, what = input_list, package = NULL, listify.what = FALSE,
 #' tested.
 #'
 #' @noRd
-fuzzer <- function(funs, what, what.char = "", package = NULL,
-                   ignore.patterns = "is missing, with no default",
-                   ignore.warnings = FALSE) {
+fuzzer <- function(funs, what, what_char = "", package = NULL,
+                   ignore_patterns = "is missing, with no default",
+                   ignore_warnings = FALSE) {
   report <- function(label, msg) {
     out.res[[idx]]["res"] <<- label
     out.res[[idx]]["msg"] <<- gsub("\\n", " ", msg) # shorten multiline messages
@@ -169,7 +169,7 @@ fuzzer <- function(funs, what, what.char = "", package = NULL,
 
   ## loop over the functions to fuzz
   cli::cli_progress_bar(paste(cli::col_br_blue("\U2139"), # ℹ
-                              "Fuzzing input:", what.char),
+                              "Fuzzing input:", what_char),
                         total = length(funs))
   for (idx in seq_along(funs)) {
     f <- funs[idx]
@@ -184,14 +184,14 @@ fuzzer <- function(funs, what, what.char = "", package = NULL,
     tryCatch(utils::capture.output(suppressMessages(fun(what))),
              error = function(e) {
                if (!grepl(f, e) &&
-                   !grepl(ignore.patterns, e)) {
+                   !grepl(ignore_patterns, e)) {
                  report("FAIL", e$message)
                }
              },
              warning = function(w) {
-               if (!ignore.warnings &&
+               if (!ignore_warnings &&
                    !grepl(f, w) &&
-                   !grepl(ignore.patterns, w)) {
+                   !grepl(ignore_patterns, w)) {
                  report("WARN", w$message)
                }
              })
@@ -200,5 +200,5 @@ fuzzer <- function(funs, what, what.char = "", package = NULL,
 
   ## transform results to a data frame
   structure(as.data.frame(do.call(rbind, out.res)),
-            what = what.char)
+            what = what_char)
 }

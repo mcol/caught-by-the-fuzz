@@ -47,7 +47,7 @@ summary.cbtf <- function(object, ...) {
 #' Print the results from a fuzz run
 #'
 #' @param x An object of class `cbtf`.
-#' @param show.all Whether all results should be printed. By default (`FALSE`),
+#' @param show_all Whether all results should be printed. By default (`FALSE`),
 #'        only the functions that reported an error or a warning are printed.
 #'        If `TRUE`, all functions tested are printed, including those that
 #'        were skipped.
@@ -55,10 +55,10 @@ summary.cbtf <- function(object, ...) {
 #'        These are currently ignored.
 #'
 #' @export
-print.cbtf <- function(x, show.all = FALSE, ...) {
+print.cbtf <- function(x, show_all = FALSE, ...) {
   summary.stats <- compute_summary_stats(x)
   for (run in x$runs) {
-    if (!show.all)
+    if (!show_all)
       run <- run[run$res %in% c("FAIL", "WARN"), ]
     if (nrow(run) > 0) {
       cli::cli_h3(paste("Test input:", cli::style_bold(attributes(run)$what)))

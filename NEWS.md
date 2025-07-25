@@ -9,7 +9,7 @@
 - Make the `what` argument to `fuzz()` accept a list of inputs, so that
   the function can test multiple inputs in the same run.
 - Add a default list of inputs to `fuzz()`.
-- Add the `listify.what` argument to `fuzz()` so that each input in `what`
+- Add the `listify_what` argument to `fuzz()` so that each input in `what`
   is also tested in its listified version.
 - Provide the S3 method for `length()`.
 - Add a column with the inputs tested to the data frame produced by summary().

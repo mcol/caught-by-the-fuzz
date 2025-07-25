@@ -4,12 +4,12 @@
 \alias{print.cbtf}
 \title{Print the results from a fuzz run}
 \usage{
-\method{print}{cbtf}(x, show.all = FALSE, ...)
+\method{print}{cbtf}(x, show_all = FALSE, ...)
 }
 \arguments{
 \item{x}{An object of class \code{cbtf}.}
 
-\item{show.all}{Whether all results should be printed. By default (\code{FALSE}),
+\item{show_all}{Whether all results should be printed. By default (\code{FALSE}),
 only the functions that reported an error or a warning are printed.
 If \code{TRUE}, all functions tested are printed, including those that
 were skipped.}

@@ -8,9 +8,9 @@ fuzz(
   funs,
   what = input_list,
   package = NULL,
-  listify.what = FALSE,
-  ignore.patterns = "",
-  ignore.warnings = FALSE
+  listify_what = FALSE,
+  ignore_patterns = "",
+  ignore_warnings = FALSE
 )
 }
 \arguments{
@@ -30,16 +30,16 @@ search for functions. If \code{NULL} (default), the function will first
 check the \code{"package"} attribute of \code{funs}, and if that is not set,
 names will be searched in the global namespace.}
 
-\item{listify.what}{Whether each input in \code{what} should also be tested
+\item{listify_what}{Whether each input in \code{what} should also be tested
 in its listified version (\code{FALSE} by default). When set to \code{TRUE},
 if \code{what} is \code{list(x = x)}, the function will operate as if \code{what}
 were \code{list(x = x, "list(x)" = list(x))}, for any input object \code{x}.}
 
-\item{ignore.patterns}{One or more strings containing regular expressions
+\item{ignore_patterns}{One or more strings containing regular expressions
 to match the errors to ignore. The string "is missing, with no
 default" is always ignored.}
 
-\item{ignore.warnings}{Whether warnings should be ignored (\code{FALSE} by
+\item{ignore_warnings}{Whether warnings should be ignored (\code{FALSE} by
 default).}
 }
 \value{
