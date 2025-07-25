@@ -61,7 +61,7 @@ print.cbtf <- function(x, show.all = FALSE, ...) {
     if (!show.all)
       run <- run[run$res %in% c("FAIL", "WARN"), ]
     if (nrow(run) > 0) {
-      cli::cli_h3(paste("Test input:", attributes(run)$what))
+      cli::cli_h3(paste("Test input:", cli::style_bold(attributes(run)$what)))
       max.name <- max(c(0, nchar(run$fun))) + 1
       for (idx in seq_len(nrow(run))) {
         row <- run[idx, ]
