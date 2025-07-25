@@ -13,6 +13,7 @@ Imports:
     cli (>= 3.6.5),
 Suggests:
     testthat (>= 3.2.3),
+    withr (>= 3.0.2),
 License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
