@@ -113,7 +113,7 @@ fuzz <- function(funs, what = input_list, package = NULL, listify.what = FALSE,
 
     ## report progress if running interactively
     if (cli::is_dynamic_tty())
-      cli::cli_progress_step(paste("Fuzzing input:", what.char))
+      cli::cli_progress_step(paste("Fuzzing input:", what.char)) # nocov
 
     ## fuzz this input
     runs[[idx]] <- fuzzer(funs, what[[idx]], what.char, package,

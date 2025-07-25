@@ -76,6 +76,11 @@ test_that("check object returned", {
                 length(input_list))
   expect_equal(res$package,
                NA)
+  SW({
+  res <- fuzz("list", listify.what = TRUE)
+  })
+  expect_length(res,
+                length(input_list) * 2)
 })
 
 test_that("check classes returned", {
@@ -106,16 +111,32 @@ test_that("fuzzer", {
   res <- fuzzer("list", NULL)
   expect_s3_class(res,
                   "data.frame")
+  expect_equal(res$res,
+               "OK")
   expect_equal(attr(res, "what"),
                "")
+
   res <- fuzzer("list", NULL, what.char = "NA")
   expect_equal(attr(res, "what"),
                "NA")
+
+  res <- fuzzer("ls", NA)
+  expect_equal(res$res,
+               "FAIL")
+  expect_equal(res$msg,
+               "invalid object for 'as.environment'")
   res <- fuzzer("median", letters)
   expect_equal(res$res,
                "WARN")
   expect_equal(res$msg,
                "argument is not numeric or logical: returning NA")
+
+  ## this passes because the warning message contains "mean.default"
+  res <- fuzzer("mean", letters)
+  expect_equal(res$res,
+               "OK")
+  expect_equal(res$msg,
+               "")
 })
 
 test_that("self fuzz", {
