@@ -29,7 +29,8 @@
 #' @noRd
 validate_class <- function(arg, classes, from = "fuzz") {
   name <- sprintf("'%s'", all.vars(match.call())[1])
-  if (missing(arg) || sum(inherits(arg, classes)) == 0L) {
+  if (missing(arg) || sum(inherits(arg, classes)) == 0L ||
+      (!is.list(arg) && length(arg) == 1 && is.na(arg))) {
     fuzz_error(name, "should be of class", paste(classes, collapse = ", "),
                from = from)
   }
