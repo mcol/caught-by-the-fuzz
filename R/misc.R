@@ -167,12 +167,7 @@ add_names_to_alist <- function(what) {
 #'
 #' @noRd
 append_listified <- function(input) {
-  transformed <- lapply(input, function(x) {
-    ## if (inherits(x, "list"))
-    ##   x <- list(x) ## otherwise if `x` is `list()`, the following line will leave it unchanged
-    ## as.call(c(as.name("list"), x))
-    list(x)
-  })
+  transformed <- lapply(input, list)
   if (any(nzchar(names(transformed))))
     names(transformed) <- sprintf("list(%s)", names(transformed))
   c(input, transformed)
