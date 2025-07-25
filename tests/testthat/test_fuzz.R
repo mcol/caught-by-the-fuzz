@@ -111,6 +111,11 @@ test_that("fuzzer", {
   res <- fuzzer("list", NULL, what.char = "NA")
   expect_equal(attr(res, "what"),
                "NA")
+  res <- fuzzer("median", letters)
+  expect_equal(res$res,
+               "WARN")
+  expect_equal(res$msg,
+               "argument is not numeric or logical: returning NA")
 })
 
 test_that("self fuzz", {

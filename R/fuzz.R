@@ -151,7 +151,8 @@ fuzz <- function(funs, what = input_list, package = NULL, listify.what = FALSE,
 #'
 #' @noRd
 fuzzer <- function(funs, what, what.char = "", package = NULL,
-                   ignore.patterns = NULL, ignore.warnings = FALSE) {
+                   ignore.patterns = "is missing, with no default",
+                   ignore.warnings = FALSE) {
   report <- function(label, msg) {
     out.res[[idx]]["res"] <<- label
     out.res[[idx]]["msg"] <<- gsub("\\n", " ", msg) # shorten multiline messages
