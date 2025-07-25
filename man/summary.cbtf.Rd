@@ -15,6 +15,7 @@ These are currently ignored.}
 \value{
 A data frame with the following columns is returned invisibly:
 \item{fun}{The names of the function tested.}
+\item{what}{The inputs tested.}
 \item{res}{One of "OK", "FAIL", "WARN" or "SKIP" for each function
 tested.}
 \item{msg}{The message received in case of error, warning or skip,

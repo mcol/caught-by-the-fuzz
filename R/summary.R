@@ -28,6 +28,7 @@
 #' @return
 #' A data frame with the following columns is returned invisibly:
 #' \item{fun}{The names of the function tested.}
+#' \item{what}{The inputs tested.}
 #' \item{res}{One of "OK", "FAIL", "WARN" or "SKIP" for each function
 #'       tested.}
 #' \item{msg}{The message received in case of error, warning or skip,
@@ -38,7 +39,9 @@ summary.cbtf <- function(object, ...) {
   cli::cli_text("Fuzzed {nrow(object$runs[[1]])} function{?s} ",
                 "on {length(object$runs)} input{?s}: ",
                 compute_summary_stats(object))
-  invisible(as.data.frame(do.call(rbind, object$runs)))
+  df <- cbind(do.call(rbind, object$runs),
+              what = sapply(object$runs, function(x) attr(x, "what")))
+  invisible(df[, c("fun", "what", "res", "msg")])
 }
 
 #' Print the results from a fuzz run
