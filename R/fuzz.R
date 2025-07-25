@@ -103,7 +103,8 @@ fuzz <- function(funs, what = input_list, package = NULL, listify_what = FALSE,
 
   ## loop over the inputs
   runs <- list()
-  cli::cli_alert_info("Fuzzing {length(funs)} function{?s} on {length(what)} input{?s}")
+  cli::cli_alert_info(c("Fuzzing {length(funs)} function{?s} ",
+                        "on {length(what)} input{?s}"))
   what.chars <- names(what)
   for (idx in seq_along(what)) {
     ## string representation of the input

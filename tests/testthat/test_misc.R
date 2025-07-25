@@ -33,7 +33,7 @@ test_that("contains_readline", {
   fun1 <- function() readline("Prompt")
   fun2 <- function() input <- readline("Prompt")
   fun3 <- function() if (TRUE) input <- readline("Prompt")
-  fun4 <- function() if (TRUE) while(TRUE) input <- readline("Prompt")
+  fun4 <- function() if (TRUE) while (TRUE) input <- readline("Prompt")
 
   expect_true(contains_readline(fun1))
   expect_true(contains_readline(fun2))
