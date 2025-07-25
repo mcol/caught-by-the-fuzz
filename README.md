@@ -35,23 +35,84 @@ convenient when there are a large number of functions to test.
 ``` r
 library(CBTF)
 funs <- get_exported_functions("mime")
-fuzz(funs, list(TRUE))
+fuzz(funs, what = list(TRUE))
 ```
 
-    ## ℹ Fuzzing 3 functions on 1 input
+    ## ℹ Fuzzing 2 functions on 1 input
     ## ✖  🚨   CAUGHT BY THE FUZZ!   🚨
     ## 
     ## ── Test input: TRUE
     ##       guess_type  FAIL  a character vector argument expected
     ##  parse_multipart  FAIL  $ operator is invalid for atomic vectors
     ## 
-    ##  [ FAIL 2 | WARN 0 | SKIP 1 | OK 0 ]
+    ##  [ FAIL 2 | WARN 0 | SKIP 0 | OK 0 ]
 
 The first occurrence is a false positive, as the message returned
 indicates that the input was checked and the function returned cleanly.
 The second case instead reveals that the function didn’t validate its
 input: indeed, it expected an environment, and used the `$` operation on
 it without checking.
+
+## Advanced uses
+
+### Better-looking output
+
+When the inputs contains complex structures, it is better to provide a
+named list to the `what` argument of `fuzz()`: these names will be used
+instead of relying on deparsing of the input, which may be poor.
+
+For example, compare this:
+
+``` r
+fuzz(funs, what = list(letters))
+```
+
+    ## ℹ Fuzzing 2 functions on 1 input
+    ## ✖  🚨   CAUGHT BY THE FUZZ!   🚨
+    ## 
+    ## ── Test input: c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l",
+    ##  parse_multipart  FAIL  $ operator is invalid for atomic vectors
+    ## 
+    ##  [ FAIL 1 | WARN 0 | SKIP 0 | OK 1 ]
+
+to this:
+
+``` r
+fuzz(funs, what = list(letters = letters))
+```
+
+    ## ℹ Fuzzing 2 functions on 1 input
+    ## ✖  🚨   CAUGHT BY THE FUZZ!   🚨
+    ## 
+    ## ── Test input: letters
+    ##  parse_multipart  FAIL  $ operator is invalid for atomic vectors
+    ## 
+    ##  [ FAIL 1 | WARN 0 | SKIP 0 | OK 1 ]
+
+### Fuzzing for arguments other than the first
+
+At the moment, the only way to fuzz an argument other than the first is
+by currying the function, ensuring that the preceding arguments before
+are filled in.
+
+For example, to fuzz the `nrow` argument of `matrix()`, we could do the
+following:
+
+``` r
+curried.matrix <- function(nrow) matrix(1:10, nrow = nrow)
+fuzz("curried.matrix", what = list(NA, NULL))
+```
+
+    ## ℹ Fuzzing 1 function on 2 inputs
+    ## ✖  🚨   CAUGHT BY THE FUZZ!   🚨
+    ## 
+    ## ── Test input: NA
+    ##  curried.matrix  FAIL  invalid 'nrow' value (too large or NA)
+    ## 
+    ## ── Test input: NULL
+    ##  curried.matrix  FAIL  non-numeric matrix extent
+    ## 
+    ##  [ FAIL 2 | WARN 0 | SKIP 0 | OK 0 ]
 
 ## Funding
 

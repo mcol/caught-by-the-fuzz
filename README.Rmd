@@ -41,13 +41,44 @@ withr::local_envvar(c(R_CLI_DYNAMIC="FALSE"))
 ```{r}
 library(CBTF)
 funs <- get_exported_functions("mime")
-fuzz(funs, list(TRUE))
+fuzz(funs, what = list(TRUE))
 ```
 
 The first occurrence is a false positive, as the message returned indicates
 that the input was checked and the function returned cleanly. The second case
 instead reveals that the function didn't validate its input: indeed, it
 expected an environment, and used the `$` operation on it without checking.
+
+## Advanced uses
+
+### Better-looking output
+
+When the inputs contains complex structures, it is better to provide a named
+list to the `what` argument of `fuzz()`: these names will be used instead of
+relying on deparsing of the input, which may be poor.
+
+For example, compare this:
+```{r}
+fuzz(funs, what = list(letters))
+```
+to this:
+```{r}
+fuzz(funs, what = list(letters = letters))
+```
+
+### Fuzzing for arguments other than the first
+
+At the moment, the only way to fuzz an argument other than the first is by
+currying the function, ensuring that the preceding arguments before are
+filled in.
+
+For example, to fuzz the `nrow` argument of `matrix()`, we could do the
+following:
+
+```{r}
+curried.matrix <- function(nrow) matrix(1:10, nrow = nrow)
+fuzz("curried.matrix", what = list(NA, NULL))
+```
 
 ## Funding
 
