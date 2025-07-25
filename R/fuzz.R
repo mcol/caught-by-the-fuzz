@@ -86,11 +86,11 @@ fuzz <- function(funs, what = input_list, package = NULL, listify_what = FALSE,
   if (is.null(package)) {
     package <- attr(funs, "package")
   } else {
-    validate_class(package, "character")
+    validate_class(package, "character", scalar = TRUE)
   }
-  validate_class(listify_what, "logical")
+  validate_class(listify_what, "logical", scalar = TRUE)
   validate_class(ignore_patterns, "character")
-  validate_class(ignore_warnings, "logical")
+  validate_class(ignore_warnings, "logical", scalar = TRUE)
 
   ## expand the set of inputs with their listified version
   if (listify_what)

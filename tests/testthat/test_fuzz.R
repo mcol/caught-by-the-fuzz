@@ -11,12 +11,18 @@ test_that("input validation", {
                "'funs' is empty")
   expect_error(fuzz("list", list()),
                "'what' is empty")
+  expect_error(fuzz("list", package = letters),
+               "'package' should be a character scalar")
   expect_error(fuzz("list", listify_what = NULL),
                "'listify_what' should be of class logical")
+  expect_error(fuzz("list", listify_what = c(TRUE, FALSE)),
+               "'listify_what' should be a logical scalar")
   expect_error(fuzz("list", ignore_patterns = TRUE),
                "'ignore_patterns' should be of class character")
   expect_error(fuzz("list", list(NA), ignore_warnings = NA),
                "'ignore_warnings' should be of class logical")
+  expect_error(fuzz("list", list(NA), ignore_warnings = c(TRUE, FALSE)),
+               "'ignore_warnings' should be a logical scalar")
 })
 
 test_that("check skipped functions", {
