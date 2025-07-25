@@ -47,7 +47,7 @@ test_that("check object returned", {
                   "cbtf")
   expect_named(res,
                c("runs", "package"))
-  expect_length(res$runs,
+  expect_length(res,
                 1)
   expect_s3_class(res$runs[[1]],
                   "data.frame")
@@ -72,7 +72,7 @@ test_that("check object returned", {
   SW({
   res <- fuzz("list")
   })
-  expect_length(res$runs,
+  expect_length(res,
                 length(input_list))
   expect_equal(res$package,
                NA)

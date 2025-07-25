@@ -11,6 +11,7 @@
 - Add a default list of inputs to `fuzz()`.
 - Add the `listify.what` argument to `fuzz()` so that each input in `what`
   is also tested in its listified version.
+- Provide the S3 method for `length()`.
 
 # CBTF 0.2.0 (2025-07-16)
 

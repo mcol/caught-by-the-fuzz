@@ -69,3 +69,15 @@ print.cbtf <- function(x, show.all = FALSE, ...) {
   }
   cat("\n", summary.stats, "\n")
 }
+
+#' Compute the number of inputs tested
+#'
+#' @param x An object of class `cbtf`.
+#'
+#' @return
+#' An integer corresponding to the number of inputs tested in a run.
+#'
+#' @export
+length.cbtf <- function(x) {
+  length(x$runs)
+}
