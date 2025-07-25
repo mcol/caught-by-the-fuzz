@@ -99,6 +99,8 @@ test_that("check classes returned", {
               "1:3")
   expect_what(fuzz("list", list(letters = letters)),
               "letters")
+  expect_what(fuzz("list", list(NA, letters = letters)),
+              c("NA", "letters"))
   what <- letters
   expect_what(fuzz("list", list(input = what)),
               "input")

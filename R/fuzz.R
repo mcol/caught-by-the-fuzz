@@ -109,7 +109,7 @@ fuzz <- function(funs, what = input_list, package = NULL, listify_what = FALSE,
   for (idx in seq_along(what)) {
     ## string representation of the input
     what.char <- what.chars[idx]
-    if (is.null(what.char))
+    if (is.null(what.char) || what.char == "")
       what.char <- deparse(what[[idx]])[[1]]
 
     ## report progress if running interactively

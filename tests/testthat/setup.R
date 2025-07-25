@@ -3,7 +3,8 @@ SW <- function(expr) capture.output(suppressMessages(suppressWarnings(expr)))
 
 ## check that the `what` attribute matches the expectation
 expect_what <- function(res, exp) {
-  expect_equal(attr(res$runs[[1]], "what"), exp)
+  expect_equal(sapply(res$runs, function(x) attr(x, "what")),
+               exp)
 }
 
 ## check that the function is skipped for the correct reason
