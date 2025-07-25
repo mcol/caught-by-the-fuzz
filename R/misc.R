@@ -20,7 +20,7 @@
 #' @title Validate that an argument is of the specified class
 #'
 #' @param arg Argument to validate.
-#' @param classes A vector of candidate classes or types.
+#' @param class A character string for the candidate class or type.
 #' @param from Name of the caller function.
 #' @param scalar Whether the argument is valid only if it's a scalar value
 #'        (`FALSE` by default).
@@ -29,15 +29,15 @@
 #' Nothing in case of success, otherwise an error is thrown.
 #'
 #' @noRd
-validate_class <- function(arg, classes, from = "fuzz", scalar = FALSE) {
+validate_class <- function(arg, class, from = "fuzz", scalar = FALSE) {
   name <- sprintf("'%s'", all.vars(match.call())[1])
-  if (missing(arg) || sum(inherits(arg, classes)) == 0L ||
+  if (missing(arg) || sum(inherits(arg, class)) == 0L ||
       (!is.list(arg) && length(arg) == 1 && is.na(arg))) {
-    fuzz_error(name, "should be of class", paste(classes, collapse = ", "),
+    fuzz_error(name, "should be of class", paste(class, collapse = ", "),
                from = from)
   }
   if (scalar && length(arg) > 1)
-    fuzz_error(name, "should be a", classes, "scalar")
+    fuzz_error(name, "should be a", class, "scalar")
   if (length(arg) == 0)
     fuzz_error(name, "is empty", from = from)
 }
