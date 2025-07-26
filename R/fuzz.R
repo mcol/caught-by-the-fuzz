@@ -105,10 +105,15 @@ fuzz <- function(funs, what = input_list, package = NULL, listify_what = FALSE,
                             collapse = "|")
   ignore_patterns <- gsub("^\\|", "", ignore_patterns) # remove extra |
 
-  ## loop over the inputs
-  runs <- list()
+  ## start fuzzing
   cli::cli_alert_info(c("Fuzzing {length(funs)} function{?s} ",
                         "on {length(what)} input{?s}"))
+  if (is.null(package))
+    cli::cli_alert_info(c("Functions will be searched in the global namespace ",
+                          "as 'package' was not specified"))
+
+  ## loop over the inputs
+  runs <- list()
   what.chars <- names(what)
   for (idx in seq_along(what)) {
     ## string representation of the input

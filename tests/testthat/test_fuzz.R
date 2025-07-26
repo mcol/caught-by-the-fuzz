@@ -51,7 +51,8 @@ test_that("check object returned", {
 
   funs <- c("list", "data.frame", "+")
   SW({
-  res <- fuzz(funs, list(NULL))
+  expect_message(res <- fuzz(funs, list(NULL)),
+                 "Functions will be searched in the global namespace")
   })
   expect_s3_class(res,
                   "cbtf")

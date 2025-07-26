@@ -104,6 +104,7 @@ fuzz("curried.matrix", what = list(NA, NULL))
 ```
 
     ## ℹ Fuzzing 1 function on 2 inputs
+    ## ℹ Functions will be searched in the global namespace as 'package' was not specified
     ## ✖  🚨   CAUGHT BY THE FUZZ!   🚨
     ## 
     ## ── Test input: NA
