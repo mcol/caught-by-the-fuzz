@@ -12,3 +12,15 @@ expect_skip_reason <- function(res, reason) {
   expect_equal(paste(res$runs[[1]]$res, res$runs[[1]]$msg),
                paste("SKIP", reason))
 }
+
+## check that fuzzing found no errors
+expect_pass_message <- function(res) {
+  expect_message(print(res),
+                 "You didn't get caught by the fuzz!")
+}
+
+## check that fuzzing found errors
+expect_fail_message <- function(res) {
+  expect_message(print(res),
+                 "CAUGHT BY THE FUZZ!")
+}

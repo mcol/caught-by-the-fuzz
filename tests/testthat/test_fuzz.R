@@ -154,14 +154,11 @@ test_that("fuzzer", {
 test_that("self fuzz", {
   testthat::skip_on_cran()
 
-  pass.msg <- "You didn't get caught by the fuzz!"
   SW({
-  expect_message(expect_output(print(fuzz("fuzz", list(list()))),
-                               "OK 1"),
-                 pass.msg)
-  expect_message(expect_output(print(fuzz("fuzz", list(NULL))),
-                               "OK 1"),
-                 pass.msg)
+  expect_output(expect_pass_message(fuzz("fuzz", list(list()))),
+                "OK 1")
+  expect_output(expect_pass_message(fuzz("fuzz", list(NULL))),
+                "OK 1")
 
   ## fuzz test other arguments by currying the function
   curry_fuzz_for <- function(argname) {
@@ -169,22 +166,17 @@ test_that("self fuzz", {
   }
 
   withr::with_envvar(c(package_arg = curry_fuzz_for("package")),
-                     expect_message(print(fuzz("package_arg")),
-                                    pass.msg))
+                     expect_pass_message(fuzz("package_arg")))
   withr::with_envvar(c(listify_arg = curry_fuzz_for("listify_what")),
-                     expect_message(print(fuzz("listify_arg")),
-                                    pass.msg))
+                     expect_pass_message(fuzz("listify_arg")))
   withr::with_envvar(c(patterns_arg = curry_fuzz_for("ignore_patterns")),
-                     expect_message(print(fuzz("patterns_arg")),
-                                    pass.msg))
+                     expect_pass_message(fuzz("patterns_arg")))
   withr::with_envvar(c(warnings_arg = curry_fuzz_for("ignore_warnings")),
-                     expect_message(print(fuzz("warnings_arg")),
-                                    pass.msg))
+                     expect_pass_message(fuzz("warnings_arg")))
 
   ## as `what` expects a list argument, we can't use curry_fuzz_for()
   withr::with_envvar(c(what_arg = function(arg) fuzz("list", what = list(arg))),
-                     expect_message(print(fuzz("what_arg")),
-                                    pass.msg))
+                     expect_pass_message(fuzz("what_arg")))
   })
 })
 
