@@ -203,6 +203,12 @@ test_that("get_exported_functions", {
   expect_equal(attr(funs, "package"),
                "CBTF")
 
+  SW({
+  expect_pass_message(fuzz("get_exported_functions"))
+  withr::with_envvar(c(package_arg = function(arg) get_exported_functions("CBTF", package = arg)),
+                     expect_pass_message(fuzz("package_arg")))
+  })
+
   ## tested with mime 0.13
   skip_if_not_installed("mime")
   funs <- get_exported_functions("mime")
