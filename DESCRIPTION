@@ -1,21 +1,21 @@
 Package: CBTF
 Type: Package
-Title: Caught by the Fuzz! A minimal fuzz-test runner
+Title: Caught by the Fuzz! - A Minimalistic Fuzz-Test Runner
 Version: 0.2.0.9000
 Date: 2025-07-16
-Authors@R:
-    person("Marco", "Colombo", , "mar.colombo13@gmail.com", role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0001-6672-0623"))
+Authors@R: c(person("Marco", "Colombo",
+                    email = "mar.colombo13@gmail.com", role = c("aut", "cre"),
+                    comment = c(ORCID = "0000-0001-6672-0623")))
 Maintainer: Marco Colombo <mar.colombo13@gmail.com>
 Description: A minimal runner for fuzz-testing functions in the public interface
   of an R package.
 URL: https://mcol.github.io/caught-by-the-fuzz/
 BugReports: https://github.com/mcol/caught-by-the-fuzz/issues
 Imports:
-    cli (>= 3.6.5),
+    cli (>= 3.6.5)
 Suggests:
     testthat (>= 3.2.3),
-    withr (>= 3.0.2),
+    withr (>= 3.0.2)
 License: GPL-3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
