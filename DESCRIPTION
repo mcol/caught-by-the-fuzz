@@ -7,8 +7,10 @@ Authors@R: c(person("Marco", "Colombo",
                     email = "mar.colombo13@gmail.com", role = c("aut", "cre"),
                     comment = c(ORCID = "0000-0001-6672-0623")))
 Maintainer: Marco Colombo <mar.colombo13@gmail.com>
-Description: A minimal runner for fuzz-testing functions in the public interface
-  of an R package.
+Description: A simple runner for fuzz-testing functions in an R package's
+    public interface. Fuzz testing helps identify functions lacking sufficient
+    argument validation, and uncovers problematic inputs that, while valid by
+    function signature, may cause issues within the function body.
 URL: https://mcol.github.io/caught-by-the-fuzz/
 BugReports: https://github.com/mcol/caught-by-the-fuzz/issues
 Imports:

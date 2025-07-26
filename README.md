@@ -7,15 +7,12 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-The `CBTF` package implementa a very simple mechanism for fuzz-testing
+The `CBTF` package implements a very simple mechanism for fuzz-testing
 functions in the public interface of an R package.
 
-Fuzz testing can be used in the first instance to identify functions
-that do not have sufficient argument validation. Besides, fuzz testing
-can identify sets of inputs that, while satisfying the implicit typing
-of a function signature, are problematic inside the function body. These
-often concern presence of missing values, `NULL` entries,
-dimensionality- or sign-related errors.
+Fuzz testing helps identify functions lacking sufficient argument
+validation, and uncovers sets of inputs that, while valid by function
+signature, may cause issues within the function body.
 
 The core functionality of the package is `fuzz()`, whose aim is to call
 each provided function with a certain input and record the output
