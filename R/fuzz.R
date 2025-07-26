@@ -31,9 +31,7 @@
 #' @export
 get_exported_functions <- function(package, ignore_names = "") {
   validate_class(package, "character", from = "get_exported_functions",
-                 scalar = TRUE)
-  if (nchar(package) == 0)
-    fuzz_error("'package'", "is empty", from = "get_exported_functions")
+                 scalar = TRUE, remove_empty = TRUE)
   validate_class(ignore_names, "character", from = "get_exported_functions")
   funs <- sort(getNamespaceExports(package))
   funs <- grep(".__", funs, fixed = TRUE, invert = TRUE, value = TRUE)
@@ -84,7 +82,7 @@ fuzz <- function(funs, what = input_list, package = NULL, listify_what = FALSE,
                  ignore_patterns = "", ignore_warnings = FALSE) {
 
   ## input validation
-  validate_class(funs, "character")
+  validate_class(funs, "character", remove_empty = TRUE)
   validate_class(what, "list")
   if (is.null(package)) {
     package <- attr(funs, "package")
