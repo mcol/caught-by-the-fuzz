@@ -37,9 +37,9 @@ validate_class <- function(arg, class, from = "fuzz", scalar = FALSE) {
                from = from)
   }
   if (scalar && length(arg) > 1)
-    fuzz_error(name, "should be a", class, "scalar")
+    fuzz_error(name, "should be a", class, "scalar", from = from)
   if (length(arg) == 0)
-    fuzz_error(name, "is empty", from = from)
+    fuzz_error(name, "is an empty", class, from = from)
 }
 
 #' @title Stop with an error message

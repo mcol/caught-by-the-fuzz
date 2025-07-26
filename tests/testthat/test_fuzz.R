@@ -8,9 +8,9 @@ test_that("input validation", {
   expect_error(fuzz(what = NA),
                "'funs' should be of class character")
   expect_error(fuzz(character(0), NULL),
-               "'funs' is empty")
+               "'funs' is an empty character")
   expect_error(fuzz("list", list()),
-               "'what' is empty")
+               "'what' is an empty list")
   expect_error(fuzz("list", package = letters),
                "'package' should be a character scalar")
   expect_error(fuzz("list", listify_what = NULL),
@@ -197,11 +197,11 @@ test_that("get_exported_functions", {
   expect_error(get_exported_functions(NA),
                "'package' should be of class character")
   expect_error(get_exported_functions(character(0)),
-               "'package' is empty")
+               "'package' is an empty character")
   expect_error(get_exported_functions("CBTF", NA),
                "'ignore_names' should be of class character")
   expect_error(get_exported_functions("CBTF", character(0)),
-               "'ignore_names' is empty")
+               "'ignore_names' is an empty character")
 
   funs <- get_exported_functions("CBTF")
   expect_type(funs,
