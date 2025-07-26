@@ -1,3 +1,35 @@
+test_that("validate_class", {
+  testthat::skip_on_cran()
+
+  arg <- data.frame()
+  expect_error(validate_class(arg, "character"),
+               "[fuzz] 'arg' should be of class character",
+               fixed = TRUE)
+  expect_error(validate_class(arg, "character", from = "function_name"),
+               "[function_name] 'arg' should be of class character",
+               fixed = TRUE)
+  expect_error(validate_class(arg, "data.frame"),
+               "'arg' is an empty data.frame")
+  expect_error(validate_class(iris, "data.frame", scalar = TRUE),
+               "'iris' should be a data.frame scalar")
+  expect_error(validate_class(letters, "character", scalar = TRUE),
+               "'letters' should be a character scalar")
+  arg <- ""
+  expect_error(validate_class(arg, "character", remove_empty = TRUE),
+               "'arg' is an empty character")
+  arg <- list()
+  expect_error(validate_class(arg, "list", remove_empty = TRUE),
+               "'arg' is an empty list")
+  arg <- list("")
+  expect_error(validate_class(arg, "list", remove_empty = TRUE),
+               "'arg' is an empty list")
+
+  expect_silent(validate_class(iris, "data.frame"))
+  expect_silent(validate_class(iris, "data.frame", remove_empty = TRUE))
+  expect_silent(validate_class("", "character"))
+  expect_silent(validate_class(list(""), "list"))
+})
+
 test_that("fuzz_error", {
   testthat::skip_on_cran()
 
