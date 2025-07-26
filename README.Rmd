@@ -88,4 +88,4 @@ Development of `CBTF` is partially supported through the DFG programme
 led by Dr Sebastian Kreutzer (PI at Heidelberg University, DE) and Dr
 Thomas Kolb (PI at Justus-Liebig-University Giessen, DE).
 Updates on the REPLAY project at large are available at the
-[REPLAY website](https://replay.r-luminescence.org/).
+[REPLAY website](https://r-lum.github.io/REPLAY-website/).

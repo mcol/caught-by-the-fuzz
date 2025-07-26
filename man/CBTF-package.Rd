@@ -29,7 +29,7 @@ the list of functions to be fuzzed.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://mcol.github.io/caught-by-the-fuzz}
+  \item \url{https://mcol.github.io/caught-by-the-fuzz/}
   \item Report bugs at \url{https://github.com/mcol/caught-by-the-fuzz/issues}
 }
 

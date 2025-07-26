@@ -9,7 +9,7 @@ Authors@R:
 Maintainer: Marco Colombo <mar.colombo13@gmail.com>
 Description: A minimal runner for fuzz-testing functions in the public interface
   of an R package.
-URL: https://mcol.github.io/caught-by-the-fuzz
+URL: https://mcol.github.io/caught-by-the-fuzz/
 BugReports: https://github.com/mcol/caught-by-the-fuzz/issues
 Imports:
     cli (>= 3.6.5),
