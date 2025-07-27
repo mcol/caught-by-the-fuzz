@@ -84,14 +84,14 @@ test_that("check object returned", {
   res <- fuzz("list")
   })
   expect_length(res,
-                length(input_list))
+                length(test_inputs()))
   expect_equal(res$package,
                NA)
   SW({
   res <- fuzz("list", listify_what = TRUE)
   })
   expect_length(res,
-                length(input_list) * 2)
+                length(test_inputs()) * 2)
 })
 
 test_that("check classes returned", {
@@ -202,7 +202,9 @@ test_that("get_exported_functions", {
   expect_type(funs,
               "character")
   expect_equal(as.character(funs),
-               c("fuzz", "get_exported_functions"))
+               c("fuzz",
+                 "get_exported_functions",
+                 "test_inputs"))
   expect_equal(attr(funs, "package"),
                "CBTF")
 

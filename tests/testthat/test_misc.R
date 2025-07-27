@@ -82,13 +82,15 @@ test_that("contains_readline", {
   expect_false(contains_readline(fun3))
 })
 
-test_that("add_names_to_alist", {
+test_that("namify", {
   testthat::skip_on_cran()
 
-  expect_equal(add_names_to_alist(alist(NA)),
+  expect_equal(namify(NA),
                list("NA" = NA))
-  expect_equal(add_names_to_alist(alist(12, iris, matrix(1, 0, 1))),
+  expect_equal(namify(12, one = 1, "", iris, matrix(1, 0, 1)),
                list("12" = 12,
+                    "one" = 1,
+                    "\"\"" = "",
                     "iris" = iris,
                     "matrix(1, 0, 1)" = matrix(1, 0, 1)))
 })
