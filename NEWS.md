@@ -1,3 +1,5 @@
+# Current development version
+
 # CBTF 0.3.0 (2025-07-26)
 
 - Warnings containing the name of the function being fuzzed are no longer
