@@ -178,6 +178,12 @@ add_names_to_alist <- function(what) {
 
 #' Append to each input a listified call to that input
 #'
+#' @param input A named list.
+#'
+#' @return
+#' A named list with the original elements followed by their listified
+#' version.
+#'
 #' @noRd
 append_listified <- function(input) {
   transformed <- lapply(input, list)
