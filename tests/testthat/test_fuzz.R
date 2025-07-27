@@ -191,6 +191,8 @@ test_that("get_exported_functions", {
                "'package' should be of class character")
   expect_error(get_exported_functions(character(0)),
                "'package' is an empty character")
+  expect_error(get_exported_functions("like this"),
+               "there is no package called 'like this'")
   expect_error(get_exported_functions("CBTF", NA),
                "'ignore_names' should be of class character")
   expect_error(get_exported_functions("CBTF", character(0)),

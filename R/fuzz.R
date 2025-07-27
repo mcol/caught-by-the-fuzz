@@ -30,10 +30,12 @@
 #'
 #' @export
 get_exported_functions <- function(package, ignore_names = "") {
-  validate_class(package, "character", from = "get_exported_functions",
+  from <- "get_exported_functions"
+  validate_class(package, "character", from = from,
                  scalar = TRUE, remove_empty = TRUE)
-  validate_class(ignore_names, "character", from = "get_exported_functions")
-  funs <- sort(getNamespaceExports(package))
+  validate_class(ignore_names, "character", from = from)
+  funs <- tryCatch(sort(getNamespaceExports(package)),
+                   error = function(e) fuzz_error(e$message, from = from))
   funs <- grep(".__", funs, fixed = TRUE, invert = TRUE, value = TRUE)
 
   ## keep only functions
