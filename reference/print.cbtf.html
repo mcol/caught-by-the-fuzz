@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">CBTF</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,7 +34,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Print the results from a fuzz run</h1>
-      <small class="dont-index">Source: <a href="https://github.com/mcol/caught-by-the-fuzz/blob/main/R/summary.R" class="external-link"><code>R/summary.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/mcol/caught-by-the-fuzz/blob/v0.3.0/R/summary.R" class="external-link"><code>R/summary.R</code></a></small>
       <div class="d-none name"><code>print.cbtf.Rd</code></div>
     </div>
 
@@ -45,7 +45,7 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for class 'cbtf'</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, show.all <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">x</span>, show_all <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -56,7 +56,7 @@
 <dd><p>An object of class <code>cbtf</code>.</p></dd>
 
 
-<dt id="arg-show-all">show.all<a class="anchor" aria-label="anchor" href="#arg-show-all"></a></dt>
+<dt id="arg-show-all">show_all<a class="anchor" aria-label="anchor" href="#arg-show-all"></a></dt>
 <dd><p>Whether all results should be printed. By default (<code>FALSE</code>),
 only the functions that reported an error or a warning are printed.
 If <code>TRUE</code>, all functions tested are printed, including those that
@@ -68,7 +68,24 @@ were skipped.</p></dd>
 These are currently ignored.</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p><code><a href="summary.cbtf.html">summary()</a></code></p></div>
+    </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="fuzz.html">fuzz</a></span><span class="op">(</span>funs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"list"</span>, <span class="st">"matrix"</span>, <span class="st">"mean"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>            what <span class="op">=</span> <span class="fu"><a href="test_inputs.html">test_inputs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"numeric"</span>, <span class="st">"raw"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Fuzzing 3 functions on 8 inputs</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Functions will be searched in the global namespace as 'package' was not specified</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">res</span>, show.all <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span>  🏃 You didn't get caught by the fuzz!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [ FAIL 0 | WARN 0 | SKIP 0 | <span style="color: #00BB00;">OK</span> 24 ] </span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

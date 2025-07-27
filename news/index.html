@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">CBTF</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,9 +34,20 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/mcol/caught-by-the-fuzz/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/mcol/caught-by-the-fuzz/blob/v0.3.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.3.0" id="cbtf-030-2025-07-26">CBTF 0.3.0 (2025-07-26)<a class="anchor" aria-label="anchor" href="#cbtf-030-2025-07-26"></a></h2>
+<ul><li>Warnings containing the name of the function being fuzzed are no longer reported, to make their behaviour consistent with that of errors.</li>
+<li>Add the <code>package</code> argument to <code><a href="../reference/fuzz.html">fuzz()</a></code> as an alternative and simpler way to specify the namespace where function names are searched.</li>
+<li>Don’t consider primitives (such as <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code> or <code>+</code>) to be functions with no arguments (<a href="https://github.com/mcol/caught-by-the-fuzz/issues/5" class="external-link">#5</a>).</li>
+<li>Make the <code>what</code> argument to <code><a href="../reference/fuzz.html">fuzz()</a></code> accept a list of inputs, so that the function can test multiple inputs in the same run.</li>
+<li>Add function <code><a href="../reference/test_inputs.html">test_inputs()</a></code> to return a configurable list of problematic inputs.</li>
+<li>Add the <code>listify_what</code> argument to <code><a href="../reference/fuzz.html">fuzz()</a></code> so that each input in <code>what</code> is also tested in its listified version.</li>
+<li>Provide the S3 method for <code><a href="https://rdrr.io/r/base/length.html" class="external-link">length()</a></code>.</li>
+<li>Make the output from summary() more informative and include a column with the inputs tested in the data frame returned.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.2.0" id="cbtf-020-2025-07-16">CBTF 0.2.0 (2025-07-16)<a class="anchor" aria-label="anchor" href="#cbtf-020-2025-07-16"></a></h2>
 <ul><li>Return an object with the raw results from <code><a href="../reference/fuzz.html">fuzz()</a></code> and provide S3 methods for <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> and <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> (<a href="https://github.com/mcol/caught-by-the-fuzz/issues/1" class="external-link">#1</a>).</li>
