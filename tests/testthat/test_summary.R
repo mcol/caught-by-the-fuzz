@@ -3,8 +3,9 @@ test_that("summary", {
 
   SW({
   res <- fuzz("list", list(NA, c(1, 2, 3)))
-  expect_message(sum <- summary(res),
-                 "Fuzzed 1 function on 2 inputs:")
+  expect_output(expect_message(sum <- summary(res),
+                               "Fuzzed 1 function on 2 inputs:"),
+                "list    0    0    0  2")
   expect_s3_class(sum,
                   "data.frame")
   expect_named(sum,

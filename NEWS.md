@@ -12,7 +12,8 @@
 - Add the `listify_what` argument to `fuzz()` so that each input in `what`
   is also tested in its listified version.
 - Provide the S3 method for `length()`.
-- Add a column with the inputs tested to the data frame produced by summary().
+- Make the output from summary() more informative and include a column with
+  the inputs tested in the data frame returned.
 
 # CBTF 0.2.0 (2025-07-16)
 

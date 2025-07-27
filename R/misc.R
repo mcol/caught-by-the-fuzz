@@ -96,18 +96,22 @@ check_fuzzable <- function(fun, pkg) {
 #' message for the overall success or failure, and returns a summary string.
 #'
 #' @param object An object of class `cbtf`.
+#' @param verbose Whether a message on the overall pass or fail of the fuzz
+#'        run should be printed out (`TRUE` by default).
 #'
 #' @return
 #' A summary results string formatted with ANSI colour codes.
 #'
 #' @noRd
-compute_summary_stats <- function(object) {
+compute_summary_stats <- function(object, verbose = TRUE) {
   results <- unlist(lapply(object$runs, function(x) x$res))
   success <- sum(results %in% c("FAIL", "WARN")) == 0
-  if (success)
-    cli::cli_alert_success(" \U0001F3C3 You didn't get caught by the fuzz!")
-  else
-    cli::cli_alert_danger(" \U0001F6A8   CAUGHT BY THE FUZZ!   \U0001F6A8")
+  if (verbose) {
+    if (success)
+      cli::cli_alert_success(" \U0001F3C3 You didn't get caught by the fuzz!")
+    else
+      cli::cli_alert_danger(" \U0001F6A8   CAUGHT BY THE FUZZ!   \U0001F6A8")
+  }
 
   stats <- as.list(table(results))
   summary.stats <- paste(tocolour("FAIL", sum(stats$FAIL)),

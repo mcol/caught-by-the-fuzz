@@ -36,11 +36,12 @@
 #'
 #' @export
 summary.cbtf <- function(object, ...) {
-  cli::cli_text("Fuzzed {nrow(object$runs[[1]])} function{?s} ",
-                "on {length(object$runs)} input{?s}: ",
-                compute_summary_stats(object))
   df <- cbind(do.call(rbind, object$runs),
               what = sapply(object$runs, function(x) attr(x, "what")))
+  cli::cli_text("Fuzzed {nrow(object$runs[[1]])} function{?s} ",
+                "on {length(object$runs)} input{?s}: ")
+  print(table(df$fun, factor(df$res, levels = c("FAIL", "WARN", "SKIP", "OK"))))
+  cat("\n", compute_summary_stats(object, verbose = FALSE), "\n", sep = "")
   invisible(df[, c("fun", "what", "res", "msg")])
 }
 
