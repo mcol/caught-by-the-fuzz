@@ -20,3 +20,11 @@ requested package, with the \code{"package"} attribute set.
 \description{
 Get the names of the exported functions of a package
 }
+\examples{
+## get the functions in the public interface of this package
+funs <- get_exported_functions("CBTF")
+
+}
+\seealso{
+\code{\link[=fuzz]{fuzz()}}
+}

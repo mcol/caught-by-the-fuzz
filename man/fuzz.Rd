@@ -51,3 +51,17 @@ functions tested.
 This function calls each of the functions it receives with each of the
 objects specified in \code{what}.
 }
+\examples{
+## this should produce no errors
+res <- fuzz(funs = c("list", "matrix", "mean"),
+            what = test_inputs(c("numeric", "raw")))
+summary(res)
+
+## this will catch an error (false positive)
+fuzz(funs = "matrix",  what = test_inputs("scalar"))
+
+}
+\seealso{
+\code{\link[=get_exported_functions]{get_exported_functions()}}, \code{\link[=test_inputs]{test_inputs()}},
+\code{\link[=summary.cbtf]{summary()}}, \code{\link[=print.cbtf]{print()}}
+}

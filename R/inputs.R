@@ -13,12 +13,13 @@
 #' A named list of inputs corresponding to the input classes selected.
 #'
 #' @examples
-#'
 #' ## only the scalar and numeric tests
 #' inputs1 <- test_inputs(c("scalar", "numeric"))
 #'
 #' ## everything but the data, raw and list tests
 #' inputs2 <- test_inputs("all", skip = c("date", "raw", "list"))
+#'
+#' @seealso [fuzz()]
 #'
 #' @export
 test_inputs <- function(use = "all", skip = "") {

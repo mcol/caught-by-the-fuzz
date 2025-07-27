@@ -20,3 +20,12 @@ These are currently ignored.}
 \description{
 Print the results from a fuzz run
 }
+\examples{
+res <- fuzz(funs = c("list", "matrix", "mean"),
+            what = test_inputs(c("numeric", "raw")))
+print(res, show.all = TRUE)
+
+}
+\seealso{
+\code{\link[=summary.cbtf]{summary()}}
+}

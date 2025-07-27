@@ -28,6 +28,12 @@
 #' A character vector of the names of the functions exported from the
 #' requested package, with the `"package"` attribute set.
 #'
+#' @examples
+#' ## get the functions in the public interface of this package
+#' funs <- get_exported_functions("CBTF")
+#'
+#' @seealso [fuzz()]
+#'
 #' @export
 get_exported_functions <- function(package, ignore_names = "") {
   from <- "get_exported_functions"
@@ -79,6 +85,18 @@ get_exported_functions <- function(package, ignore_names = "") {
 #' @return
 #' An object of class `cbtf` that stores the results obtained for each of the
 #' functions tested.
+#'
+#' @examples
+#' ## this should produce no errors
+#' res <- fuzz(funs = c("list", "matrix", "mean"),
+#'             what = test_inputs(c("numeric", "raw")))
+#' summary(res)
+#'
+#' ## this will catch an error (false positive)
+#' fuzz(funs = "matrix",  what = test_inputs("scalar"))
+#'
+#' @seealso [get_exported_functions()], [test_inputs()],
+#' [`summary()`][summary.cbtf], [`print()`][print.cbtf]
 #'
 #' @export
 fuzz <- function(funs, what = test_inputs(),

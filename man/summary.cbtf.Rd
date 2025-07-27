@@ -24,3 +24,12 @@ or an empty string if the function succeeded.}
 \description{
 Generates a data frame of summary results from a single run of \code{\link[=fuzz]{fuzz()}}.
 }
+\examples{
+res <- fuzz(funs = c("list", "matrix", "mean"),
+            what = test_inputs(c("numeric", "raw")))
+summary(res)
+
+}
+\seealso{
+\code{\link[=print.cbtf]{print()}}
+}

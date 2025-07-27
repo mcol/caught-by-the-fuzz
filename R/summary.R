@@ -34,6 +34,13 @@
 #' \item{msg}{The message received in case of error, warning or skip,
 #'       or an empty string if the function succeeded.}
 #'
+#' @examples
+#' res <- fuzz(funs = c("list", "matrix", "mean"),
+#'             what = test_inputs(c("numeric", "raw")))
+#' summary(res)
+#'
+#' @seealso [`print()`][print.cbtf]
+#'
 #' @export
 summary.cbtf <- function(object, ...) {
   df <- cbind(do.call(rbind, object$runs),
@@ -54,6 +61,13 @@ summary.cbtf <- function(object, ...) {
 #'        were skipped.
 #' @param ... Further arguments passed to or from other methods.
 #'        These are currently ignored.
+#'
+#' @examples
+#' res <- fuzz(funs = c("list", "matrix", "mean"),
+#'             what = test_inputs(c("numeric", "raw")))
+#' print(res, show.all = TRUE)
+#'
+#' @seealso [`summary()`][summary.cbtf]
 #'
 #' @export
 print.cbtf <- function(x, show_all = FALSE, ...) {
@@ -80,6 +94,11 @@ print.cbtf <- function(x, show_all = FALSE, ...) {
 #'
 #' @return
 #' An integer corresponding to the number of inputs tested in a run.
+#'
+#' @examples
+#' res <- fuzz(funs = c("list", "matrix", "mean"),
+#'             what = test_inputs(c("numeric", "raw")))
+#' length(res)
 #'
 #' @export
 length.cbtf <- function(x) {

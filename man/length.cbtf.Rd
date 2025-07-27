@@ -15,3 +15,9 @@ An integer corresponding to the number of inputs tested in a run.
 \description{
 Compute the number of inputs tested
 }
+\examples{
+res <- fuzz(funs = c("list", "matrix", "mean"),
+            what = test_inputs(c("numeric", "raw")))
+length(res)
+
+}
