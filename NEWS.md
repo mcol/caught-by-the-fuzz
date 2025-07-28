@@ -1,6 +1,8 @@
 # Current development version
 
-# CBTF 0.3.0 (2025-07-26)
+- Don't crash in `get_exported_functions()` if `getNameSpaceExports()` fails.
+
+# CBTF 0.3.0 (2025-07-27)
 
 - Warnings containing the name of the function being fuzzed are no longer
   reported, to make their behaviour consistent with that of errors.

@@ -46,7 +46,8 @@ get_exported_functions <- function(package, ignore_names = "") {
 
   ## keep only functions
   keep.idx <- sapply(funs, function(x) {
-    is.function(utils::getFromNamespace(x, package))
+    is.function(tryCatch(utils::getFromNamespace(x, package),
+                         error = function(e) FALSE))
   })
   funs <- setdiff(funs[keep.idx], ignore_names)
   attr(funs, "package") <- package
