@@ -78,11 +78,8 @@ print.cbtf <- function(x, show_all = FALSE, ...) {
     if (nrow(run) > 0) {
       cli::cli_h3(paste("Test input:", cli::style_bold(attributes(run)$what)))
       max.name <- max(c(0, nchar(run$fun))) + 1
-      for (idx in seq_len(nrow(run))) {
-        row <- run[idx, ]
-        cat(sprintf("%*s  %s  %s\n",
-                    max.name, row$fun, tocolour(row$res), row$msg))
-      }
+      cat(sprintf("%*s  %14s  %s\n",
+                  max.name, run$fun, tocolour(run$res), run$msg))
     }
   }
   cat("\n", summary.stats, "\n")
