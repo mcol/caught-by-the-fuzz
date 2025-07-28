@@ -1,5 +1,5 @@
 
-# CBTF: Caught by the Fuzz! <a href="https://www.youtube.com/watch?v=uJ-mpul94eo"><img src="man/figures/logo.png" align="right" height="120" /></a>
+# CBTF: Caught by the Fuzz! A minimalistic fuzz-test runner for R<a href="https://www.youtube.com/watch?v=uJ-mpul94eo"><img src="man/figures/logo.png" align="right" height="120" /></a>
 
 <!-- badges: start -->
 
@@ -22,6 +22,10 @@ user, unless the error message matches a pattern of whitelisted errors.
 The helper function `get_exported_functions()` identifies the functions
 in the public interface of a given package, facilitating the generation
 of the list of functions to be fuzzed.
+
+Function `test_inputs()` by default generates a large set of potentially
+problematic inputs, but they can be limited just to the desired classes
+of inputs.
 
 At the moment this is extremely limited: it operates only on the first
 argument and it doesn’t introduce any randomness. However, it’s
