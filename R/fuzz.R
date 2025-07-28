@@ -217,13 +217,17 @@ fuzzer <- function(funs, what, what_char = "", package = NULL,
                if (!grepl(f, e) &&
                    !grepl(ignore_patterns, e)) {
                  report("FAIL", e$message)
+               } else {
+                 report("OK", e$message)
                }
              },
              warning = function(w) {
-               if (!ignore_warnings &&
-                   !grepl(f, w) &&
+               if (ignore_warnings) return()
+               if (!grepl(f, w) &&
                    !grepl(ignore_patterns, w)) {
                  report("WARN", w$message)
+               } else {
+                 report("OK", w$message)
                }
              })
   }

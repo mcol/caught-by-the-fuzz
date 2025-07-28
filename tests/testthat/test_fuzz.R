@@ -68,6 +68,8 @@ test_that("check object returned", {
                length(funs))
   expect_equal(res$runs[[1]]$res,
                c("OK", "OK", "OK"))
+  expect_equal(res$runs[[1]]$msg,
+               c("", "", "invalid argument to unary operator"))
   expect_equal(res$package,
                NA)
 
@@ -149,7 +151,7 @@ test_that("fuzzer", {
   expect_equal(res$res,
                "OK")
   expect_equal(res$msg,
-               "")
+               "argument is not numeric or logical: returning NA")
 })
 
 test_that("self fuzz", {
