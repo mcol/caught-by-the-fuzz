@@ -79,7 +79,7 @@ print.cbtf <- function(x, show_all = FALSE, ...) {
       cli::cli_h3(paste("Test input:", cli::style_bold(attributes(run)$what)))
       max.name <- max(c(0, nchar(run$fun))) + 1
       cat(sprintf("%*s  %14s  %s\n",
-                  max.name, run$fun, tocolour(run$res), run$msg))
+                  max.name, run$fun, tocolour(run$res), run$msg), sep = "")
     }
   }
   cat("\n", summary.stats, "\n")

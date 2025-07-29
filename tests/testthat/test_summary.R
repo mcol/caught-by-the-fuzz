@@ -23,5 +23,8 @@ test_that("print", {
                 "OK 2")
   expect_output(expect_fail_message(fuzz("ls", list(NA, c(1, 2, 3)))),
                 "FAIL 2")
+  res <- fuzz(c("list", "median"), list(NA))
+  expect_output(print(res, show_all = TRUE),
+                "\\n median")
   })
 })
