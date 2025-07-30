@@ -36,7 +36,8 @@
 #' in the public interface of a given package, facilitating the generation of
 #' the list of functions to be fuzzed.
 #'
-#' @author
-#' Marco Colombo \email{mar.colombo13@@gmail.com}
+#' Function [test_inputs()] by default generates a large set of potentially
+#' problematic inputs, but they can be limited just to the desired classes of
+#' inputs.
 #'
 "_PACKAGE"

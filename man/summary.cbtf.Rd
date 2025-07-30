@@ -22,7 +22,8 @@ tested.}
 or an empty string if the function succeeded.}
 }
 \description{
-Generates a data frame of summary results from a single run of \code{\link[=fuzz]{fuzz()}}.
+Generates a data frame of summary results from a run of \code{\link[=fuzz]{fuzz()}} and
+reports some summary statistics.
 }
 \examples{
 res <- fuzz(funs = c("list", "matrix", "mean"),

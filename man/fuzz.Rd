@@ -15,8 +15,8 @@ fuzz(
 }
 \arguments{
 \item{funs}{A character vector of function names to test. If a \code{"package"}
-attribute is set, the functions are loaded from that package's
-namespace; otherwise, they are searched in the global namespace.}
+attribute is set and is no \code{package} argument is provided, functions
+are loaded from the namespace specified in the attribute.}
 
 \item{what}{A list of objects to be passed, one at a time, as the first
 argument to each function in \code{funs}. Ideally, the list should be
@@ -45,17 +45,65 @@ default).}
 }
 \value{
 An object of class \code{cbtf} that stores the results obtained for each of the
-functions tested.
+functions tested. This contains the following fields:
+\itemize{
+\item \code{runs}: a list of data frames, each containing the results of fuzzing
+all the functions in \code{funs} with one of the inputs in \code{what}:
+\itemize{
+\item \verb{$fun}: The name of the function tested.
+\item \verb{$res}: The test result, one of the following:
+\itemize{
+\item OK: either no error or warning was produced (in which case, \verb{$msg}
+is left blank), or it was whitelisted (in which case, the message
+received is stored in \verb{$msg}).
+\item SKIP: no test was run, either because the given name was not
+found, or it didn't correspond to a function, or the function
+didn't accept arguments, or the function contained a call to
+\code{\link[=readline]{readline()}}; the exact reason is stored in \verb{$msg}.
+\item WARN: a warning was thrown for which no whitelisting occurred and
+\code{ignore_warnings = FALSE}; its message is stored in \verb{$msg}.
+\item FAIL: an error was thrown for which no whitelisting occurred; its
+message is stored in \verb{$msg}.
+}
+\item \verb{$msg}: The error or warning message returned, if any, by the
+function.
+\item \verb{attr(*, "what")}: The character representation of the input tested.
+}
+\item \code{package}: a character string that specified the package name where
+the functions were searched, or \code{NA} if none was provided.
+}
 }
 \description{
-This function calls each of the functions it receives with each of the
-objects specified in \code{what}.
+This function calls each of the functions in \code{funs} with each of the
+objects specified in \code{what}, recording if any errors or warnings are
+thrown in the process.
+}
+\details{
+In order to reduce the number of false positive results produced, this
+function applies the following set rules, to establish if an error or
+warning condition should be considered "handled" by the function
+(whitelisting):
+\itemize{
+\item If the name of the function appears in the error or warning message.
+\item If the error or warning message contains the text "is missing, with no
+default", which is produced when a missing argument is used without a
+value being assigned to it.
+\item If the error or warning message contains any of the patterns specified
+in \code{ignore_patterns}.
+\item If a warning is thrown but \code{ignore_warnings = TRUE} is set.
+}
+
+In all whitelisted cases, the result is "OK", and the message that
+was received is stored in the \verb{$msg} field (see the \emph{Value} section).
 }
 \examples{
 ## this should produce no errors
 res <- fuzz(funs = c("list", "matrix", "mean"),
             what = test_inputs(c("numeric", "raw")))
 summary(res)
+
+## display all results even for successful tests
+print(res, show_all = TRUE)
 
 ## this will catch an error (false positive)
 fuzz(funs = "matrix",  what = test_inputs("scalar"))

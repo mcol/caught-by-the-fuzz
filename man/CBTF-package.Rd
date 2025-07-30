@@ -22,6 +22,10 @@ the error message matches a pattern of whitelisted errors.
 The helper function \code{\link[=get_exported_functions]{get_exported_functions()}} identifies the functions
 in the public interface of a given package, facilitating the generation of
 the list of functions to be fuzzed.
+
+Function \code{\link[=test_inputs]{test_inputs()}} by default generates a large set of potentially
+problematic inputs, but they can be limited just to the desired classes of
+inputs.
 }
 \seealso{
 Useful links:
@@ -32,5 +36,6 @@ Useful links:
 
 }
 \author{
-Marco Colombo \email{mar.colombo13@gmail.com}
+\strong{Maintainer}: Marco Colombo \email{mar.colombo13@gmail.com} (\href{https://orcid.org/0000-0001-6672-0623}{ORCID})
+
 }

@@ -15,10 +15,16 @@ function aliases.}
 }
 \value{
 A character vector of the names of the functions exported from the
-requested package, with the \code{"package"} attribute set.
+requested package, with the \code{"package"} attribute set. This can be used
+directly as the \code{funs} argument of \code{\link[=fuzz]{fuzz()}} without need to specify the
+\code{package} argument.
 }
 \description{
-Get the names of the exported functions of a package
+This function extracts the exports from the namespace of the given package
+via \code{\link[=getNamespaceExports]{getNamespaceExports()}}, prunes exported symbols beginning with \code{.__}
+(which can be present if the package links to custom C/C++ code or provides
+additional generics), and discards non-function objects. The set of names
+returned can be further controlled via the \code{ignore_names} argument.
 }
 \examples{
 ## get the functions in the public interface of this package

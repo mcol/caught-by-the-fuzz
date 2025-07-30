@@ -19,7 +19,8 @@
 
 #' Results summary from a fuzz run
 #'
-#' Generates a data frame of summary results from a single run of [fuzz()].
+#' Generates a data frame of summary results from a run of [fuzz()] and
+#' reports some summary statistics.
 #'
 #' @param object An object of class `cbtf`.
 #' @param ... Further arguments passed to or from other methods.
@@ -54,13 +55,19 @@ summary.cbtf <- function(object, ...) {
 
 #' Print the results from a fuzz run
 #'
+#' This formats with colours the results from a fuzz run and prints them to
+#' the terminal.
+#'
 #' @param x An object of class `cbtf`.
 #' @param show_all Whether all results should be printed. By default (`FALSE`),
 #'        only the functions that reported an error or a warning are printed.
 #'        If `TRUE`, all functions tested are printed, including those that
-#'        were skipped.
+#'        were successful or were skipped.
 #' @param ... Further arguments passed to or from other methods.
 #'        These are currently ignored.
+#'
+#' @return
+#' No return value, called for side effects.
 #'
 #' @examples
 #' res <- fuzz(funs = c("list", "matrix", "mean"),

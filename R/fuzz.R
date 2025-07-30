@@ -19,6 +19,12 @@
 
 #' Get the names of the exported functions of a package
 #'
+#' This function extracts the exports from the namespace of the given package
+#' via [getNamespaceExports()], prunes exported symbols beginning with `.__`
+#' (which can be present if the package links to custom C/C++ code or provides
+#' additional generics), and discards non-function objects. The set of names
+#' returned can be further controlled via the `ignore_names` argument.
+#'
 #' @param package Name of the package to fuzz-test.
 #' @param ignore_names Names of functions to ignore: these are removed from
 #'        the names returned. This can be helpful, for example, to discard
@@ -26,7 +32,9 @@
 #'
 #' @return
 #' A character vector of the names of the functions exported from the
-#' requested package, with the `"package"` attribute set.
+#' requested package, with the `"package"` attribute set. This can be used
+#' directly as the `funs` argument of [fuzz()] without need to specify the
+#' `package` argument.
 #'
 #' @examples
 #' ## get the functions in the public interface of this package
@@ -56,12 +64,29 @@ get_exported_functions <- function(package, ignore_names = "") {
 
 #' Fuzz-test the specified functions
 #'
-#' This function calls each of the functions it receives with each of the
-#' objects specified in `what`.
+#' This function calls each of the functions in `funs` with each of the
+#' objects specified in `what`, recording if any errors or warnings are
+#' thrown in the process.
+#'
+#' In order to reduce the number of false positive results produced, this
+#' function applies the following set rules, to establish if an error or
+#' warning condition should be considered "handled" by the function
+#' (whitelisting):
+#'
+#' * If the name of the function appears in the error or warning message.
+#' * If the error or warning message contains the text "is missing, with no
+#'   default", which is produced when a missing argument is used without a
+#'   value being assigned to it.
+#' * If the error or warning message contains any of the patterns specified
+#'   in `ignore_patterns`.
+#' * If a warning is thrown but `ignore_warnings = TRUE` is set.
+#'
+#' In all whitelisted cases, the result is "OK", and the message that
+#' was received is stored in the `$msg` field (see the *Value* section).
 #'
 #' @param funs A character vector of function names to test. If a `"package"`
-#'        attribute is set, the functions are loaded from that package's
-#'        namespace; otherwise, they are searched in the global namespace.
+#'        attribute is set and is no `package` argument is provided, functions
+#'        are loaded from the namespace specified in the attribute.
 #' @param what A list of objects to be passed, one at a time, as the first
 #'        argument to each function in `funs`. Ideally, the list should be
 #'        named, so that each input tested can be pretty-printed with the
@@ -85,13 +110,36 @@ get_exported_functions <- function(package, ignore_names = "") {
 #'
 #' @return
 #' An object of class `cbtf` that stores the results obtained for each of the
-#' functions tested.
+#' functions tested. This contains the following fields:
+#' * `runs`: a list of data frames, each containing the results of fuzzing
+#' all the functions in `funs` with one of the inputs in `what`:
+#'     - `$fun`: The name of the function tested.
+#'     - `$res`: The test result, one of the following:
+#'         + OK: either no error or warning was produced (in which case, `$msg`
+#'           is left blank), or it was whitelisted (in which case, the message
+#'           received is stored in `$msg`).
+#'         + SKIP: no test was run, either because the given name was not
+#'           found, or it didn't correspond to a function, or the function
+#'           didn't accept arguments, or the function contained a call to
+#'           [readline()]; the exact reason is stored in `$msg`.
+#'         + WARN: a warning was thrown for which no whitelisting occurred and
+#'           `ignore_warnings = FALSE`; its message is stored in `$msg`.
+#'         + FAIL: an error was thrown for which no whitelisting occurred; its
+#'           message is stored in `$msg`.
+#'     - `$msg`: The error or warning message returned, if any, by the
+#'        function.
+#'     - `attr(*, "what")`: The character representation of the input tested.
+#' * `package`: a character string that specified the package name where
+#' the functions were searched, or `NA` if none was provided.
 #'
 #' @examples
 #' ## this should produce no errors
 #' res <- fuzz(funs = c("list", "matrix", "mean"),
 #'             what = test_inputs(c("numeric", "raw")))
 #' summary(res)
+#'
+#' ## display all results even for successful tests
+#' print(res, show_all = TRUE)
 #'
 #' ## this will catch an error (false positive)
 #' fuzz(funs = "matrix",  what = test_inputs("scalar"))

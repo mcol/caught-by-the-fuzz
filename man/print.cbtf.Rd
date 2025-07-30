@@ -12,13 +12,17 @@
 \item{show_all}{Whether all results should be printed. By default (\code{FALSE}),
 only the functions that reported an error or a warning are printed.
 If \code{TRUE}, all functions tested are printed, including those that
-were skipped.}
+were successful or were skipped.}
 
 \item{...}{Further arguments passed to or from other methods.
 These are currently ignored.}
 }
+\value{
+No return value, called for side effects.
+}
 \description{
-Print the results from a fuzz run
+This formats with colours the results from a fuzz run and prints them to
+the terminal.
 }
 \examples{
 res <- fuzz(funs = c("list", "matrix", "mean"),
