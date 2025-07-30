@@ -270,8 +270,8 @@ fuzzer <- function(funs, what, what_char = "", package = NULL,
                }
              },
              warning = function(w) {
-               if (ignore_warnings) return()
-               if (!grepl(f, w) &&
+               if (!ignore_warnings &&
+                   !grepl(f, w) &&
                    !grepl(ignore_patterns, w)) {
                  report("WARN", w$message)
                } else {

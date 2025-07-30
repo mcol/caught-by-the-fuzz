@@ -145,6 +145,11 @@ test_that("fuzzer", {
                "WARN")
   expect_equal(res$msg,
                "argument is not numeric or logical: returning NA")
+  res <- fuzzer("median", letters, ignore_warnings = TRUE)
+  expect_equal(res$res,
+               "OK")
+  expect_equal(res$msg,
+               "argument is not numeric or logical: returning NA")
 
   ## this passes because the warning message contains "mean.default"
   res <- fuzzer("mean", letters)
