@@ -232,9 +232,20 @@ fuzz <- function(funs, what = test_inputs(),
 fuzzer <- function(funs, what, what_char = "", package = NULL,
                    ignore_patterns = "is missing, with no default",
                    ignore_warnings = FALSE) {
+  ## store result and message in the list of results defined below
   report <- function(label, msg) {
     out.res[[idx]]["res"] <<- label
     out.res[[idx]]["msg"] <<- gsub("\\n", " ", msg) # shorten multiline messages
+  }
+
+  ## apply the whitelist rules before reporting the result
+  whitelist_and_report <- function(fun, ew, type, ignore_warnings = FALSE) {
+    res <- if (!ignore_warnings &&
+               !grepl(fun, ew) && ## check if ew contains the function name
+               !grepl(ignore_patterns, ew)) {
+             res <- type
+           } else { "OK" }
+    report(res, ew$message)
   }
 
   ## define where functions names are searched
@@ -242,6 +253,7 @@ fuzzer <- function(funs, what, what_char = "", package = NULL,
     function(x) utils::getFromNamespace(x, package)
   }
 
+  ## list of results
   out.res <- lapply(funs, function(x) {
     data.frame(fun = x, res = "OK", msg = "")
   })
@@ -262,21 +274,10 @@ fuzzer <- function(funs, what, what_char = "", package = NULL,
     cli::cli_progress_update(status = f)
     tryCatch(utils::capture.output(suppressMessages(fun(what))),
              error = function(e) {
-               if (!grepl(f, e) &&
-                   !grepl(ignore_patterns, e)) {
-                 report("FAIL", e$message)
-               } else {
-                 report("OK", e$message)
-               }
+               whitelist_and_report(f, e, "FAIL")
              },
              warning = function(w) {
-               if (!ignore_warnings &&
-                   !grepl(f, w) &&
-                   !grepl(ignore_patterns, w)) {
-                 report("WARN", w$message)
-               } else {
-                 report("OK", w$message)
-               }
+               whitelist_and_report(f, w, "WARN", ignore_warnings)
              })
   }
   cli::cli_progress_done()
