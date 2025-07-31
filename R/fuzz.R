@@ -111,26 +111,34 @@ get_exported_functions <- function(package, ignore_names = "") {
 #' @return
 #' An object of class `cbtf` that stores the results obtained for each of the
 #' functions tested. This contains the following fields:
-#' * `runs`: a list of data frames, each containing the results of fuzzing
-#' all the functions in `funs` with one of the inputs in `what`:
-#'     - `$fun`: The name of the function tested.
-#'     - `$res`: The test result, one of the following:
-#'         + OK: either no error or warning was produced (in which case, `$msg`
-#'           is left blank), or it was whitelisted (in which case, the message
-#'           received is stored in `$msg`).
-#'         + SKIP: no test was run, either because the given name was not
-#'           found, or it didn't correspond to a function, or the function
-#'           didn't accept arguments, or the function contained a call to
-#'           [readline()]; the exact reason is stored in `$msg`.
-#'         + WARN: a warning was thrown for which no whitelisting occurred and
-#'           `ignore_warnings = FALSE`; its message is stored in `$msg`.
-#'         + FAIL: an error was thrown for which no whitelisting occurred; its
-#'           message is stored in `$msg`.
-#'     - `$msg`: The error or warning message returned, if any, by the
-#'        function.
-#'     - `attr(*, "what")`: The character representation of the input tested.
-#' * `package`: a character string that specified the package name where
-#' the functions were searched, or `NA` if none was provided.
+#' \item{$runs}{a list of data frames, each containing the results of fuzzing
+#'       all the functions in `funs` with one of the inputs in `what`, with
+#'       attribute "what" containing . The data frame contains the following
+#'       columns and attributes:\cr
+#'       - `fun`: The name of the function tested.\cr
+#'       - `res`: The result of the fuzz test, see below for the possible
+#'         values.\cr
+#'       - `msg`: The error or warning message returned by the function, if
+#'          any.\cr
+#'       - `attr(*, "what")`: The character representation of the input
+#'         tested.
+#' }
+#' \item{$package}{a character string specifying the package name where
+#'       function names were searched, or `NA` if none was provided.}
+#'
+#' The `res` column in each of the data frames in the `$runs` field can
+#' contain the following values:
+#' * OK: either no error or warning was produced (in which case, the `msg`
+#'   entry is left blank), or it was whitelisted (in which case, the message
+#'   received is stored in `msg`).
+#' * SKIP: no test was run, either because the given name cannot be found, or
+#'   it doesn't correspond to a function, or the function accepts no arguments,
+#'   or the function contains a call to [readline()]; the exact reason is given
+#'   in `msg`.
+#' * WARN: a warning was thrown for which no whitelisting occurred and
+#'   `ignore_warnings = FALSE`; its message is stored in `msg`.
+#' * FAIL: an error was thrown for which no whitelisting occurred; its message
+#'   is stored in `msg`.
 #'
 #' @examples
 #' ## this should produce no errors

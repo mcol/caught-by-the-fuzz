@@ -46,31 +46,35 @@ default).}
 \value{
 An object of class \code{cbtf} that stores the results obtained for each of the
 functions tested. This contains the following fields:
+\item{$runs}{a list of data frames, each containing the results of fuzzing
+all the functions in \code{funs} with one of the inputs in \code{what}, with
+attribute "what" containing . The data frame contains the following
+columns and attributes:\cr
+- \code{fun}: The name of the function tested.\cr
+- \code{res}: The result of the fuzz test, see below for the possible
+values.\cr
+- \code{msg}: The error or warning message returned by the function, if
+any.\cr
+- \verb{attr(*, "what")}: The character representation of the input
+tested.
+}
+\item{$package}{a character string specifying the package name where
+function names were searched, or \code{NA} if none was provided.}
+
+The \code{res} column in each of the data frames in the \verb{$runs} field can
+contain the following values:
 \itemize{
-\item \code{runs}: a list of data frames, each containing the results of fuzzing
-all the functions in \code{funs} with one of the inputs in \code{what}:
-\itemize{
-\item \verb{$fun}: The name of the function tested.
-\item \verb{$res}: The test result, one of the following:
-\itemize{
-\item OK: either no error or warning was produced (in which case, \verb{$msg}
-is left blank), or it was whitelisted (in which case, the message
-received is stored in \verb{$msg}).
-\item SKIP: no test was run, either because the given name was not
-found, or it didn't correspond to a function, or the function
-didn't accept arguments, or the function contained a call to
-\code{\link[=readline]{readline()}}; the exact reason is stored in \verb{$msg}.
+\item OK: either no error or warning was produced (in which case, the \code{msg}
+entry is left blank), or it was whitelisted (in which case, the message
+received is stored in \code{msg}).
+\item SKIP: no test was run, either because the given name cannot be found, or
+it doesn't correspond to a function, or the function accepts no arguments,
+or the function contains a call to \code{\link[=readline]{readline()}}; the exact reason is given
+in \code{msg}.
 \item WARN: a warning was thrown for which no whitelisting occurred and
-\code{ignore_warnings = FALSE}; its message is stored in \verb{$msg}.
-\item FAIL: an error was thrown for which no whitelisting occurred; its
-message is stored in \verb{$msg}.
-}
-\item \verb{$msg}: The error or warning message returned, if any, by the
-function.
-\item \verb{attr(*, "what")}: The character representation of the input tested.
-}
-\item \code{package}: a character string that specified the package name where
-the functions were searched, or \code{NA} if none was provided.
+\code{ignore_warnings = FALSE}; its message is stored in \code{msg}.
+\item FAIL: an error was thrown for which no whitelisting occurred; its message
+is stored in \code{msg}.
 }
 }
 \description{
