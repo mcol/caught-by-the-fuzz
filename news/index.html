@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">CBTF</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,11 +34,19 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/mcol/caught-by-the-fuzz/blob/v0.3.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/mcol/caught-by-the-fuzz/blob/v0.4.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.3.0" id="cbtf-030-2025-07-26">CBTF 0.3.0 (2025-07-26)<a class="anchor" aria-label="anchor" href="#cbtf-030-2025-07-26"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.4.0" id="cbtf-040-2025-07-31">CBTF 0.4.0 (2025-07-31)<a class="anchor" aria-label="anchor" href="#cbtf-040-2025-07-31"></a></h2>
+<ul><li>Don’t crash in <code><a href="../reference/get_exported_functions.html">get_exported_functions()</a></code> if <code>getNameSpaceExports()</code> fails.</li>
+<li>Store the error message in the results object also in case of whitelisted errors, so it can be reported from <code>print(..., show_all = TRUE)</code>.</li>
+<li>Add the tabulation shown in <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> as attribute <code>"summary_table"</code> of the data frame returned.</li>
+<li>Make <code><a href="../reference/get_exported_functions.html">get_exported_functions()</a></code> return only fuzzable functions, so that functions with no arguments are no longer returned.</li>
+<li>Expand the documentation to satisfy the CRAN request.</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.3.0" id="cbtf-030-2025-07-27">CBTF 0.3.0 (2025-07-27)<a class="anchor" aria-label="anchor" href="#cbtf-030-2025-07-27"></a></h2>
 <ul><li>Warnings containing the name of the function being fuzzed are no longer reported, to make their behaviour consistent with that of errors.</li>
 <li>Add the <code>package</code> argument to <code><a href="../reference/fuzz.html">fuzz()</a></code> as an alternative and simpler way to specify the namespace where function names are searched.</li>
 <li>Don’t consider primitives (such as <code><a href="https://rdrr.io/r/base/list.html" class="external-link">list()</a></code> or <code>+</code>) to be functions with no arguments (<a href="https://github.com/mcol/caught-by-the-fuzz/issues/5" class="external-link">#5</a>).</li>
