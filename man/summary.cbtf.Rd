@@ -16,13 +16,13 @@ These are currently ignored.}
 A data frame with the following columns is returned invisibly:
 \item{fun}{The names of the function tested.}
 \item{what}{The inputs tested.}
-\item{res}{One of "OK", "FAIL", "WARN" or "SKIP" for each function
-tested.}
+\item{res}{One of "OK", "FAIL", "WARN" or "SKIP" for each combination of
+function and input tested (see the \emph{Value} section in \link{fuzz}).}
 \item{msg}{The message received in case of error, warning or skip,
-or an empty string if the function succeeded.}
+or an empty string if no failure occurred.}
 }
 \description{
-Generates a data frame of summary results from a run of \code{\link[=fuzz]{fuzz()}} and
+Generates a data frame of summary results from a run of \link{fuzz} and
 reports some summary statistics.
 }
 \examples{

@@ -31,5 +31,5 @@ print(res, show.all = TRUE)
 
 }
 \seealso{
-\code{\link[=summary.cbtf]{summary()}}
+\link{summary.cbtf}
 }

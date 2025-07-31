@@ -19,7 +19,7 @@
 
 #' Results summary from a fuzz run
 #'
-#' Generates a data frame of summary results from a run of [fuzz()] and
+#' Generates a data frame of summary results from a run of [fuzz] and
 #' reports some summary statistics.
 #'
 #' @param object An object of class `cbtf`.
@@ -30,17 +30,17 @@
 #' A data frame with the following columns is returned invisibly:
 #' \item{fun}{The names of the function tested.}
 #' \item{what}{The inputs tested.}
-#' \item{res}{One of "OK", "FAIL", "WARN" or "SKIP" for each function
-#'       tested.}
+#' \item{res}{One of "OK", "FAIL", "WARN" or "SKIP" for each combination of
+#'       function and input tested (see the *Value* section in [fuzz]).}
 #' \item{msg}{The message received in case of error, warning or skip,
-#'       or an empty string if the function succeeded.}
+#'       or an empty string if no failure occurred.}
 #'
 #' @examples
 #' res <- fuzz(funs = c("list", "matrix", "mean"),
 #'             what = test_inputs(c("numeric", "raw")))
 #' summary(res)
 #'
-#' @seealso [`print()`][print.cbtf]
+#' @seealso [print.cbtf]
 #'
 #' @export
 summary.cbtf <- function(object, ...) {
@@ -74,7 +74,7 @@ summary.cbtf <- function(object, ...) {
 #'             what = test_inputs(c("numeric", "raw")))
 #' print(res, show.all = TRUE)
 #'
-#' @seealso [`summary()`][summary.cbtf]
+#' @seealso [summary.cbtf]
 #'
 #' @export
 print.cbtf <- function(x, show_all = FALSE, ...) {
