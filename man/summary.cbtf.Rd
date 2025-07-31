@@ -13,17 +13,19 @@
 These are currently ignored.}
 }
 \value{
-A data frame with the following columns is returned invisibly:
+A data frame containing the following columns and attributes is returned
+invisibly:
 \item{fun}{The names of the function tested.}
 \item{what}{The inputs tested.}
 \item{res}{One of "OK", "FAIL", "WARN" or "SKIP" for each combination of
 function and input tested (see the \emph{Value} section in \link{fuzz}).}
 \item{msg}{The message received in case of error, warning or skip,
 or an empty string if no failure occurred.}
+\item{attr(*, "summary_table")}{The tabulation of results that was printed
+out.}
 }
 \description{
-Generates a data frame of summary results from a run of \link{fuzz} and
-reports some summary statistics.
+Reports some summary statistics from the results of a run of \link{fuzz}.
 }
 \examples{
 res <- fuzz(funs = c("list", "matrix", "mean"),
@@ -32,5 +34,5 @@ summary(res)
 
 }
 \seealso{
-\code{\link[=print.cbtf]{print()}}
+\link{print.cbtf}
 }

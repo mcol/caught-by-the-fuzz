@@ -19,21 +19,23 @@
 
 #' Results summary from a fuzz run
 #'
-#' Generates a data frame of summary results from a run of [fuzz] and
-#' reports some summary statistics.
+#' Reports some summary statistics from the results of a run of [fuzz].
 #'
 #' @param object An object of class `cbtf`.
 #' @param ... Further arguments passed to or from other methods.
 #'        These are currently ignored.
 #'
 #' @return
-#' A data frame with the following columns is returned invisibly:
+#' A data frame containing the following columns and attributes is returned
+#' invisibly:
 #' \item{fun}{The names of the function tested.}
 #' \item{what}{The inputs tested.}
 #' \item{res}{One of "OK", "FAIL", "WARN" or "SKIP" for each combination of
 #'       function and input tested (see the *Value* section in [fuzz]).}
 #' \item{msg}{The message received in case of error, warning or skip,
 #'       or an empty string if no failure occurred.}
+#' \item{attr(*, "summary_table")}{The tabulation of results that was printed
+#'       out.}
 #'
 #' @examples
 #' res <- fuzz(funs = c("list", "matrix", "mean"),
@@ -48,9 +50,11 @@ summary.cbtf <- function(object, ...) {
               what = sapply(object$runs, function(x) attr(x, "what")))
   cli::cli_text("Fuzzed {nrow(object$runs[[1]])} function{?s} ",
                 "on {length(object$runs)} input{?s}: ")
-  print(table(df$fun, factor(df$res, levels = c("FAIL", "WARN", "SKIP", "OK"))))
+  print(tbl <- table(df$fun,
+                     factor(df$res, levels = c("FAIL", "WARN", "SKIP", "OK"))))
   cat("\n", compute_summary_stats(object, verbose = FALSE), "\n", sep = "")
-  invisible(df[, c("fun", "what", "res", "msg")])
+  invisible(structure(df[, c("fun", "what", "res", "msg")],
+                      summary_table = tbl))
 }
 
 #' Print the results from a fuzz run

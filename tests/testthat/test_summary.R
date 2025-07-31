@@ -13,6 +13,8 @@ test_that("summary", {
   expect_equal(sum$what,
                c("NA", "c(1, 2, 3)"))
   })
+  expect_s3_class(attr(sum, "summary_table"),
+                  "table")
 })
 
 test_that("print", {

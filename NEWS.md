@@ -3,6 +3,8 @@
 - Don't crash in `get_exported_functions()` if `getNameSpaceExports()` fails.
 - Store the error message in the results object also in case of whitelisted
   errors, so it can be reported from `print(..., show_all = TRUE)`.
+- Add the tabulation shown in `summary()` as attribute `"summary_table"` of
+  the data frame returned.
 - Expand the documentation to satisfy the CRAN request.
 
 # CBTF 0.3.0 (2025-07-27)
