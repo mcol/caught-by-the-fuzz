@@ -215,6 +215,10 @@ test_that("get_exported_functions", {
   expect_equal(attr(funs, "package"),
                "CBTF")
 
+  funs <- get_exported_functions("base")
+  expect_false(".Device" %in% funs)
+  expect_false("Sys.Date" %in% funs)
+
   SW({
   expect_pass_message(fuzz("get_exported_functions"))
   withr::with_envvar(c(package_arg = function(arg) get_exported_functions("CBTF", package = arg)),

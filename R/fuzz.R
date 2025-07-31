@@ -20,10 +20,9 @@
 #' Get the names of the exported functions of a package
 #'
 #' This function extracts the exports from the namespace of the given package
-#' via [getNamespaceExports], prunes exported symbols beginning with `.__`
-#' (which can be present if the package links to custom C/C++ code or provides
-#' additional generics), and discards non-function objects. The set of names
-#' returned can be further controlled via the `ignore_names` argument.
+#' via [getNamespaceExports] and discards non-fuzzable objects (non-functions
+#' and functions with no arguments). The set of names returned can be further
+#' restricted via the `ignore_names` argument.
 #'
 #' @param package Name of the package to fuzz-test.
 #' @param ignore_names Names of functions to ignore: these are removed from
@@ -31,13 +30,13 @@
 #'        function aliases.
 #'
 #' @return
-#' A character vector of the names of the functions exported from the
-#' requested package, with the `"package"` attribute set. This can be used
+#' A character vector of the names of the fuzzable functions exported from
+#' the given package, with the `"package"` attribute set. This can be used
 #' directly as the `funs` argument of [fuzz] without need to specify the
 #' `package` argument.
 #'
 #' @examples
-#' ## get the functions in the public interface of this package
+#' ## get the fuzzable functions in the public interface of this package
 #' funs <- get_exported_functions("CBTF")
 #'
 #' @seealso [fuzz]
@@ -50,12 +49,10 @@ get_exported_functions <- function(package, ignore_names = "") {
   validate_class(ignore_names, "character", from = from)
   funs <- tryCatch(sort(getNamespaceExports(package)),
                    error = function(e) fuzz_error(e$message, from = from))
-  funs <- grep(".__", funs, fixed = TRUE, invert = TRUE, value = TRUE)
 
-  ## keep only functions
+  ## keep only fuzzable functions
   keep.idx <- sapply(funs, function(x) {
-    is.function(tryCatch(utils::getFromNamespace(x, package),
-                         error = function(e) FALSE))
+    is.function(check_fuzzable(x, package, skip_readline = FALSE))
   })
   funs <- setdiff(funs[keep.idx], ignore_names)
   attr(funs, "package") <- package

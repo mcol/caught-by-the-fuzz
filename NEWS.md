@@ -5,6 +5,8 @@
   errors, so it can be reported from `print(..., show_all = TRUE)`.
 - Add the tabulation shown in `summary()` as attribute `"summary_table"` of
   the data frame returned.
+- Make `get_exported_functions()` return only fuzzable functions, so that
+  functions with no arguments are no longer returned.
 - Expand the documentation to satisfy the CRAN request.
 
 # CBTF 0.3.0 (2025-07-27)

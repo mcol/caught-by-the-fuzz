@@ -55,6 +55,8 @@ test_that("check_fuzzable", {
   assign(".with.readline.", function(val) readline("Test"), envir = .GlobalEnv)
   expect_equal(check_fuzzable(".with.readline.", NULL),
                "Contains readline()")
+  expect_equal(check_fuzzable(".with.readline.", NULL, skip_readline = FALSE),
+               .with.readline.)
   rm(".with.readline.", envir = .GlobalEnv)
 
   expect_true(is.function(check_fuzzable("list", NULL)))

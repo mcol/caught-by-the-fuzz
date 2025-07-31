@@ -62,13 +62,15 @@ fuzz_error <- function(..., from = "fuzz") {
 #' @param fun Name of the function to validate.
 #' @param pkg Name of the package where functions are searched. A `NULL`
 #'        value corresponds to the global namespace.
+#' @param skip_readline Whether functions containing calls to [readline] should
+#'        be considered non-fuzzable (`TRUE` by default).
 #'
 #' @return
 #' In case of failure, a character string containing the reason why the
 #' function cannot be fuzzed; otherwise the function itself.
 #'
 #' @noRd
-check_fuzzable <- function(fun, pkg) {
+check_fuzzable <- function(fun, pkg, skip_readline = TRUE) {
   ## attempt to get a function from its name
   fun <- try(if (is.null(pkg)) get(fun)
              else utils::getFromNamespace(fun, pkg),
@@ -88,7 +90,7 @@ check_fuzzable <- function(fun, pkg) {
     return("Doesn't accept arguments")
 
   ## skip functions that wait for user input
-  if (contains_readline(fun))
+  if (skip_readline && contains_readline(fun))
     return("Contains readline()")
 
   return(fun)

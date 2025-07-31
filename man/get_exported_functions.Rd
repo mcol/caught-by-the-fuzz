@@ -14,20 +14,19 @@ the names returned. This can be helpful, for example, to discard
 function aliases.}
 }
 \value{
-A character vector of the names of the functions exported from the
-requested package, with the \code{"package"} attribute set. This can be used
+A character vector of the names of the fuzzable functions exported from
+the given package, with the \code{"package"} attribute set. This can be used
 directly as the \code{funs} argument of \link{fuzz} without need to specify the
 \code{package} argument.
 }
 \description{
 This function extracts the exports from the namespace of the given package
-via \link{getNamespaceExports}, prunes exported symbols beginning with \code{.__}
-(which can be present if the package links to custom C/C++ code or provides
-additional generics), and discards non-function objects. The set of names
-returned can be further controlled via the \code{ignore_names} argument.
+via \link{getNamespaceExports} and discards non-fuzzable objects (non-functions
+and functions with no arguments). The set of names returned can be further
+restricted via the \code{ignore_names} argument.
 }
 \examples{
-## get the functions in the public interface of this package
+## get the fuzzable functions in the public interface of this package
 funs <- get_exported_functions("CBTF")
 
 }
