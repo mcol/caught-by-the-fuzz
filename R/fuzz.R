@@ -256,11 +256,6 @@ fuzzer <- function(funs, what, what_char = "", package = NULL,
     report(res, ew$message)
   }
 
-  ## define where functions names are searched
-  getter <- if (is.null(package)) get else {
-    function(x) utils::getFromNamespace(x, package)
-  }
-
   ## list of results
   out.res <- lapply(funs, function(x) {
     data.frame(fun = x, res = "OK", msg = "")
@@ -272,7 +267,7 @@ fuzzer <- function(funs, what, what_char = "", package = NULL,
                         total = length(funs))
   for (idx in seq_along(funs)) {
     f <- funs[idx]
-    fun <- check_fuzzable(try(getter(f), silent = TRUE), package)
+    fun <- check_fuzzable(f, package)
     if (is.character(fun)) {
       report("SKIP", fun)
       cli::cli_progress_update()

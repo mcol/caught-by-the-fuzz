@@ -59,10 +59,9 @@ fuzz_error <- function(..., from = "fuzz") {
 
 #' @title Check that a function can be fuzzed
 #'
-#' @param fun Function to validate.
+#' @param fun Name of the function to validate.
 #' @param pkg Name of the package where functions are searched. A `NULL`
-#'        value corresponds to the global namespace. This is used only to
-#'        generate a better message.
+#'        value corresponds to the global namespace.
 #'
 #' @return
 #' In case of failure, a character string containing the reason why the
@@ -70,6 +69,11 @@ fuzz_error <- function(..., from = "fuzz") {
 #'
 #' @noRd
 check_fuzzable <- function(fun, pkg) {
+  ## attempt to get a function from its name
+  fun <- try(if (is.null(pkg)) get(fun)
+             else utils::getFromNamespace(fun, pkg),
+             silent = TRUE)
+
   ## skip non-existing names
   if (inherits(fun, "try-error"))
     return(sprintf("Object not found in the %s namespace",

@@ -39,6 +39,28 @@ test_that("fuzz_error", {
                "[function_name] part 1 part 2", fixed = TRUE)
 })
 
+test_that("check_fuzzable", {
+  testthat::skip_on_cran()
+
+  expect_equal(check_fuzzable(".not.existing.", NULL),
+               "Object not found in the global namespace")
+  expect_equal(check_fuzzable(".not.existing.", "package_name"),
+               "Object not found in the 'package_name' namespace")
+  expect_equal(check_fuzzable(".Device", NULL),
+               "Not a function")
+  expect_equal(check_fuzzable("Sys.Date", NULL),
+               "Doesn't accept arguments")
+
+  ## must use `assign` otherwise the name cannot be found by the `get` call
+  assign(".with.readline.", function(val) readline("Test"), envir = .GlobalEnv)
+  expect_equal(check_fuzzable(".with.readline.", NULL),
+               "Contains readline()")
+  rm(".with.readline.", envir = .GlobalEnv)
+
+  expect_true(is.function(check_fuzzable("list", NULL)))
+  expect_true(is.function(check_fuzzable("mean", NULL)))
+})
+
 test_that("tocolour", {
   testthat::skip_on_cran()
 
