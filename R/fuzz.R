@@ -109,9 +109,8 @@ get_exported_functions <- function(package, ignore_names = "") {
 #' An object of class `cbtf` that stores the results obtained for each of the
 #' functions tested. This contains the following fields:
 #' \item{$runs}{a list of data frames, each containing the results of fuzzing
-#'       all the functions in `funs` with one of the inputs in `what`, with
-#'       attribute "what" containing . The data frame contains the following
-#'       columns and attributes:\cr
+#'       all the functions in `funs` with one of the inputs in `what`. The
+#'       data frame contains the following columns and attributes:\cr
 #'       - `fun`: The name of the function tested.\cr
 #'       - `res`: The result of the fuzz test, see below for the possible
 #'         values.\cr
@@ -230,7 +229,7 @@ fuzz <- function(funs, what = test_inputs(),
 #'
 #' @return
 #' A data.frame of results obtained for each of the functions tested, with
-#' the attribute `what` set to contain the string representation of the input
+#' the attribute `"what"` set to contain the string representation of the input
 #' tested.
 #'
 #' @noRd

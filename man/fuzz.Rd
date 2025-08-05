@@ -47,9 +47,8 @@ default).}
 An object of class \code{cbtf} that stores the results obtained for each of the
 functions tested. This contains the following fields:
 \item{$runs}{a list of data frames, each containing the results of fuzzing
-all the functions in \code{funs} with one of the inputs in \code{what}, with
-attribute "what" containing . The data frame contains the following
-columns and attributes:\cr
+all the functions in \code{funs} with one of the inputs in \code{what}. The
+data frame contains the following columns and attributes:\cr
 - \code{fun}: The name of the function tested.\cr
 - \code{res}: The result of the fuzz test, see below for the possible
 values.\cr
