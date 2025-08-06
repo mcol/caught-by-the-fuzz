@@ -83,14 +83,16 @@ summary.cbtf <- function(object, ...) {
 #' @export
 print.cbtf <- function(x, show_all = FALSE, ...) {
   summary.stats <- compute_summary_stats(x)
+  res.size <- nchar(tocolour("FAIL")) # include ANSI formatting, if present
   for (run in x$runs) {
     if (!show_all)
       run <- run[run$res %in% c("FAIL", "WARN"), ]
     if (nrow(run) > 0) {
       cli::cli_h3(paste("Test input:", cli::style_bold(attributes(run)$what)))
       max.name <- max(c(0, nchar(run$fun))) + 1
-      cat(sprintf("%*s  %14s  %s\n",
-                  max.name, run$fun, tocolour(run$res), run$msg), sep = "")
+      cat(sprintf("%*s  %*s  %s\n",
+                  max.name, run$fun, res.size, tocolour(run$res), run$msg),
+          sep = "")
     }
   }
   cat("\n", summary.stats, "\n")
