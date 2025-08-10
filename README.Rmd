@@ -67,6 +67,15 @@ to this:
 fuzz(funs, what = list(letters = letters))
 ```
 
+### Test for list inputs automatically
+
+It is trivial to augment a given set of inputs with list versions of the same.
+This effectively doubles the number of tests run with no additional coding
+effort.
+```{r}
+fuzz(funs, what = list(letters = letters), listify_what = TRUE)
+```
+
 ### Fuzzing for arguments other than the first
 
 At the moment, the only way to fuzz an argument other than the first is by

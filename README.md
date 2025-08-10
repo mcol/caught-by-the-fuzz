@@ -90,6 +90,27 @@ fuzz(funs, what = list(letters = letters))
     ## 
     ##  [ FAIL 1 | WARN 0 | SKIP 0 | OK 1 ]
 
+### Test for list inputs automatically
+
+It is trivial to augment a given set of inputs with list versions of the
+same. This effectively doubles the number of tests run with no
+additional coding effort.
+
+``` r
+fuzz(funs, what = list(letters = letters), listify_what = TRUE)
+```
+
+    ## ℹ Fuzzing 2 functions on 2 inputs
+    ## ✖  🚨   CAUGHT BY THE FUZZ!   🚨
+    ## 
+    ## ── Test input: letters
+    ##  parse_multipart  FAIL  $ operator is invalid for atomic vectors
+    ## 
+    ## ── Test input: list(letters)
+    ##  guess_type  FAIL  a character vector argument expected
+    ## 
+    ##  [ FAIL 2 | WARN 0 | SKIP 0 | OK 2 ]
+
 ### Fuzzing for arguments other than the first
 
 At the moment, the only way to fuzz an argument other than the first is
