@@ -162,6 +162,20 @@ test_that("fuzzer", {
                "OK")
   expect_equal(res$msg,
                "argument is not numeric or logical: returning NA")
+
+  ## in case of both error and warning, we should report the error
+  SW({
+  assign(".local_fun.", envir = .GlobalEnv,
+         function(arg) {
+           warning("a warning")
+           stop("an error", call. = FALSE)
+         })
+  res <- fuzzer(".local_fun.", list(NA))
+  expect_equal(res$res,
+               "FAIL")
+  expect_equal(res$msg,
+               "an error")
+  })
 })
 
 test_that("self fuzz", {

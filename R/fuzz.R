@@ -273,12 +273,14 @@ fuzzer <- function(funs, what, what_char = "", package = NULL,
     }
 
     cli::cli_progress_update()
-    tryCatch(utils::capture.output(suppressMessages(fun(what))),
+    tryCatch(withCallingHandlers(utils::capture.output(suppressMessages(fun(what))),
+                                 warning = function(w) {
+                                   whitelist_and_report(f, w, "WARN",
+                                                        ignore_warnings)
+                                   invokeRestart("muffleWarning")
+                                 }),
              error = function(e) {
                whitelist_and_report(f, e, "FAIL")
-             },
-             warning = function(w) {
-               whitelist_and_report(f, w, "WARN", ignore_warnings)
              })
   }
   cli::cli_progress_done()

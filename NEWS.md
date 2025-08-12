@@ -1,6 +1,9 @@
 # Current development version
 
 - Streamline the progress report from `fuzz()`.
+- In case both an error and a warning are raised by the function being
+  fuzzed, we now report the error; previously the warning was reported
+  because of how `tryCatch()` is implemented.
 
 # CBTF 0.4.0 (2025-07-31)
 
