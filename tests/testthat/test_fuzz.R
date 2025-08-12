@@ -1,3 +1,6 @@
+## remove local binding generated further down with `assign()`
+withr::defer(rm(".local_fun.", envir = .GlobalEnv))
+
 test_that("input validation", {
   testthat::skip_on_cran()
 
@@ -172,21 +175,24 @@ test_that("self fuzz", {
 
   ## fuzz test other arguments by currying the function
   curry_fuzz_for <- function(argname) {
-    function(arg) do.call(fuzz, list("list", setNames(list(arg), argname)))
+    function(arg) do.call(fuzz, setNames(list("list", arg), c("funs", argname)))
+  }
+  test_self_fuzz <- function(argname) {
+    assign(".local_fun.", envir = .GlobalEnv,
+           curry_fuzz_for(argname))
+    expect_pass_message(fuzz(".local_fun.",
+                             ignore_patterns = "\\[fuzz\\]"))
   }
 
-  withr::with_envvar(c(package_arg = curry_fuzz_for("package")),
-                     expect_pass_message(fuzz("package_arg")))
-  withr::with_envvar(c(listify_arg = curry_fuzz_for("listify_what")),
-                     expect_pass_message(fuzz("listify_arg")))
-  withr::with_envvar(c(patterns_arg = curry_fuzz_for("ignore_patterns")),
-                     expect_pass_message(fuzz("patterns_arg")))
-  withr::with_envvar(c(warnings_arg = curry_fuzz_for("ignore_warnings")),
-                     expect_pass_message(fuzz("warnings_arg")))
+  test_self_fuzz("package")
+  test_self_fuzz("listify_what")
+  test_self_fuzz("ignore_patterns")
+  test_self_fuzz("ignore_warnings")
 
   ## as `what` expects a list argument, we can't use curry_fuzz_for()
-  withr::with_envvar(c(what_arg = function(arg) fuzz("list", what = list(arg))),
-                     expect_pass_message(fuzz("what_arg")))
+  assign(".local_fun.", envir = .GlobalEnv,
+         function(arg) fuzz("list", what = list(arg)))
+  expect_pass_message(fuzz(".local_fun."))
   })
 })
 
@@ -223,8 +229,10 @@ test_that("get_exported_functions", {
 
   SW({
   expect_pass_message(fuzz("get_exported_functions"))
-  withr::with_envvar(c(package_arg = function(arg) get_exported_functions("CBTF", package = arg)),
-                     expect_pass_message(fuzz("package_arg")))
+  assign(".local_fun.", envir = .GlobalEnv,
+         function(arg) get_exported_functions(package = arg))
+  expect_pass_message(fuzz(".local_fun.",
+                           ignore_patterns = "\\[get_exported_functions\\]"))
   })
 
   ## tested with mime 0.13

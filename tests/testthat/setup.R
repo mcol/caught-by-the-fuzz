@@ -17,10 +17,14 @@ expect_skip_reason <- function(res, reason) {
 expect_pass_message <- function(res) {
   expect_message(print(res),
                  "You didn't get caught by the fuzz!")
+  expect_output(print(res),
+                "FAIL 0 | WARN 0 | SKIP 0", fixed = TRUE)
 }
 
 ## check that fuzzing found errors
 expect_fail_message <- function(res) {
   expect_message(print(res),
                  "CAUGHT BY THE FUZZ!")
+  expect_output(print(res),
+                "SKIP 0 | OK 0", fixed = TRUE)
 }
