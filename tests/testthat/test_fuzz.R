@@ -44,10 +44,10 @@ test_that("check skipped functions", {
                      "Object not found in the 'CBTF' namespace")
 
   ## must use `assign` otherwise the name cannot be found by the `get` call
-  assign(".with.readline.", function(val) readline("Test"), envir = .GlobalEnv)
-  expect_skip_reason(fuzz(".with.readline.", list(NULL)),
+  assign(".local_fun.", envir = .GlobalEnv,
+         function(val) readline("Test"))
+  expect_skip_reason(fuzz(".local_fun.", list(NULL)),
                      "Contains readline()")
-  rm(".with.readline.", envir = .GlobalEnv)
   })
 })
 
