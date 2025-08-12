@@ -1,5 +1,7 @@
 # Current development version
 
+- Streamline the progress report from `fuzz()`.
+
 # CBTF 0.4.0 (2025-07-31)
 
 - Don't crash in `get_exported_functions()` if `getNameSpaceExports()` fails.

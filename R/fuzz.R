@@ -194,15 +194,10 @@ fuzz <- function(funs, what = test_inputs(),
     if (is.null(what.char) || what.char == "")
       what.char <- deparse(what[[idx]])[[1]]
 
-    ## report progress if running interactively
-    if (cli::is_dynamic_tty())
-      cli::cli_progress_step(paste("Fuzzing input:", what.char)) # nocov
-
-    ## fuzz this input
+    ## fuzz all functions with this input
     runs[[idx]] <- fuzzer(funs, what[[idx]], what.char, package,
                           ignore_patterns, ignore_warnings)
   }
-  cli::cli_progress_done()
 
   ## returned object
   structure(list(runs = runs,
@@ -258,19 +253,26 @@ fuzzer <- function(funs, what, what_char = "", package = NULL,
   })
 
   ## loop over the functions to fuzz
-  cli::cli_progress_bar(paste(cli::col_br_blue("\U2139"), # ℹ
-                              "Fuzzing input:", what_char),
+  cli::cli_progress_bar(type = "tasks",
+                        format = paste(
+                            "{cli::pb_spin} Fuzzing input: {strtrim(what_char, 40)}",
+                            " {.timestamp {cli::pb_current}/{cli::pb_total}} @ {f}"
+                        ),
+                        format_done = paste(
+                            "{.alert-success Fuzzing input: {what_char}",
+                            " {.timestamp {cli::pb_elapsed}}}"
+                        ),
+                        clear = FALSE,
                         total = length(funs))
   for (idx in seq_along(funs)) {
     f <- funs[idx]
     fun <- check_fuzzable(f, package)
     if (is.character(fun)) {
       report("SKIP", fun)
-      cli::cli_progress_update()
       next
     }
 
-    cli::cli_progress_update(status = f)
+    cli::cli_progress_update()
     tryCatch(utils::capture.output(suppressMessages(fun(what))),
              error = function(e) {
                whitelist_and_report(f, e, "FAIL")
