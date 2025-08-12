@@ -13,6 +13,8 @@ test_that("input validation", {
                "'what' is an empty list")
   expect_error(fuzz("list", package = letters),
                "'package' should be a character scalar")
+  expect_error(fuzz("list", package = ""),
+               "'package' is an empty character")
   expect_error(fuzz("list", listify_what = NULL),
                "'listify_what' should be of class logical")
   expect_error(fuzz("list", listify_what = c(TRUE, FALSE)),

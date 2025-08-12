@@ -162,7 +162,7 @@ fuzz <- function(funs, what = test_inputs(),
   if (is.null(package)) {
     package <- attr(funs, "package")
   } else {
-    validate_class(package, "character", scalar = TRUE)
+    validate_class(package, "character", scalar = TRUE, remove_empty = TRUE)
   }
   validate_class(listify_what, "logical", scalar = TRUE)
   validate_class(ignore_patterns, "character")
