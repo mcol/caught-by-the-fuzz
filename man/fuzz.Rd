@@ -59,6 +59,8 @@ tested.
 \item{$funs}{a vector of names of the functions tested.}
 \item{$package}{a character string specifying the package name where
 function names were searched, or \code{NA} if none was provided.}
+\item{$ignore_patterns}{The value of the \code{ignore_patterns} argument.}
+\item{$ignore_warnings}{The value of the \code{ignore_warnings} argument.}
 
 The \code{res} column in each of the data frames in the \verb{$runs} field can
 contain the following values:

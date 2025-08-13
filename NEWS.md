@@ -10,6 +10,8 @@
   of results should be printed to the terminal or not.
 - Change the internal structure of the `cbtf` object to store the names of
   the functions fuzzed only once.
+- Store the values of the `ignore_patterns` and `ignore_warnings` options in
+  the `cbtf` object.
 
 # CBTF 0.4.0 (2025-07-31)
 

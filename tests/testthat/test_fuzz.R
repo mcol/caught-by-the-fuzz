@@ -62,7 +62,7 @@ test_that("check object returned", {
   expect_s3_class(res,
                   "cbtf")
   expect_named(res,
-               c("runs", "funs", "package"))
+               c("runs", "funs", "package", "ignore_patterns", "ignore_warnings"))
   expect_length(res,
                 length(funs))
   expect_s3_class(res$runs[[1]],

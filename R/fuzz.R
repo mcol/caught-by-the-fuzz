@@ -121,6 +121,8 @@ get_exported_functions <- function(package, ignore_names = "") {
 #' \item{$funs}{a vector of names of the functions tested.}
 #' \item{$package}{a character string specifying the package name where
 #'       function names were searched, or `NA` if none was provided.}
+#' \item{$ignore_patterns}{The value of the `ignore_patterns` argument.}
+#' \item{$ignore_warnings}{The value of the `ignore_warnings` argument.}
 #'
 #' The `res` column in each of the data frames in the `$runs` field can
 #' contain the following values:
@@ -173,10 +175,10 @@ fuzz <- function(funs, what = test_inputs(),
     what <- append_listified(what)
 
   ## join all regular expression patterns
-  ignore_patterns <- paste0(c(ignore_patterns,
+  joined_patterns <- paste0(c(ignore_patterns,
                               "is missing, with no default"),
                             collapse = "|")
-  ignore_patterns <- gsub("^\\|", "", ignore_patterns) # remove extra |
+  joined_patterns <- gsub("^\\|", "", joined_patterns) # remove extra |
 
   ## start fuzzing
   cli::cli_alert_info(c("Fuzzing {length(funs)} function{?s} ",
@@ -196,13 +198,15 @@ fuzz <- function(funs, what = test_inputs(),
 
     ## fuzz all functions with this input
     runs[[idx]] <- fuzzer(funs, what[[idx]], what.char, package,
-                          ignore_patterns, ignore_warnings)
+                          joined_patterns, ignore_warnings)
   }
 
   ## returned object
   structure(list(runs = runs,
                  funs = funs,
-                 package = if (!is.null(package)) package else NA),
+                 package = if (!is.null(package)) package else NA,
+                 ignore_patterns = ignore_patterns,
+                 ignore_warnings = ignore_warnings),
             class = "cbtf")
 }
 
