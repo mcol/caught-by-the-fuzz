@@ -98,12 +98,12 @@ print.cbtf <- function(x, show_all = FALSE, ...) {
   cat("\n", summary.stats, "\n")
 }
 
-#' Compute the number of inputs tested
+#' Compute the number of tests performed
 #'
 #' @param x An object of class `cbtf`.
 #'
 #' @return
-#' An integer corresponding to the number of inputs tested in a run.
+#' An integer corresponding to the number of tests performed in a run.
 #'
 #' @examples
 #' res <- fuzz(funs = c("list", "matrix", "mean"),
@@ -112,5 +112,5 @@ print.cbtf <- function(x, show_all = FALSE, ...) {
 #'
 #' @export
 length.cbtf <- function(x) {
-  length(x$runs)
+  length(x$runs) * length(x$runs[[1]]$fun)
 }

@@ -64,7 +64,7 @@ test_that("check object returned", {
   expect_named(res,
                c("runs", "package"))
   expect_length(res,
-                1)
+                length(funs))
   expect_s3_class(res$runs[[1]],
                   "data.frame")
   expect_named(res$runs[[1]],

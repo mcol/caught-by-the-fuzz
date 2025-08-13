@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary.R
 \name{length.cbtf}
 \alias{length.cbtf}
-\title{Compute the number of inputs tested}
+\title{Compute the number of tests performed}
 \usage{
 \method{length}{cbtf}(x)
 }
@@ -10,10 +10,10 @@
 \item{x}{An object of class \code{cbtf}.}
 }
 \value{
-An integer corresponding to the number of inputs tested in a run.
+An integer corresponding to the number of tests performed in a run.
 }
 \description{
-Compute the number of inputs tested
+Compute the number of tests performed
 }
 \examples{
 res <- fuzz(funs = c("list", "matrix", "mean"),
