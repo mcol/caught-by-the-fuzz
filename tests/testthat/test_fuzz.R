@@ -62,13 +62,13 @@ test_that("check object returned", {
   expect_s3_class(res,
                   "cbtf")
   expect_named(res,
-               c("runs", "package"))
+               c("runs", "funs", "package"))
   expect_length(res,
                 length(funs))
   expect_s3_class(res$runs[[1]],
                   "data.frame")
   expect_named(res$runs[[1]],
-               c("fun", "res", "msg"))
+               c("res", "msg"))
   expect_equal(nrow(res$runs[[1]]),
                length(funs))
   expect_equal(res$runs[[1]]$res,

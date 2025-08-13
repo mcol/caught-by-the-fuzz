@@ -49,7 +49,6 @@ functions tested. This contains the following fields:
 \item{$runs}{a list of data frames, each containing the results of fuzzing
 all the functions in \code{funs} with one of the inputs in \code{what}. The
 data frame contains the following columns and attributes:\cr
-- \code{fun}: The name of the function tested.\cr
 - \code{res}: The result of the fuzz test, see below for the possible
 values.\cr
 - \code{msg}: The error or warning message returned by the function, if
@@ -57,6 +56,7 @@ any.\cr
 - \verb{attr(*, "what")}: The character representation of the input
 tested.
 }
+\item{$funs}{a vector of names of the functions tested.}
 \item{$package}{a character string specifying the package name where
 function names were searched, or \code{NA} if none was provided.}
 

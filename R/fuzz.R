@@ -111,7 +111,6 @@ get_exported_functions <- function(package, ignore_names = "") {
 #' \item{$runs}{a list of data frames, each containing the results of fuzzing
 #'       all the functions in `funs` with one of the inputs in `what`. The
 #'       data frame contains the following columns and attributes:\cr
-#'       - `fun`: The name of the function tested.\cr
 #'       - `res`: The result of the fuzz test, see below for the possible
 #'         values.\cr
 #'       - `msg`: The error or warning message returned by the function, if
@@ -119,6 +118,7 @@ get_exported_functions <- function(package, ignore_names = "") {
 #'       - `attr(*, "what")`: The character representation of the input
 #'         tested.
 #' }
+#' \item{$funs}{a vector of names of the functions tested.}
 #' \item{$package}{a character string specifying the package name where
 #'       function names were searched, or `NA` if none was provided.}
 #'
@@ -201,6 +201,7 @@ fuzz <- function(funs, what = test_inputs(),
 
   ## returned object
   structure(list(runs = runs,
+                 funs = funs,
                  package = if (!is.null(package)) package else NA),
             class = "cbtf")
 }
@@ -249,7 +250,7 @@ fuzzer <- function(funs, what, what_char = "", package = NULL,
 
   ## list of results
   out.res <- lapply(funs, function(x) {
-    data.frame(fun = x, res = "OK", msg = "")
+    data.frame(res = "OK", msg = "")
   })
 
   ## loop over the functions to fuzz

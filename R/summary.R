@@ -51,6 +51,7 @@
 #' @export
 summary.cbtf <- function(object, tabulate = TRUE, ...) {
   df <- cbind(do.call(rbind, object$runs),
+              fun = rep(object$funs, length(object$runs)),
               what = sapply(object$runs, function(x) attr(x, "what")))
   cli::cli_text("Fuzzed {nrow(object$runs[[1]])} function{?s} ",
                 "on {length(object$runs)} input{?s}: ")
@@ -89,13 +90,14 @@ summary.cbtf <- function(object, tabulate = TRUE, ...) {
 #' @export
 print.cbtf <- function(x, show_all = FALSE, ...) {
   summary.stats <- compute_summary_stats(x)
+  max.name <- max(c(0, nchar(x$funs))) + 1
   res.size <- nchar(tocolour("FAIL")) # include ANSI formatting, if present
   for (run in x$runs) {
+    run$fun <- x$funs
     if (!show_all)
       run <- run[run$res %in% c("FAIL", "WARN"), ]
     if (nrow(run) > 0) {
       cli::cli_h3(paste("Test input:", cli::style_bold(attributes(run)$what)))
-      max.name <- max(c(0, nchar(run$fun))) + 1
       cat(sprintf("%*s  %*s  %s\n",
                   max.name, run$fun, res.size, tocolour(run$res), run$msg),
           sep = "")
@@ -118,5 +120,5 @@ print.cbtf <- function(x, show_all = FALSE, ...) {
 #'
 #' @export
 length.cbtf <- function(x) {
-  length(x$runs) * length(x$runs[[1]]$fun)
+  length(x$runs) * length(x$runs[[1]]$res)
 }
