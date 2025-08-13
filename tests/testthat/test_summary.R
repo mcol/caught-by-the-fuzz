@@ -3,9 +3,7 @@ test_that("summary", {
 
   SW({
   res <- fuzz("list", list(NA, c(1, 2, 3)))
-  expect_output(expect_message(sum <- summary(res),
-                               "Fuzzed 1 function on 2 inputs:"),
-                "list    0    0    0  2")
+  sum <- summary(res)
   expect_s3_class(sum,
                   "data.frame")
   expect_named(sum,
@@ -15,6 +13,8 @@ test_that("summary", {
   })
   expect_s3_class(attr(sum, "summary_table"),
                   "table")
+
+  expect_snapshot(summary(res))
 })
 
 test_that("print", {
@@ -25,8 +25,9 @@ test_that("print", {
                 "OK 2")
   expect_output(expect_fail_message(fuzz("ls", list(NA, c(1, 2, 3)))),
                 "FAIL 2")
+
   res <- fuzz(c("list", "median"), list(NA))
-  expect_output(print(res, show_all = TRUE),
-                "\\n median")
+  expect_snapshot(print(res))
+  expect_snapshot(print(res, show_all = TRUE))
   })
 })
