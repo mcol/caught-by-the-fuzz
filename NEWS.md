@@ -6,6 +6,8 @@
   because of how `tryCatch()` is implemented.
 - The `length()` S3 method for objects of class `cbtf` now counts the total
   number of tests performed, instead of the number of inputs tested.
+- Add the `tabulate` argument to `summary()` to control whether the tabulation
+  of results should be printed to the terminal or not.
 
 # CBTF 0.4.0 (2025-07-31)
 

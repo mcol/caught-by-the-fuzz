@@ -22,6 +22,10 @@
 #' Reports some summary statistics from the results of a run of [fuzz].
 #'
 #' @param object An object of class `cbtf`.
+#' @param tabulate Whether a tabulation of results should be printed out
+#'        (`TRUE` by default). The tabulation can always be retrieved from
+#'        the `"summary_table"` attribute of the returned object also when
+#'        `tabulate = FALSE`.
 #' @param ... Further arguments passed to or from other methods.
 #'        These are currently ignored.
 #'
@@ -45,13 +49,15 @@
 #' @seealso [print.cbtf]
 #'
 #' @export
-summary.cbtf <- function(object, ...) {
+summary.cbtf <- function(object, tabulate = TRUE, ...) {
   df <- cbind(do.call(rbind, object$runs),
               what = sapply(object$runs, function(x) attr(x, "what")))
   cli::cli_text("Fuzzed {nrow(object$runs[[1]])} function{?s} ",
                 "on {length(object$runs)} input{?s}: ")
-  print(tbl <- table(df$fun,
-                     factor(df$res, levels = c("FAIL", "WARN", "SKIP", "OK"))))
+  tbl <- table(df$fun,
+               factor(df$res, levels = c("FAIL", "WARN", "SKIP", "OK")))
+  if (tabulate)
+    print(tbl)
   cat("\n", compute_summary_stats(object, verbose = FALSE), "\n", sep = "")
   invisible(structure(df[, c("fun", "what", "res", "msg")],
                       summary_table = tbl))

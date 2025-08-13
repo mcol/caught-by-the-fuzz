@@ -4,10 +4,15 @@
 \alias{summary.cbtf}
 \title{Results summary from a fuzz run}
 \usage{
-\method{summary}{cbtf}(object, ...)
+\method{summary}{cbtf}(object, tabulate = TRUE, ...)
 }
 \arguments{
 \item{object}{An object of class \code{cbtf}.}
+
+\item{tabulate}{Whether a tabulation of results should be printed out
+(\code{TRUE} by default). The tabulation can always be retrieved from
+the \code{"summary_table"} attribute of the returned object also when
+\code{tabulate = FALSE}.}
 
 \item{...}{Further arguments passed to or from other methods.
 These are currently ignored.}

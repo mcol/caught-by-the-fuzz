@@ -11,6 +11,16 @@
       
       [ FAIL 0 | WARN 0 | SKIP 0 | OK 2 ]
 
+---
+
+    Code
+      summary(res, tabulate = FALSE)
+    Message
+      Fuzzed 1 function on 2 inputs:
+    Output
+      
+      [ FAIL 0 | WARN 0 | SKIP 0 | OK 2 ]
+
 # print
 
     Code

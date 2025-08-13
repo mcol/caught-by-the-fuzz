@@ -15,6 +15,7 @@ test_that("summary", {
                   "table")
 
   expect_snapshot(summary(res))
+  expect_snapshot(summary(res, tabulate = FALSE))
 })
 
 test_that("print", {
