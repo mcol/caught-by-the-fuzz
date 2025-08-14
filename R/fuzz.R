@@ -260,11 +260,13 @@ fuzzer <- function(funs, what, what_char = "", package = NULL,
   ## loop over the functions to fuzz
   cli::cli_progress_bar(type = "tasks",
                         format = paste(
-                            "{cli::pb_spin} Fuzzing input: {strtrim(what_char, 40)}",
+                            "{cli::pb_spin} Test input:",
+                            "{.strong {strtrim(what_char, 40)}}",
                             " {.timestamp {cli::pb_current}/{cli::pb_total}} @ {f}"
                         ),
                         format_done = paste(
-                            "{.alert-success Fuzzing input: {what_char}",
+                            "{.alert-success Test input:}",
+                            "{.strong {what_char}}",
                             " {.timestamp {cli::pb_elapsed}}}"
                         ),
                         clear = FALSE,
