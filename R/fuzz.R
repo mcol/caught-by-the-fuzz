@@ -150,8 +150,8 @@ get_exported_functions <- function(package, ignore_names = "") {
 #' ## this will catch an error (false positive)
 #' fuzz(funs = "matrix",  what = test_inputs("scalar"))
 #'
-#' @seealso [get_exported_functions], [test_inputs], [summary.cbtf],
-#' [print.cbtf]
+#' @seealso [get_exported_functions], [test_inputs], [whitelist],
+#' [summary.cbtf], [print.cbtf]
 #'
 #' @export
 fuzz <- function(funs, what = test_inputs(),
@@ -295,4 +295,44 @@ fuzzer <- function(funs, what, what_char = "", package = NULL,
   ## transform results to a data frame
   structure(as.data.frame(do.call(rbind, out.res)),
             what = what_char)
+}
+
+#' Apply additional whitelist patterns to the results of a fuzz run
+#'
+#' This allows for post-hoc whitelisting of results according to the patterns
+#' specified.
+#'
+#' @param object An object of class `cbtf`.
+#' @param patterns One or more strings containing regular expressions to
+#'        match the errors to whitelist.
+#'
+#' @return
+#' An object of class `cbtf` with the additional whitelist patterns applied.
+#'
+#' @examples
+#' ## this reports a false positive result
+#' (res <- fuzz(funs = "matrix", what = test_inputs("scalar")))
+#'
+#' ## with whitelisting, we can remove that
+#' whitelist(res, "must be of a vector type")
+#'
+#' @seealso [fuzz]
+#'
+#' @export
+whitelist <- function(object, patterns) {
+  from <- "whitelist"
+  validate_class(object, "cbtf", from = from)
+  validate_class(patterns, "character", from = from, remove_empty = TRUE)
+
+  ## join all regular expression patterns
+  joined_patterns <- paste0(patterns, collapse = "|")
+  joined_patterns <- gsub("^\\|", "", joined_patterns) # remove extra |
+
+  ## apply the new whitelist patterns to errors and warnings
+  object$runs <- lapply(object$runs, function(x) {
+    x$res[grepl(joined_patterns, x$msg) & x$msg != "SKIP"] <- "OK"
+    x
+  })
+  object$ignore_patterns <- setdiff(c(object$ignore_patterns, patterns), "")
+  object
 }

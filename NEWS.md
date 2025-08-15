@@ -12,6 +12,8 @@
   the functions fuzzed only once.
 - Store the values of the `ignore_patterns` and `ignore_warnings` options in
   the `cbtf` object.
+- Add the `whitelist()` function to remove false positives from a `cbtf`
+  object.
 
 # CBTF 0.4.0 (2025-07-31)
 

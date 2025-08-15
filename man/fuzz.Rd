@@ -115,6 +115,6 @@ fuzz(funs = "matrix",  what = test_inputs("scalar"))
 
 }
 \seealso{
-\link{get_exported_functions}, \link{test_inputs}, \link{summary.cbtf},
-\link{print.cbtf}
+\link{get_exported_functions}, \link{test_inputs}, \link{whitelist},
+\link{summary.cbtf}, \link{print.cbtf}
 }

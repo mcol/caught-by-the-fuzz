@@ -210,6 +210,30 @@ test_that("self fuzz", {
   })
 })
 
+test_that("whitelist", {
+  testthat::skip_on_cran()
+
+  SW({
+  res <- fuzz("numToInts")
+  })
+  expect_error(whitelist(NA, NA),
+               "[whitelist] 'object' should be of class cbtf",
+               fixed = TRUE)
+  expect_error(whitelist(res, NA),
+               "'patterns' should be of class character")
+  expect_error(whitelist(res, ""),
+               "'patterns' is an empty character")
+
+  ignore_patterns <- c("cannot be coerced to type",
+                       "NAs introduced by coercion")
+  res.new <- whitelist(res, c("", ignore_patterns))
+  SW({
+  expect_pass_message(res.new)
+  })
+  expect_equal(res.new$ignore_patterns,
+               ignore_patterns)
+})
+
 test_that("get_exported_functions", {
   testthat::skip_on_cran()
 
@@ -233,7 +257,8 @@ test_that("get_exported_functions", {
   expect_equal(as.character(funs),
                c("fuzz",
                  "get_exported_functions",
-                 "test_inputs"))
+                 "test_inputs",
+                 "whitelist"))
   expect_equal(attr(funs, "package"),
                "CBTF")
 
