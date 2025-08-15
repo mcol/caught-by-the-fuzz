@@ -14,18 +14,23 @@ Fuzz testing helps identify functions lacking sufficient argument validation,
 and uncovers sets of inputs that, while valid by function signature, may
 cause issues within the function body.
 
-The core functionality of the package is \link{fuzz}, whose aim is to call
-each provided function with a certain input and record the output produced.
-If an error is generated, this is captured and reported to the user, unless
-the error message matches a pattern of whitelisted errors. The objects
-returned by \link{fuzz} can be printed with \link{print.cbtf} and \link{summary.cbtf}.
+The core functionality of the package is in \link{fuzz}, which calls each
+provided function with a certain input and records the output produced.
+If an error or a warning is generated, this is captured and reported to the
+user, unless it matches a pattern of whitelisted messages. The objects
+returned by \link{fuzz} can be inspected with \link{summary.cbtf} and \link{print.cbtf}.
+
+Whitelisting can also be done after a fuzz run has been completed via the
+\link{whitelist} function, so that only messages that need to be acted upon are
+actually shown. Using \link{whitelist} has the advantage of not requiring the
+completion of a fuzz run of all functions over all inputs again.
 
 The helper function \link{get_exported_functions} identifies the functions
 in the public interface of a given package, facilitating the generation of
 the list of functions to be fuzzed.
 
 Function \link{test_inputs} by default generates a large set of potentially
-problematic inputs, but they can be limited just to the desired classes of
+problematic inputs, but these can be limited just to the desired classes of
 inputs.
 }
 \seealso{

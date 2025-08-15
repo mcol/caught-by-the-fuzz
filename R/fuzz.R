@@ -97,7 +97,7 @@ get_exported_functions <- function(package, ignore_names = "") {
 #'        names will be searched in the global namespace.
 #' @param listify_what Whether each input in `what` should also be tested
 #'        in its listified version (`FALSE` by default). When set to `TRUE`,
-#'        if `what` is `list(x = x)`, the function will operate as if `what`
+#'        if `what` is `list(x = x)`, the function will operate as if it
 #'        were `list(x = x, "list(x)" = list(x))`, for any input object `x`.
 #' @param ignore_patterns One or more strings containing regular expressions
 #'        to match the errors to ignore. The string "is missing, with no
@@ -108,7 +108,7 @@ get_exported_functions <- function(package, ignore_names = "") {
 #' @return
 #' An object of class `cbtf` that stores the results obtained for each of the
 #' functions tested. This contains the following fields:
-#' \item{$runs}{a list of data frames, each containing the results of fuzzing
+#' \item{runs}{a list of data frames, each containing the results of fuzzing
 #'       all the functions in `funs` with one of the inputs in `what`. The
 #'       data frame contains the following columns and attributes:\cr
 #'       - `res`: The result of the fuzz test, see below for the possible
@@ -118,24 +118,24 @@ get_exported_functions <- function(package, ignore_names = "") {
 #'       - `attr(*, "what")`: The character representation of the input
 #'         tested.
 #' }
-#' \item{$funs}{a vector of names of the functions tested.}
-#' \item{$package}{a character string specifying the package name where
+#' \item{funs}{a vector of names of the functions tested.}
+#' \item{package}{a character string specifying the package name where
 #'       function names were searched, or `NA` if none was provided.}
-#' \item{$ignore_patterns}{The value of the `ignore_patterns` argument.}
-#' \item{$ignore_warnings}{The value of the `ignore_warnings` argument.}
+#' \item{ignore_patterns}{The value of the `ignore_patterns` argument.}
+#' \item{ignore_warnings}{The value of the `ignore_warnings` argument.}
 #'
 #' The `res` column in each of the data frames in the `$runs` field can
 #' contain the following values:
-#' * OK: either no error or warning was produced (in which case, the `msg`
+#' * **OK**: either no error or warning was produced (in which case, the `msg`
 #'   entry is left blank), or it was whitelisted (in which case, the message
 #'   received is stored in `msg`).
-#' * SKIP: no test was run, either because the given name cannot be found, or
+#' * **SKIP**: no test was run, either because the given name cannot be found, or
 #'   it doesn't correspond to a function, or the function accepts no arguments,
 #'   or the function contains a call to [readline]; the exact reason is given
 #'   in `msg`.
-#' * WARN: a warning was thrown for which no whitelisting occurred and
+#' * **WARN**: a warning was thrown for which no whitelisting occurred and
 #'   `ignore_warnings = FALSE`; its message is stored in `msg`.
-#' * FAIL: an error was thrown for which no whitelisting occurred; its message
+#' * **FAIL**: an error was thrown for which no whitelisting occurred; its message
 #'   is stored in `msg`.
 #'
 #' @examples
