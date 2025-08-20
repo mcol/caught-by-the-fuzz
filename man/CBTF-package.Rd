@@ -29,9 +29,10 @@ The helper function \link{get_exported_functions} identifies the functions
 in the public interface of a given package, facilitating the generation of
 the list of functions to be fuzzed.
 
-Function \link{test_inputs} by default generates a large set of potentially
-problematic inputs, but these can be limited just to the desired classes of
-inputs.
+The helper function \link{test_inputs} is invoked by \link{fuzz} if the user doesn't
+specify the set of inputs to be tested. By default generates a large set of
+potentially problematic inputs, but these can be limited just to the
+desired classes of inputs.
 }
 \seealso{
 Useful links:

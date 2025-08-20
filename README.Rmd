@@ -32,9 +32,10 @@ The helper function `get_exported_functions()` identifies the functions
 in the public interface of a given package, facilitating the generation of
 the list of functions to be fuzzed.
 
-Function `test_inputs()` by default generates a large set of potentially
-problematic inputs, but these can be limited just to the desired classes of
-inputs.
+The helper function `test_inputs()` is invoked by `fuzz()` if the user doesn't
+specify the set of inputs to be tested. By default it generates a large set of
+potentially problematic inputs, but these can be limited just to the desired
+classes of inputs.
 
 At the moment the functionality of the package is extremely limited: it
 operates only on the first argument and it doesn't introduce any randomness.
@@ -46,6 +47,10 @@ However, it's convenient when there are a large number of functions to test.
 ## don't print the progess messages, as `\r` is badly supported here
 withr::local_envvar(c(R_CLI_DYNAMIC="FALSE"))
 ```
+
+This is a simple example that displays how to use `CBTF` to fuzz an R package.
+We consider `mime` because it is small enough to run quickly and is likely
+installed on most systems.
 
 ```{r}
 library(CBTF)
