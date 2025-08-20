@@ -170,6 +170,7 @@ raw_inputs <- function() {
 
 list_inputs <- function() {
   namify(
+      list(3),
       list(a = c(1, 2, 3), b = letters),
       list()
   )
