@@ -189,15 +189,15 @@ fuzz <- function(funs, what = test_inputs(),
 
   ## loop over the inputs
   runs <- list()
-  what.chars <- names(what)
+  what_chars <- names(what)
   for (idx in seq_along(what)) {
     ## string representation of the input
-    what.char <- what.chars[idx]
-    if (is.null(what.char) || what.char == "")
-      what.char <- deparse(what[[idx]])[[1]]
+    what_char <- what_chars[idx]
+    if (is.null(what_char) || what_char == "")
+      what_char <- deparse(what[[idx]])[[1]]
 
     ## fuzz all functions with this input
-    runs[[idx]] <- fuzzer(funs, what[[idx]], what.char, package,
+    runs[[idx]] <- fuzzer(funs, what[[idx]], what_char, package,
                           joined_patterns, ignore_warnings)
   }
 
