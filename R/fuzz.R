@@ -267,7 +267,7 @@ fuzzer <- function(funs, what, what_char = "", package = NULL,
                         format_done = paste(
                             "{.alert-success Test input:}",
                             "{.strong {what_char}}",
-                            " {.timestamp {cli::pb_elapsed}}}"
+                            " {.timestamp {cli::pb_elapsed}}"
                         ),
                         clear = FALSE,
                         total = length(funs))
