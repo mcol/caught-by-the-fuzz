@@ -187,6 +187,12 @@ fuzz <- function(funs, what = test_inputs(),
     cli::cli_alert_info(c("Functions will be searched in the global namespace ",
                           "as 'package' was not specified"))
 
+  ## ensure that we always show some progress
+  if (is.null(getOption("cli.progress_show_after"))) {
+    opt <- options(cli.progress_show_after = 0.2)
+    on.exit(options(opt), add = TRUE)
+  }
+
   ## loop over the inputs
   runs <- list()
   what_chars <- names(what)
