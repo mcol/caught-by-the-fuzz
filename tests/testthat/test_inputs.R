@@ -21,4 +21,10 @@ test_that("test_inputs", {
                test_inputs())
   expect_equal(test_inputs(c("all", "error")),
                test_inputs())
+  expect_equal(test_inputs("help"),
+               c("all", "scalar", "numeric", "integer", "logical",
+                 "character", "factor", "data.frame", "matrix", "array",
+                 "date", "raw", "list"))
+  expect_equal(test_inputs("help"),
+               test_inputs(c("scalar", "help")))
 })

@@ -14,6 +14,8 @@
   the `cbtf` object.
 - Add the `whitelist()` function to remove false positives from a `cbtf`
   object.
+- Make `test_input()` recognise the `"help"` keyword, in which case it returns
+  a vector of valid input classes.
 
 # CBTF 0.4.0 (2025-07-31)
 

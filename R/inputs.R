@@ -6,18 +6,24 @@
 #'
 #' @param use Names of input classes to use. Valid names are "all" (default),
 #'        "scalar", "numeric", "integer", "logical", "character", "factor",
-#'        "data.frame", "matrix", "array", "date", "raw" and "list".
+#'        "data.frame", "matrix", "array", "date", "raw" and "list". A vector
+#'        of valid classes can be retrieved programmatically by setting this
+#'        argument to "help".
 #' @param skip Names of input classes to skip.
 #'
 #' @return
-#' A named list of inputs corresponding to the input classes selected.
+#' A named list of inputs corresponding to the input classes selected, or
+#' a character vector of valid input classes if `use = "help"`.
 #'
 #' @examples
 #' ## only the scalar and numeric tests
-#' inputs1 <- test_inputs(c("scalar", "numeric"))
+#' inputs1 <- test_inputs(use = c("scalar", "numeric"))
 #'
 #' ## everything but the data, raw and list tests
-#' inputs2 <- test_inputs("all", skip = c("date", "raw", "list"))
+#' inputs2 <- test_inputs(skip = c("date", "raw", "list"))
+#'
+#' ## print the valid input classes
+#' test_inputs("help")
 #'
 #' @seealso [fuzz]
 #'
@@ -38,6 +44,8 @@ test_inputs <- function(use = "all", skip = "") {
               "raw_inputs",
               "list_inputs")
   valid <- names(inputs) <- gsub("_inputs", "", inputs)
+  if ("help" %in% use)
+    return(c("all", valid))
   if ("all" %in% use)
     use <- valid
   use <- setdiff(use[use %in% valid], skip)

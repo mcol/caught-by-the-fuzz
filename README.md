@@ -114,7 +114,34 @@ fuzz(funs, what = list(letters = letters))
     ## 
     ##  [ FAIL 1 | WARN 0 | SKIP 0 | OK 1 ]
 
-### Test for list inputs automatically
+### Controlling the inputs tested
+
+By default, `fuzz()` tests all the inputs produced by `test_inputs()`.
+However, this can be controlled by specifying the classes that should be
+tested:
+
+``` r
+test_inputs(use = c("scalar", "numeric", "integer", "matrix"))
+```
+
+Alternatively, one can specify the classes to be excluded:
+
+``` r
+test_inputs(skip = c("date", "raw"))
+```
+
+A vector of valid classes can be retrieved programmatically by setting
+this argument to “help”:
+
+``` r
+test_inputs("help")
+```
+
+    ##  [1] "all"        "scalar"     "numeric"    "integer"    "logical"   
+    ##  [6] "character"  "factor"     "data.frame" "matrix"     "array"     
+    ## [11] "date"       "raw"        "list"
+
+### Fuzzing list inputs automatically
 
 It is trivial to augment a given set of inputs with list versions of the
 same. This effectively doubles the number of tests run with no
