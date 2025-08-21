@@ -45,7 +45,7 @@
 - Add the `listify_what` argument to `fuzz()` so that each input in `what`
   is also tested in its listified version.
 - Provide the S3 method for `length()`.
-- Make the output from summary() more informative and include a column with
+- Make the output from `summary()` more informative and include a column with
   the inputs tested in the data frame returned.
 
 # CBTF 0.2.0 (2025-07-16)
@@ -55,8 +55,8 @@
 - Skip functions that call `readline()`, as in an interactive session they
   stall waiting for user input (#4).
 - Skip non-existing function names and functions that accept no arguments.
-- Show a progress bar during fuzz().
-- Prettify the output from fuzz(), summary() and print().
+- Show a progress bar during `fuzz()`.
+- Prettify the output from `fuzz()`, `summary()` and `print()`.
 
 # CBTF 0.1.0 (2024-11-14)
 
