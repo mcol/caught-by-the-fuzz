@@ -1,4 +1,4 @@
-# Current development version
+# CBTF 0.5.0 (2025-08-21)
 
 - Streamline the progress report from `fuzz()`.
 - In case both an error and a warning are raised by the function being
