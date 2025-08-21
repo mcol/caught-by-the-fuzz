@@ -37,6 +37,12 @@ doesn’t specify the set of inputs to be tested. By default it generates
 a large set of potentially problematic inputs, but these can be limited
 just to the desired classes of inputs.
 
+The helper function `namify()` can be used to generate automatically
+pretty names in the list of input object, which can improve the output,
+especially when structures such as data frames, matrices, and more
+complex objects are involved. These names are based on the deparsed
+representation of the unevaluated inputs.
+
 At the moment the functionality of the package is extremely limited: it
 operates only on the first argument and it doesn’t introduce any
 randomness. However, it’s convenient when there are a large number of
@@ -89,35 +95,43 @@ whitelist(res, "a character vector argument expected")
 
 When the inputs contains complex structures, it is better to provide a
 named list to the `what` argument of `fuzz()`: these names will be used
-instead of relying on deparsing of the input, which may be poor.
+instead of relying on deparsing of the input, which may be poor. A
+convenient way of generating names is by using the `namify()` helper
+function.
 
 For example, compare this:
 
 ``` r
-fuzz(funs, what = list(letters))
+fuzz(funs, what = list(letters, data.frame(a = 1, b = "a")))
 ```
 
-    ## ℹ Fuzzing 2 functions on 1 input
+    ## ℹ Fuzzing 2 functions on 2 inputs
     ## ✖  🚨   CAUGHT BY THE FUZZ!   🚨
     ## 
     ## ── Test input: c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l",
     ##  parse_multipart  FAIL  $ operator is invalid for atomic vectors
     ## 
-    ##  [ FAIL 1 | WARN 0 | SKIP 0 | OK 1 ]
+    ## ── Test input: structure(list(a = 1, b = "a"), class = "data.frame", row.names = c(NA,
+    ##       guess_type  FAIL  a character vector argument expected
+    ## 
+    ##  [ FAIL 2 | WARN 0 | SKIP 0 | OK 2 ]
 
 to this:
 
 ``` r
-fuzz(funs, what = list(letters = letters))
+fuzz(funs, what = namify(letters, data.frame(a = 1, b = "a")))
 ```
 
-    ## ℹ Fuzzing 2 functions on 1 input
+    ## ℹ Fuzzing 2 functions on 2 inputs
     ## ✖  🚨   CAUGHT BY THE FUZZ!   🚨
     ## 
     ## ── Test input: letters
     ##  parse_multipart  FAIL  $ operator is invalid for atomic vectors
     ## 
-    ##  [ FAIL 1 | WARN 0 | SKIP 0 | OK 1 ]
+    ## ── Test input: data.frame(a = 1, b = "a")
+    ##       guess_type  FAIL  a character vector argument expected
+    ## 
+    ##  [ FAIL 2 | WARN 0 | SKIP 0 | OK 2 ]
 
 ### Controlling the inputs tested
 
@@ -153,7 +167,7 @@ same. This effectively doubles the number of tests run with no
 additional coding effort.
 
 ``` r
-fuzz(funs, what = list(letters = letters), listify_what = TRUE)
+fuzz(funs, what = namify(letters), listify_what = TRUE)
 ```
 
     ## ℹ Fuzzing 2 functions on 2 inputs

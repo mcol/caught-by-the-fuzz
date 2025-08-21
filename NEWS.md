@@ -16,6 +16,8 @@
   object.
 - Make `test_input()` recognise the `"help"` keyword, in which case it returns
   a vector of valid input classes.
+- Add the `namify()` function to help create a named list of custom input
+  objects.
 
 # CBTF 0.4.0 (2025-07-31)
 

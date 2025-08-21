@@ -257,6 +257,7 @@ test_that("get_exported_functions", {
   expect_equal(as.character(funs),
                c("fuzz",
                  "get_exported_functions",
+                 "namify",
                  "test_inputs",
                  "whitelist"))
   expect_equal(attr(funs, "package"),
