@@ -1,5 +1,7 @@
 # Current development version
 
+- Add the `trace` argument to `fuzz()` to help tracing the progress if the
+  function appears to be stuck.
 
 # CBTF 0.5.0 (2025-08-21)
 

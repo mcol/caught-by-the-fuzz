@@ -28,6 +28,8 @@ test_that("input validation", {
                "'ignore_warnings' should be of class logical")
   expect_error(fuzz("list", list(NA), ignore_warnings = c(TRUE, FALSE)),
                "'ignore_warnings' should be a logical scalar")
+  expect_error(fuzz("list", list(NA), trace = c(TRUE, FALSE)),
+               "'trace' should be a logical scalar")
 })
 
 test_that("check skipped functions", {
@@ -202,6 +204,7 @@ test_that("self fuzz", {
   test_self_fuzz("listify_what")
   test_self_fuzz("ignore_patterns")
   test_self_fuzz("ignore_warnings")
+  test_self_fuzz("trace")
 
   ## as `what` expects a list argument, we can't use curry_fuzz_for()
   assign(".local_fun.", envir = .GlobalEnv,

@@ -10,7 +10,8 @@ fuzz(
   package = NULL,
   listify_what = FALSE,
   ignore_patterns = "",
-  ignore_warnings = FALSE
+  ignore_warnings = FALSE,
+  trace = FALSE
 )
 }
 \arguments{
@@ -43,6 +44,10 @@ default" is always ignored.}
 
 \item{ignore_warnings}{Whether warnings should be ignored (\code{FALSE} by
 default).}
+
+\item{trace}{Wheter a tracing output should be produced (\code{FALSE} by
+default). This can be useful to trace the progress if the function
+appears to be stuck.}
 }
 \value{
 An object of class \code{cbtf} that stores the results obtained for each of the

@@ -105,6 +105,9 @@ get_exported_functions <- function(package, ignore_names = "") {
 #'        default" is always ignored.
 #' @param ignore_warnings Whether warnings should be ignored (`FALSE` by
 #'        default).
+#' @param trace Wheter a tracing output should be produced (`FALSE` by
+#'        default). This can be useful to trace the progress if the function
+#'        appears to be stuck.
 #'
 #' @return
 #' An object of class `cbtf` that stores the results obtained for each of the
@@ -157,7 +160,8 @@ get_exported_functions <- function(package, ignore_names = "") {
 #' @export
 fuzz <- function(funs, what = test_inputs(),
                  package = NULL, listify_what = FALSE,
-                 ignore_patterns = "", ignore_warnings = FALSE) {
+                 ignore_patterns = "", ignore_warnings = FALSE,
+                 trace = FALSE) {
 
   ## input validation
   validate_class(funs, "character", remove_empty = TRUE)
@@ -170,6 +174,7 @@ fuzz <- function(funs, what = test_inputs(),
   validate_class(listify_what, "logical", scalar = TRUE)
   validate_class(ignore_patterns, "character")
   validate_class(ignore_warnings, "logical", scalar = TRUE)
+  validate_class(trace, "logical", scalar = TRUE)
 
   ## expand the set of inputs with their listified version
   if (listify_what)
@@ -205,7 +210,7 @@ fuzz <- function(funs, what = test_inputs(),
 
     ## fuzz all functions with this input
     runs[[idx]] <- fuzzer(funs, what[[idx]], what_char, package,
-                          joined_patterns, ignore_warnings)
+                          joined_patterns, ignore_warnings, trace)
   }
 
   ## returned object
@@ -233,6 +238,8 @@ fuzz <- function(funs, what = test_inputs(),
 #'        to match the messages to ignore.
 #' @param ignore_warnings Whether warnings should be ignored (`FALSE` by
 #'        default).
+#' @param trace Whether a tracing output should be produced (`FALSE` by
+#'        default).
 #'
 #' @return
 #' A data.frame of results obtained for each of the functions tested, with
@@ -242,7 +249,7 @@ fuzz <- function(funs, what = test_inputs(),
 #' @noRd
 fuzzer <- function(funs, what, what_char = "", package = NULL,
                    ignore_patterns = "is missing, with no default",
-                   ignore_warnings = FALSE) {
+                   ignore_warnings = FALSE, trace = FALSE) {
   ## store result and message in the list of results defined below
   report <- function(label, msg) {
     out.res[[idx]]["res"] <<- label
@@ -285,6 +292,9 @@ fuzzer <- function(funs, what, what_char = "", package = NULL,
       report("SKIP", fun)
       next
     }
+
+    if (trace)
+      cli::cli_text("{.strong trace>} {f}, {what_char}")
 
     cli::cli_progress_update()
     tryCatch(withCallingHandlers(utils::capture.output(suppressMessages(fun(what))),
