@@ -10,7 +10,7 @@ This package implements a very simple mechanism for fuzz-testing functions
 in the public interface of an R package.
 }
 \details{
-Fuzz testing helps identify functions lacking sufficient argument validation,
+Fuzz testing helps identify functions that lack sufficient argument validation,
 and uncovers sets of inputs that, while valid by function signature, may
 cause issues within the function body.
 
