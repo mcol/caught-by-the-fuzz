@@ -24,6 +24,10 @@ No return value, called for side effects.
 This formats with colours the results from a fuzz run and prints them to
 the terminal.
 }
+\details{
+The use of unicode icons in the output messages can be disabled by setting
+\code{options(cli.unicode = FALSE)}.
+}
 \examples{
 res <- fuzz(funs = c("list", "matrix", "mean"),
             what = test_inputs(c("numeric", "raw")))

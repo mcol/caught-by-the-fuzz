@@ -32,6 +32,10 @@ out.}
 \description{
 Reports some summary statistics from the results of a run of \link{fuzz}.
 }
+\details{
+The use of unicode icons in the output messages can be disabled by setting
+\code{options(cli.unicode = FALSE)}.
+}
 \examples{
 res <- fuzz(funs = c("list", "matrix", "mean"),
             what = test_inputs(c("numeric", "raw")))

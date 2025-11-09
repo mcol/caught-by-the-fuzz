@@ -26,7 +26,7 @@
     Code
       print(res)
     Message
-      v  🏃 You didn't get caught by the fuzz!
+      v    You didn't get caught by the fuzz!
     Output
       
        [ FAIL 0 | WARN 0 | SKIP 0 | OK 2 ] 
@@ -36,7 +36,7 @@
     Code
       print(res, show_all = TRUE)
     Message
-      v  🏃 You didn't get caught by the fuzz!
+      v    You didn't get caught by the fuzz!
       
       -- Test input: NA 
     Output

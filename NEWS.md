@@ -2,6 +2,9 @@
 
 - Add the `trace` argument to `fuzz()` to help tracing the progress if the
   function appears to be stuck.
+- Use unicode symbols only on terminals that support UTF8, and respect the
+  `cli.unicode` option, so that `options(cli.unicode = FALSE)` can be used to
+  disable all unicode output.
 
 # CBTF 0.5.0 (2025-08-21)
 

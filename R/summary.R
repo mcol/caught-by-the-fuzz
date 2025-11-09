@@ -21,6 +21,9 @@
 #'
 #' Reports some summary statistics from the results of a run of [fuzz].
 #'
+#' The use of unicode icons in the output messages can be disabled by setting
+#' `options(cli.unicode = FALSE)`.
+#'
 #' @param object An object of class `cbtf`.
 #' @param tabulate Whether a tabulation of results should be printed out
 #'        (`TRUE` by default). The tabulation can always be retrieved from
@@ -68,6 +71,9 @@ summary.cbtf <- function(object, tabulate = TRUE, ...) {
 #'
 #' This formats with colours the results from a fuzz run and prints them to
 #' the terminal.
+#'
+#' The use of unicode icons in the output messages can be disabled by setting
+#' `options(cli.unicode = FALSE)`.
 #'
 #' @param x An object of class `cbtf`.
 #' @param show_all Whether all results should be printed. By default (`FALSE`),

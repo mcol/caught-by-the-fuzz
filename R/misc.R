@@ -113,10 +113,13 @@ compute_summary_stats <- function(object, verbose = TRUE) {
   results <- unlist(lapply(object$runs, function(x) x$res))
   success <- sum(results %in% c("FAIL", "WARN")) == 0
   if (verbose) {
+    use.utf8 <- cli::is_utf8_output()
+    symb.succ <- if (use.utf8) "\U1F3C3" else " "
+    symb.fail <- if (use.utf8) "\U1F6A8" else " "
     if (success)
-      cli::cli_alert_success(" \U0001F3C3 You didn't get caught by the fuzz!")
+      cli::cli_alert_success(" {symb.succ} You didn't get caught by the fuzz!")
     else
-      cli::cli_alert_danger(" \U0001F6A8   CAUGHT BY THE FUZZ!   \U0001F6A8")
+      cli::cli_alert_danger(" {symb.fail}   CAUGHT BY THE FUZZ!   {symb.fail}")
   }
 
   stats <- as.list(table(results))
