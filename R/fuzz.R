@@ -286,25 +286,25 @@ fuzzer <- function(funs, what, what_char = "", package = NULL,
                         clear = FALSE,
                         total = length(funs))
   for (idx in seq_along(funs)) {
-    f <- funs[idx]
-    fun <- check_fuzzable(f, package)
+    fun_name <- funs[idx]
+    fun <- check_fuzzable(fun_name, package)
     if (is.character(fun)) {
       report("SKIP", fun)
       next
     }
 
     if (trace)
-      cli::cli_text("{.strong trace>} {f}, {what_char}")
+      cli::cli_text("{.strong trace>} {fun_name}, {what_char}")
 
     cli::cli_progress_update()
     tryCatch(withCallingHandlers(utils::capture.output(suppressMessages(fun(what))),
                                  warning = function(w) {
-                                   whitelist_and_report(f, w, "WARN",
+                                   whitelist_and_report(fun_name, w, "WARN",
                                                         ignore_warnings)
                                    invokeRestart("muffleWarning")
                                  }),
              error = function(e) {
-               whitelist_and_report(f, e, "FAIL")
+               whitelist_and_report(fun_name, e, "FAIL")
              })
   }
   cli::cli_progress_done()
