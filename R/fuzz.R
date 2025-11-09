@@ -297,7 +297,7 @@ fuzzer <- function(funs, what, what_char = "", package = NULL,
       cli::cli_text("{.strong trace>} {fun_name}, {what_char}")
 
     cli::cli_progress_update()
-    tryCatch(withCallingHandlers(utils::capture.output(suppressMessages(fun(what))),
+    tryCatch(withCallingHandlers(suppressMessages(utils::capture.output(fun(what))),
                                  warning = function(w) {
                                    whitelist_and_report(fun_name, w, "WARN",
                                                         ignore_warnings)
