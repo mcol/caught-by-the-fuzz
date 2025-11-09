@@ -257,13 +257,14 @@ fuzzer <- function(funs, what, what_char = "", package = NULL,
   }
 
   ## apply the whitelist rules before reporting the result
-  whitelist_and_report <- function(fun, ew, type, ignore_warnings = FALSE) {
+  whitelist_and_report <- function(fun_name, ew, type, ignore_warnings = FALSE) {
+    msg <- conditionMessage(ew)
     res <- if (!ignore_warnings &&
-               !grepl(fun, ew) && ## check if ew contains the function name
-               !grepl(ignore_patterns, ew)) {
+               !grepl(fun_name, msg) &&
+               !grepl(ignore_patterns, msg)) {
              res <- type
            } else { "OK" }
-    report(res, ew$message)
+    report(res, msg)
   }
 
   ## list of results

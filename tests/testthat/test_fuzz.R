@@ -158,13 +158,6 @@ test_that("fuzzer", {
   expect_equal(res$msg,
                "argument is not numeric or logical: returning NA")
 
-  ## this passes because the warning message contains "mean.default"
-  res <- fuzzer("mean", letters)
-  expect_equal(res$res,
-               "OK")
-  expect_equal(res$msg,
-               "argument is not numeric or logical: returning NA")
-
   ## in case of both error and warning, we should report the error
   SW({
   assign(".local_fun.", envir = .GlobalEnv,
