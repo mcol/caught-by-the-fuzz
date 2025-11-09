@@ -65,6 +65,8 @@ get_exported_functions <- function(package, ignore_names = "") {
 #' objects specified in `what`, recording if any errors or warnings are
 #' thrown in the process.
 #'
+#' @section Whitelisting:
+#'
 #' In order to reduce the number of false positive results produced, this
 #' function applies the following set rules, to establish if an error or
 #' warning condition should ignored (whitelisting):
@@ -80,6 +82,9 @@ get_exported_functions <- function(package, ignore_names = "") {
 #'
 #' In all whitelisted cases, the result is "OK", and the message that
 #' was received is stored in the `$msg` field (see the *Value* section).
+#'
+#' *Note:* Whitelisting can also be applied post-hoc on the results of a fuzz
+#' run using the [whitelist] function.
 #'
 #' @param funs A character vector of function names to test. If a `"package"`
 #'        attribute is set and is no `package` argument is provided, functions

@@ -89,7 +89,9 @@ This function calls each of the functions in \code{funs} with each of the
 objects specified in \code{what}, recording if any errors or warnings are
 thrown in the process.
 }
-\details{
+\section{Whitelisting}{
+
+
 In order to reduce the number of false positive results produced, this
 function applies the following set rules, to establish if an error or
 warning condition should ignored (whitelisting):
@@ -106,7 +108,11 @@ in \code{ignore_patterns}.
 
 In all whitelisted cases, the result is "OK", and the message that
 was received is stored in the \verb{$msg} field (see the \emph{Value} section).
+
+\emph{Note:} Whitelisting can also be applied post-hoc on the results of a fuzz
+run using the \link{whitelist} function.
 }
+
 \examples{
 ## this should produce no errors
 res <- fuzz(funs = c("list", "matrix", "mean"),
