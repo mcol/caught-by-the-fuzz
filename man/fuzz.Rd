@@ -45,7 +45,7 @@ default" is always ignored.}
 \item{ignore_warnings}{Whether warnings should be ignored (\code{FALSE} by
 default).}
 
-\item{trace}{Wheter a tracing output should be produced (\code{FALSE} by
+\item{trace}{Whether a tracing output should be produced (\code{FALSE} by
 default). This can be useful to trace the progress if the function
 appears to be stuck.}
 }

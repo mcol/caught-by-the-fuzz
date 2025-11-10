@@ -110,7 +110,7 @@ get_exported_functions <- function(package, ignore_names = "") {
 #'        default" is always ignored.
 #' @param ignore_warnings Whether warnings should be ignored (`FALSE` by
 #'        default).
-#' @param trace Wheter a tracing output should be produced (`FALSE` by
+#' @param trace Whether a tracing output should be produced (`FALSE` by
 #'        default). This can be useful to trace the progress if the function
 #'        appears to be stuck.
 #'
