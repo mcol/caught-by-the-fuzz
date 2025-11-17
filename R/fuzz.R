@@ -282,7 +282,7 @@ fuzzer <- function(funs, what, what_char = "", package = NULL,
                         format = paste(
                             "{cli::pb_spin} Test input:",
                             "{.strong {strtrim(what_char, 40)}}",
-                            " {.timestamp {cli::pb_current}/{cli::pb_total}} @ {f}"
+                            " {.timestamp {cli::pb_current}/{cli::pb_total}} @ {fun_name}"
                         ),
                         format_done = paste(
                             "{.alert-success Test input:}",
