@@ -22,12 +22,14 @@
 #' This function extracts the exports from the namespace of the given package
 #' via [getNamespaceExports] and discards non-fuzzable objects (non-functions
 #' and functions with no arguments). The set of names returned can be further
-#' restricted via the `ignore_names` argument.
+#' restricted via the `ignore_names` and `ignore_deprecated` arguments.
 #'
 #' @param package Name of the package to fuzz-test.
 #' @param ignore_names Names of functions to ignore: these are removed from
 #'        the names returned. This can be helpful, for example, to discard
 #'        function aliases.
+#' @param ignore_deprecated Whether deprecated function should be ignored
+#'        (`TRUE` by default).
 #'
 #' @return
 #' A character vector of the names of the fuzzable functions exported from
@@ -42,17 +44,19 @@
 #' @seealso [fuzz]
 #'
 #' @export
-get_exported_functions <- function(package, ignore_names = "") {
+get_exported_functions <- function(package, ignore_names = "",
+                                   ignore_deprecated = TRUE) {
   from <- "get_exported_functions"
   validate_class(package, "character", from = from,
                  scalar = TRUE, remove_empty = TRUE)
   validate_class(ignore_names, "character", from = from)
+  validate_class(ignore_deprecated, "logical", from = from, scalar = TRUE)
   funs <- tryCatch(sort(getNamespaceExports(package)),
                    error = function(e) fuzz_error(e$message, from = from))
 
   ## keep only fuzzable functions
   keep.idx <- sapply(funs, function(x) {
-    is.function(check_fuzzable(x, package, skip_readline = FALSE))
+    is.function(check_fuzzable(x, package, skip_readline = FALSE, ignore_deprecated))
   })
   funs <- setdiff(funs[keep.idx], ignore_names)
   attr(funs, "package") <- package
@@ -293,7 +297,7 @@ fuzzer <- function(funs, what, what_char = "", package = NULL,
                         total = length(funs))
   for (idx in seq_along(funs)) {
     fun_name <- funs[idx]
-    fun <- check_fuzzable(fun_name, package)
+    fun <- check_fuzzable(fun_name, package, ignore_deprecated = FALSE)
     if (is.character(fun)) {
       report("SKIP", fun)
       next

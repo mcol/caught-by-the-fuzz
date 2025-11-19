@@ -246,6 +246,10 @@ test_that("get_exported_functions", {
                "'ignore_names' should be of class character")
   expect_error(get_exported_functions("CBTF", character(0)),
                "'ignore_names' is an empty character")
+  expect_error(get_exported_functions("CBTF", "ignore", NA),
+               "'ignore_deprecated' should be of class logical")
+  expect_error(get_exported_functions("CBTF", "ignore", c(TRUE, FALSE)),
+               "'ignore_deprecated' should be a logical scalar")
 
   funs <- get_exported_functions("CBTF")
   expect_type(funs,

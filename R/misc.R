@@ -64,13 +64,16 @@ fuzz_error <- function(..., from = "fuzz") {
 #'        value corresponds to the global namespace.
 #' @param skip_readline Whether functions containing calls to [readline] should
 #'        be considered non-fuzzable (`TRUE` by default).
+#' @param ignore_deprecated Whether deprecated functions should be ignored
+#'        (`TRUE` by default).
 #'
 #' @return
 #' In case of failure, a character string containing the reason why the
 #' function cannot be fuzzed; otherwise the function itself.
 #'
 #' @noRd
-check_fuzzable <- function(fun, pkg, skip_readline = TRUE) {
+check_fuzzable <- function(fun, pkg, skip_readline = TRUE,
+                           ignore_deprecated = TRUE) {
   ## attempt to get a function from its name
   fun <- try(if (is.null(pkg)) get(fun)
              else utils::getFromNamespace(fun, pkg),
@@ -92,6 +95,10 @@ check_fuzzable <- function(fun, pkg, skip_readline = TRUE) {
   ## skip functions that wait for user input
   if (skip_readline && contains_readline(fun))
     return("Contains readline()")
+
+  ## skip deprecated functions
+  if (ignore_deprecated && any(grepl("\\.Deprecated", body(fun))))
+    return("Deprecated function")
 
   return(fun)
 }

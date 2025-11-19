@@ -4,7 +4,7 @@
 \alias{get_exported_functions}
 \title{Get the names of the exported functions of a package}
 \usage{
-get_exported_functions(package, ignore_names = "")
+get_exported_functions(package, ignore_names = "", ignore_deprecated = TRUE)
 }
 \arguments{
 \item{package}{Name of the package to fuzz-test.}
@@ -12,6 +12,9 @@ get_exported_functions(package, ignore_names = "")
 \item{ignore_names}{Names of functions to ignore: these are removed from
 the names returned. This can be helpful, for example, to discard
 function aliases.}
+
+\item{ignore_deprecated}{Whether deprecated function should be ignored
+(\code{TRUE} by default).}
 }
 \value{
 A character vector of the names of the fuzzable functions exported from
@@ -23,7 +26,7 @@ directly as the \code{funs} argument of \link{fuzz} without need to specify the
 This function extracts the exports from the namespace of the given package
 via \link{getNamespaceExports} and discards non-fuzzable objects (non-functions
 and functions with no arguments). The set of names returned can be further
-restricted via the \code{ignore_names} argument.
+restricted via the \code{ignore_names} and \code{ignore_deprecated} arguments.
 }
 \examples{
 ## get the fuzzable functions in the public interface of this package

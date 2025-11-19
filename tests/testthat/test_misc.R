@@ -61,6 +61,14 @@ test_that("check_fuzzable", {
 
   expect_true(is.function(check_fuzzable("list", NULL)))
   expect_true(is.function(check_fuzzable("mean", NULL)))
+
+  assign(".deprecated.", envir = .GlobalEnv,
+         function(arg) .Deprecated("new"))
+  expect_true(is.function(check_fuzzable(".deprecated.", NULL,
+                                         ignore_deprecated = FALSE)))
+  expect_equal(check_fuzzable(".deprecated.", NULL, ignore_deprecated = TRUE),
+               "Deprecated function")
+  rm(".deprecated.", envir = .GlobalEnv)
 })
 
 test_that("tocolour", {
