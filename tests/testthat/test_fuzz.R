@@ -177,27 +177,31 @@ test_that("self fuzz", {
   testthat::skip_on_cran()
 
   SW({
-  expect_output(expect_pass_message(fuzz("fuzz", list(list()))),
+  expect_output(expect_pass_message(fuzz("fuzz", list(list())),
+                                    "[fuzz] 'funs' should be of class character"),
                 "OK 1")
-  expect_output(expect_pass_message(fuzz("fuzz", list(NULL))),
+  expect_output(expect_pass_message(fuzz("fuzz", list(NULL)),
+                                    "[fuzz] 'funs' should be of class character"),
                 "OK 1")
 
   ## fuzz test other arguments by currying the function
   curry_fuzz_for <- function(argname) {
     function(arg) do.call(fuzz, setNames(list("list", arg), c("funs", argname)))
   }
-  test_self_fuzz <- function(argname) {
+  test_self_fuzz <- function(argname, argtype) {
     assign(".local_fun.", envir = .GlobalEnv,
            curry_fuzz_for(argname))
     expect_pass_message(fuzz(".local_fun.",
-                             ignore_patterns = "\\[fuzz\\]"))
+                             ignore_patterns = "\\[fuzz\\]"),
+                        sprintf("[fuzz] '%s' should be of class %s",
+                                argname, argtype))
   }
 
-  test_self_fuzz("package")
-  test_self_fuzz("listify_what")
-  test_self_fuzz("ignore_patterns")
-  test_self_fuzz("ignore_warnings")
-  test_self_fuzz("trace")
+  test_self_fuzz("package", "character")
+  test_self_fuzz("listify_what", "logical")
+  test_self_fuzz("ignore_patterns", "character")
+  test_self_fuzz("ignore_warnings", "logical")
+  test_self_fuzz("trace", "logical")
 
   ## as `what` expects a list argument, we can't use curry_fuzz_for()
   assign(".local_fun.", envir = .GlobalEnv,
@@ -268,11 +272,13 @@ test_that("get_exported_functions", {
   expect_false("Sys.Date" %in% funs)
 
   SW({
-  expect_pass_message(fuzz("get_exported_functions"))
+  expect_pass_message(fuzz("get_exported_functions"),
+                      "[get_exported_functions] 'package' should be of class character")
   assign(".local_fun.", envir = .GlobalEnv,
          function(arg) get_exported_functions(package = arg))
   expect_pass_message(fuzz(".local_fun.",
-                           ignore_patterns = "\\[get_exported_functions\\]"))
+                           ignore_patterns = "\\[get_exported_functions\\]"),
+                      "[get_exported_functions] 'package' should be of class character")
   })
 
   ## tested with mime 0.13

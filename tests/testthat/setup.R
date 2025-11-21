@@ -14,11 +14,12 @@ expect_skip_reason <- function(res, reason) {
 }
 
 ## check that fuzzing found no errors
-expect_pass_message <- function(res) {
+expect_pass_message <- function(res, msg = "") {
   expect_message(print(res),
                  "You didn't get caught by the fuzz!")
   expect_output(print(res),
                 "FAIL 0 | WARN 0 | SKIP 0", fixed = TRUE)
+  expect_equal(res$runs[[1]]$msg, msg)
 }
 
 ## check that fuzzing found errors
