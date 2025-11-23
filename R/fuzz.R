@@ -280,24 +280,21 @@ fuzzer <- function(funs, what, what_char = "", package = NULL,
 
     whitelist_and_label <- function(label, msg) {
       res <- if (ignore_warnings ||
+                 is.null(msg) ||
                  grepl(fun_name, msg) ||
                  grepl(ignore_patterns, msg)) {
                "OK"
              } else {
                label
              }
-      data.frame(res = res, msg = msg)
+      data.frame(res = res, msg = toString(msg))
     }
 
     warnings <- NULL
     tryCatch(
         withCallingHandlers({
           fun(what)
-          if (is.null(warnings)) {
-            data.frame(res = "OK", msg = "")
-          } else {
-            whitelist_and_label("WARN", warnings)
-          }
+          whitelist_and_label("WARN", warnings)
         }, warning = function(w) {
           warnings <<- conditionMessage(w)
         }),
