@@ -6,12 +6,12 @@ test_that("test_inputs", {
   expect_error(test_inputs(""),
                "'use' is an empty character")
   expect_error(test_inputs("error"),
-               "[test_inputs] No valid tests selected",
+               "[test_inputs] No valid tests selected, valid names are: 'all'",
                fixed = TRUE)
   expect_error(test_inputs(skip = NA),
                "'skip' should be of class character")
   expect_error(test_inputs("scalar", skip = "scalar"),
-               "No valid tests selected")
+               "No valid tests selected, valid names are: 'all', 'scalar'")
 
   expect_equal(test_inputs(use = "scalar", skip = "nonexisting"),
                test_inputs(use = "scalar"))
