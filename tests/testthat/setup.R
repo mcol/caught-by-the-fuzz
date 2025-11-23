@@ -1,3 +1,6 @@
+## set up local daemons
+daemons(2)
+
 ## silence output and warnings
 SW <- function(expr) capture.output(suppressMessages(suppressWarnings(expr)))
 

@@ -1,5 +1,8 @@
 # Current development version
 
+- Rewrite the internal `fuzzer()` function to use a backend based on the
+  `mirai` package. This allows to parallelize computations and support a
+  timeout to stop non-failing functions (#4).
 - Use unicode symbols only on terminals that support UTF8, and respect the
   `cli.unicode` option, so that `options(cli.unicode = FALSE)` can be used to
   disable all unicode output.

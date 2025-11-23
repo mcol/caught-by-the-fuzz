@@ -38,6 +38,13 @@
 #' actually shown. Using [whitelist] has the advantage of not requiring the
 #' completion of a fuzz run of all functions over all inputs again.
 #'
+#' Note that [fuzz] relies on the `mirai` package for asynchronous operations
+#' and parallelisation. Therefore, the function may be invoked only after
+#' persistent background processes are set up. This can be done with the
+#' [daemons] function, which allows to control the number of processes to use.
+#' This is a re-export of [mirai::daemons]; refer to the original `mirai`
+#' documentation for a complete description of its arguments and behaviour.
+#'
 #' The helper function [get_exported_functions] identifies the functions
 #' in the public interface of a given package, facilitating the generation of
 #' the list of functions to be fuzzed.

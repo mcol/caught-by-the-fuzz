@@ -54,8 +54,6 @@ test_that("check_fuzzable", {
   ## must use `assign` otherwise the name cannot be found by the `get` call
   assign(".with.readline.", function(val) readline("Test"), envir = .GlobalEnv)
   expect_equal(check_fuzzable(".with.readline.", NULL),
-               "Contains readline()")
-  expect_equal(check_fuzzable(".with.readline.", NULL, skip_readline = FALSE),
                .with.readline.)
   rm(".with.readline.", envir = .GlobalEnv)
 
@@ -88,30 +86,6 @@ test_that("tocolour", {
                paste(cli::col_yellow("FAIL"), 1))
   expect_equal(tocolour("FAIL", 1, FALSE),
                "FAIL 1")
-})
-
-test_that("contains_readline", {
-  testthat::skip_on_cran()
-
-  ## check that real calls to readline() are caught
-  fun1 <- function() readline("Prompt")
-  fun2 <- function() input <- readline("Prompt")
-  fun3 <- function() if (TRUE) input <- readline("Prompt")
-  fun4 <- function() if (TRUE) while (TRUE) input <- readline("Prompt")
-
-  expect_true(contains_readline(fun1))
-  expect_true(contains_readline(fun2))
-  expect_true(contains_readline(fun3))
-  expect_true(contains_readline(fun4))
-
-  ## check that other uses of readline() are ignored
-  fun1 <- function() print("")
-  fun2 <- function() "readline()"
-  fun3 <- function() print("readline()")
-
-  expect_false(contains_readline(fun1))
-  expect_false(contains_readline(fun2))
-  expect_false(contains_readline(fun3))
 })
 
 test_that("namify", {

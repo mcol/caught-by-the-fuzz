@@ -37,9 +37,11 @@ The use of unicode icons in the output messages can be disabled by setting
 \code{options(cli.unicode = FALSE)}.
 }
 \examples{
+daemons(2)
 res <- fuzz(funs = c("list", "matrix", "mean"),
             what = test_inputs(c("numeric", "raw")))
 summary(res)
+daemons(0)
 
 }
 \seealso{

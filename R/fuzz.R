@@ -56,7 +56,7 @@ get_exported_functions <- function(package, ignore_names = "",
 
   ## keep only fuzzable functions
   keep.idx <- sapply(funs, function(x) {
-    is.function(check_fuzzable(x, package, skip_readline = FALSE, ignore_deprecated))
+    is.function(check_fuzzable(x, package, ignore_deprecated))
   })
   funs <- setdiff(funs[keep.idx], ignore_names)
   attr(funs, "package") <- package
@@ -65,9 +65,19 @@ get_exported_functions <- function(package, ignore_names = "",
 
 #' Fuzz-test the specified functions
 #'
-#' This function calls each of the functions in `funs` with each of the
-#' objects specified in `what`, recording if any errors or warnings are
-#' thrown in the process.
+#' The fuzzer calls each function in `funs` with each object in `what` and
+#' records any errors or warnings that are thrown. If no error occurs within
+#' the first 2 seconds, the execution of the function being fuzzed is stopped
+#' and the next one is started.
+#'
+#' The implementation uses `mirai` as a backend, which allows to run functions
+#' asynchronously in parallel processes. Therefore, persistent background
+#' processes (daemons) should be made available before the start of fuzzing;
+#' the function will check for their presence and not run otherwise. This can
+#' be done with the [daemons] function, which allows to control the number of
+#' processes to use. This is a re-export of [mirai::daemons]; refer to the
+#' original `mirai` documentation for a complete description of its arguments
+#' and behaviour.
 #'
 #' @section Whitelisting:
 #'
@@ -140,15 +150,17 @@ get_exported_functions <- function(package, ignore_names = "",
 #'   entry is left blank), or it was whitelisted (in which case, the message
 #'   received is stored in `msg`).
 #' * **SKIP**: no test was run, either because the given name cannot be found, or
-#'   it doesn't correspond to a function, or the function accepts no arguments,
-#'   or the function contains a call to [readline]; the exact reason is given
-#'   in `msg`.
+#'   it doesn't correspond to a function, or the function accepts no arguments;
+#'   the exact reason is given in `msg`.
 #' * **WARN**: a warning was thrown for which no whitelisting occurred and
 #'   `ignore_warnings = FALSE`; its message is stored in `msg`.
 #' * **FAIL**: an error was thrown for which no whitelisting occurred; its message
 #'   is stored in `msg`.
 #'
 #' @examples
+#' ## set up persistent background processes
+#' daemons(2)
+#'
 #' ## this should produce no errors
 #' res <- fuzz(funs = c("list", "matrix", "mean"),
 #'             what = test_inputs(c("numeric", "raw")))
@@ -159,6 +171,9 @@ get_exported_functions <- function(package, ignore_names = "",
 #'
 #' ## this will catch an error (false positive)
 #' fuzz(funs = "matrix",  what = test_inputs("scalar"))
+#'
+#' ## close the background processes
+#' daemons(0)
 #'
 #' @seealso [get_exported_functions], [test_inputs], [namify], [whitelist],
 #' [summary.cbtf], [print.cbtf]
@@ -179,6 +194,11 @@ fuzz <- function(funs, what = test_inputs(),
   validate_class(listify_what, "logical", scalar = TRUE)
   validate_class(ignore_patterns, "character")
   validate_class(ignore_warnings, "logical", scalar = TRUE)
+
+  ## check that daemons are available (unless we are self-fuzzing and we are
+  ## being run from a daemon)
+  mirai::daemons_set() || mirai::on_daemon() ||
+    fuzz_error("No daemons set, use `daemons(n)` to launch `n` local daemons")
 
   ## expand the set of inputs with their listified version
   if (listify_what)
@@ -252,62 +272,81 @@ fuzz <- function(funs, what = test_inputs(),
 fuzzer <- function(funs, what, what_char = "", package = NULL,
                    ignore_patterns = "is missing, with no default",
                    ignore_warnings = FALSE) {
-  ## store result and message in the list of results defined below
-  report <- function(label, msg) {
-    out.res[[idx]]["res"] <<- label
-    out.res[[idx]]["msg"] <<- gsub("\\n", " ", msg) # shorten multiline messages
-  }
-
-  ## apply the whitelist rules before reporting the result
-  whitelist_and_report <- function(fun_name, ew, type, ignore_warnings = FALSE) {
-    msg <- conditionMessage(ew)
-    res <- if (!ignore_warnings &&
-               !grepl(fun_name, msg) &&
-               !grepl(ignore_patterns, msg)) {
-             res <- type
-           } else { "OK" }
-    report(res, msg)
-  }
-
-  ## list of results
-  out.res <- lapply(funs, function(x) {
-    data.frame(res = "OK", msg = "")
-  })
-
-  ## loop over the functions to fuzz
-  cli::cli_progress_bar(type = "tasks",
-                        format = paste(
-                            "{cli::pb_spin} Test input:",
-                            "{.strong {strtrim(what_char, 40)}}",
-                            " {.timestamp {cli::pb_current}/{cli::pb_total}} @ {fun_name}"
-                        ),
-                        format_done = paste(
-                            "{.alert-success Test input:}",
-                            "{.strong {what_char}}",
-                            " {.timestamp {cli::pb_elapsed}}"
-                        ),
-                        clear = FALSE,
-                        total = length(funs))
-  for (idx in seq_along(funs)) {
-    fun_name <- funs[idx]
+  fuzzer.core <- quote({
     fun <- check_fuzzable(fun_name, package, ignore_deprecated = FALSE)
     if (is.character(fun)) {
-      report("SKIP", fun)
-      next
+      return(data.frame(res = "SKIP", msg = fun))
     }
 
-    cli::cli_progress_update()
-    tryCatch(withCallingHandlers(suppressMessages(utils::capture.output(fun(what))),
-                                 warning = function(w) {
-                                   whitelist_and_report(fun_name, w, "WARN",
-                                                        ignore_warnings)
-                                   invokeRestart("muffleWarning")
-                                 }),
-             error = function(e) {
-               whitelist_and_report(fun_name, e, "FAIL")
-             })
+    whitelist_and_label <- function(label, msg) {
+      res <- if (ignore_warnings ||
+                 grepl(fun_name, msg) ||
+                 grepl(ignore_patterns, msg)) {
+               "OK"
+             } else {
+               label
+             }
+      data.frame(res = res, msg = msg)
+    }
+
+    warnings <- NULL
+    tryCatch(
+        withCallingHandlers({
+          fun(what)
+          if (is.null(warnings)) {
+            data.frame(res = "OK", msg = "")
+          } else {
+            whitelist_and_label("WARN", warnings)
+          }
+        }, warning = function(w) {
+          warnings <<- conditionMessage(w)
+        }),
+        error = function(e) {
+          whitelist_and_label("FAIL", conditionMessage(e))
+        })
+  })
+
+  timeout_secs <- 2
+  progress.opts <- list(type = "task",
+                        format = paste(
+                            "{cli::pb_spin} Test input:",
+                            "{.strong", strtrim(what_char, 40), "}",
+                            "{.timestamp {cli::pb_current}/{cli::pb_total}}"),
+                        format_done = paste(
+                            "{.alert-success Test input:}",
+                            "{.strong", what_char, "}",
+                            "{.timestamp {cli::pb_elapsed}}"
+                        ),
+                        clear = FALSE)
+
+  ## for performance reason, we pass only the functions we need
+  env <- sapply(funs, function(x) .GlobalEnv[[x]])
+  env[vapply(env, is.null, logical(1))] <- NULL
+  env <- as.environment(env)
+
+  ## fuzz the functions asynchronously
+  res <- list()
+  for (idx in seq_along(funs)) {
+    res[[idx]] <- mirai::mirai(fuzzer.core, env,
+                               .args = list(fun_name = funs[idx],
+                                            what = what, package = package,
+                                            ignore_patterns = ignore_patterns,
+                                            ignore_warnings = ignore_warnings,
+                                            check_fuzzable = check_fuzzable,
+                                            timeout_secs = timeout_secs),
+                               .timeout = timeout_secs * 1000)
   }
-  cli::cli_progress_done()
+
+  ## collect the results
+  out.res <- lapply(
+      mirai::collect_mirai(res, options = list(.progress = progress.opts)),
+      function(out) {
+        if (mirai::is_error_value(out) && as.integer(out) == 5L)
+          data.frame(res = "OK",
+                     msg = sprintf("Timed out after %d seconds", timeout_secs))
+        else
+          out
+      })
 
   ## transform results to a data frame
   structure(as.data.frame(do.call(rbind, out.res)),
@@ -327,11 +366,17 @@ fuzzer <- function(funs, what, what_char = "", package = NULL,
 #' An object of class `cbtf` with the additional whitelist patterns applied.
 #'
 #' @examples
+#' ## set up persistent background processes
+#' daemons(2)
+#'
 #' ## this reports a false positive result
 #' (res <- fuzz(funs = "matrix", what = test_inputs("scalar")))
 #'
 #' ## with whitelisting, we can remove that
 #' whitelist(res, "must be of a vector type")
+#'
+#' ## close the background processes
+#' daemons(0)
 #'
 #' @seealso [fuzz]
 #'
@@ -353,3 +398,14 @@ whitelist <- function(object, patterns) {
   object$ignore_patterns <- setdiff(c(object$ignore_patterns, patterns), "")
   object
 }
+
+#' Set up persistent background processes on the local machine
+#'
+#' This allows to control the number of processes to use. This is a re-export
+#' of [mirai::daemons]; refer to the original `mirai` documentation for a
+#' complete description of its arguments and behaviour.
+#'
+#' @name daemons
+#' @importFrom mirai daemons
+#' @export daemons
+NULL

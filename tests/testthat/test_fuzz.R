@@ -46,8 +46,7 @@ test_that("check skipped functions", {
   ## must use `assign` otherwise the name cannot be found by the `get` call
   assign(".local_fun.", envir = .GlobalEnv,
          function(val) readline("Test"))
-  expect_skip_reason(fuzz(".local_fun.", list(NULL)),
-                     "Contains readline()")
+  expect_pass_message(fuzz(".local_fun.", list(NULL)))
   })
 })
 
@@ -155,6 +154,15 @@ test_that("fuzzer", {
                "OK")
   expect_equal(res$msg,
                "argument is not numeric or logical: returning NA")
+
+  ## timeout
+  assign(".local_fun.", envir = .GlobalEnv,
+         function(arg) Sys.sleep(10))
+  res <- fuzzer(".local_fun.", list(NA))
+  expect_equal(res$res,
+               "OK")
+  expect_equal(res$msg,
+               "Timed out after 2 seconds")
 
   ## in case of both error and warning, we should report the error
   SW({

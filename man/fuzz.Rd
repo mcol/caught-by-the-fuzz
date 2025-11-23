@@ -70,9 +70,8 @@ contain the following values:
 entry is left blank), or it was whitelisted (in which case, the message
 received is stored in \code{msg}).
 \item \strong{SKIP}: no test was run, either because the given name cannot be found, or
-it doesn't correspond to a function, or the function accepts no arguments,
-or the function contains a call to \link{readline}; the exact reason is given
-in \code{msg}.
+it doesn't correspond to a function, or the function accepts no arguments;
+the exact reason is given in \code{msg}.
 \item \strong{WARN}: a warning was thrown for which no whitelisting occurred and
 \code{ignore_warnings = FALSE}; its message is stored in \code{msg}.
 \item \strong{FAIL}: an error was thrown for which no whitelisting occurred; its message
@@ -80,9 +79,20 @@ is stored in \code{msg}.
 }
 }
 \description{
-This function calls each of the functions in \code{funs} with each of the
-objects specified in \code{what}, recording if any errors or warnings are
-thrown in the process.
+The fuzzer calls each function in \code{funs} with each object in \code{what} and
+records any errors or warnings that are thrown. If no error occurs within
+the first 2 seconds, the execution of the function being fuzzed is stopped
+and the next one is started.
+}
+\details{
+The implementation uses \code{mirai} as a backend, which allows to run functions
+asynchronously in parallel processes. Therefore, persistent background
+processes (daemons) should be made available before the start of fuzzing;
+the function will check for their presence and not run otherwise. This can
+be done with the \link{daemons} function, which allows to control the number of
+processes to use. This is a re-export of \link[mirai:daemons]{mirai::daemons}; refer to the
+original \code{mirai} documentation for a complete description of its arguments
+and behaviour.
 }
 \section{Whitelisting}{
 
@@ -109,6 +119,9 @@ run using the \link{whitelist} function.
 }
 
 \examples{
+## set up persistent background processes
+daemons(2)
+
 ## this should produce no errors
 res <- fuzz(funs = c("list", "matrix", "mean"),
             what = test_inputs(c("numeric", "raw")))
@@ -119,6 +132,9 @@ print(res, show_all = TRUE)
 
 ## this will catch an error (false positive)
 fuzz(funs = "matrix",  what = test_inputs("scalar"))
+
+## close the background processes
+daemons(0)
 
 }
 \seealso{

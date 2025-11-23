@@ -11,7 +11,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 The `CBTF` package implements a very simple mechanism for fuzz-testing
 functions in the public interface of an R package.
 
-Fuzz testing helps identify functions lacking sufficient argument
+Fuzz testing helps identify functions that lack sufficient argument
 validation, and uncovers sets of inputs that, while valid by function
 signature, may cause issues within the function body.
 
@@ -25,8 +25,14 @@ returned by `fuzz()` can be inspected with `summary()` and `print()`.
 Whitelisting can also be done after a fuzz run has been completed via
 the `whitelist()` function, so that only messages that need to be acted
 upon are actually shown. Using `whitelist()` has the advantage of not
-requiring the completion of a fuzz run of all functions over all inputs
-again.
+requiring to run the fuzzer over all functions and all inputs again.
+
+Note that `fuzz()` uses the [`mirai` package](https://mirai.r-lib.org/)
+for asynchronous operations and parallelisation. Therefore, the function
+may be invoked only after persistent background processes are set up.
+This can be done with the `daemons()` function, which allows to control
+the number of processes to use; refer to the original `mirai`
+documentation for a complete description of its arguments and behaviour.
 
 The helper function `get_exported_functions()` identifies the functions
 in the public interface of a given package, facilitating the generation
@@ -57,6 +63,7 @@ and is likely installed on most systems.
 ``` r
 library(CBTF)
 funs <- get_exported_functions("mime")
+daemons(2)
 (res <- fuzz(funs, what = list(TRUE)))
 ```
 
