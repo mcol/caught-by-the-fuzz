@@ -56,7 +56,7 @@ get_exported_functions <- function(package, ignore_names = "",
 
   ## keep only fuzzable functions
   keep.idx <- sapply(funs, function(x) {
-    is.function(check_fuzzable(x, package, skip_readline = FALSE, ignore_deprecated))
+    is.function(check_fuzzable(x, package, ignore_deprecated))
   })
   funs <- setdiff(funs[keep.idx], ignore_names)
   attr(funs, "package") <- package
@@ -65,9 +65,10 @@ get_exported_functions <- function(package, ignore_names = "",
 
 #' Fuzz-test the specified functions
 #'
-#' This function calls each of the functions in `funs` with each of the
-#' objects specified in `what`, recording if any errors or warnings are
-#' thrown in the process.
+#' This function calls each function in `funs` with each object in `what`,
+#' recording any errors or warnings that are thrown. If nothing is thrown
+#' within the first 2 seconds, the current process is interrupted and the next
+#' iteration is started.
 #'
 #' @section Whitelisting:
 #'
@@ -140,9 +141,8 @@ get_exported_functions <- function(package, ignore_names = "",
 #'   entry is left blank), or it was whitelisted (in which case, the message
 #'   received is stored in `msg`).
 #' * **SKIP**: no test was run, either because the given name cannot be found, or
-#'   it doesn't correspond to a function, or the function accepts no arguments,
-#'   or the function contains a call to [readline]; the exact reason is given
-#'   in `msg`.
+#'   it doesn't correspond to a function, or the function accepts no arguments;
+#'   the exact reason is given in `msg`.
 #' * **WARN**: a warning was thrown for which no whitelisting occurred and
 #'   `ignore_warnings = FALSE`; its message is stored in `msg`.
 #' * **FAIL**: an error was thrown for which no whitelisting occurred; its message
@@ -203,6 +203,9 @@ fuzz <- function(funs, what = test_inputs(),
     on.exit(options(opt), add = TRUE)
   }
 
+  ## start a permanent background session
+  rs <- callr::r_session$new()
+
   ## loop over the inputs
   runs <- list()
   what_chars <- names(what)
@@ -213,8 +216,11 @@ fuzz <- function(funs, what = test_inputs(),
       what_char <- deparse(what[[idx]])[[1]]
 
     ## fuzz all functions with this input
-    runs[[idx]] <- fuzzer(funs, what[[idx]], what_char, package,
+    runs[[idx]] <- fuzzer(rs, funs, what[[idx]], what_char, package,
                           joined_patterns, ignore_warnings)
+    if (!rs$is_alive()) {
+      rs <- callr::r_session$new()
+    }
   }
 
   ## returned object
@@ -231,6 +237,7 @@ fuzz <- function(funs, what = test_inputs(),
 #' This is where the actual fuzzing happens. This function supports only one
 #' input, which is passed to each of the functions in `funs`.
 #'
+#' @param rs An active R background session.
 #' @param funs A character vector of function names to test.
 #' @param what The object to be passed as the first argument to each of the
 #'        functions in `funs`.
@@ -249,24 +256,13 @@ fuzz <- function(funs, what = test_inputs(),
 #' tested.
 #'
 #' @noRd
-fuzzer <- function(funs, what, what_char = "", package = NULL,
+fuzzer <- function(rs, funs, what, what_char = "", package = NULL,
                    ignore_patterns = "is missing, with no default",
                    ignore_warnings = FALSE) {
   ## store result and message in the list of results defined below
   report <- function(label, msg) {
     out.res[[idx]]["res"] <<- label
     out.res[[idx]]["msg"] <<- gsub("\\n", " ", msg) # shorten multiline messages
-  }
-
-  ## apply the whitelist rules before reporting the result
-  whitelist_and_report <- function(fun_name, ew, type, ignore_warnings = FALSE) {
-    msg <- conditionMessage(ew)
-    res <- if (!ignore_warnings &&
-               !grepl(fun_name, msg) &&
-               !grepl(ignore_patterns, msg)) {
-             res <- type
-           } else { "OK" }
-    report(res, msg)
   }
 
   ## list of results
@@ -297,15 +293,44 @@ fuzzer <- function(funs, what, what_char = "", package = NULL,
     }
 
     cli::cli_progress_update()
-    tryCatch(withCallingHandlers(suppressMessages(utils::capture.output(fun(what))),
-                                 warning = function(w) {
-                                   whitelist_and_report(fun_name, w, "WARN",
-                                                        ignore_warnings)
-                                   invokeRestart("muffleWarning")
-                                 }),
-             error = function(e) {
-               whitelist_and_report(fun_name, e, "FAIL")
-             })
+    rs$call(function(fun_name, fun, what, ignore_patterns, ignore_warnings) {
+      whitelist_and_label <- function(msg, type) {
+        res <- if (ignore_warnings ||
+                   grepl(fun_name, msg) ||
+                   grepl(ignore_patterns, msg)) {
+                 "OK"
+               } else {
+                 type
+               }
+        list(res = res, msg = msg)
+      }
+
+      warnings <- NULL
+      tryCatch(
+          withCallingHandlers({
+            fun(what)
+            if (is.null(warnings)) {
+              list(res = "OK", msg = "")
+            } else {
+              whitelist_and_label(warnings, "WARN")
+            }
+          }, warning = function(w) {
+            warnings <<- conditionMessage(w)
+          }),
+          error = function(e) {
+            whitelist_and_label(conditionMessage(e), "FAIL")
+          })
+    }, args = list(fun_name, fun, what, ignore_patterns, ignore_warnings))
+
+    timeout_secs <- 2
+    if (rs$poll_process(timeout_secs * 1000) == "timeout") {
+      rs$close()
+      rs <- callr::r_session$new()
+      report("OK", sprintf("Timed out after %d seconds", timeout_secs))
+      next
+    }
+    result <- rs$read()$result
+    report(result$res, result$msg)
   }
   cli::cli_progress_done()
 

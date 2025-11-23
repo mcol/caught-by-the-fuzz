@@ -70,9 +70,8 @@ contain the following values:
 entry is left blank), or it was whitelisted (in which case, the message
 received is stored in \code{msg}).
 \item \strong{SKIP}: no test was run, either because the given name cannot be found, or
-it doesn't correspond to a function, or the function accepts no arguments,
-or the function contains a call to \link{readline}; the exact reason is given
-in \code{msg}.
+it doesn't correspond to a function, or the function accepts no arguments;
+the exact reason is given in \code{msg}.
 \item \strong{WARN}: a warning was thrown for which no whitelisting occurred and
 \code{ignore_warnings = FALSE}; its message is stored in \code{msg}.
 \item \strong{FAIL}: an error was thrown for which no whitelisting occurred; its message
@@ -80,9 +79,10 @@ is stored in \code{msg}.
 }
 }
 \description{
-This function calls each of the functions in \code{funs} with each of the
-objects specified in \code{what}, recording if any errors or warnings are
-thrown in the process.
+This function calls each function in \code{funs} with each object in \code{what},
+recording any errors or warnings that are thrown. If nothing is thrown
+within the first 2 seconds, the current process is interrupted and the next
+iteration is started.
 }
 \section{Whitelisting}{
 

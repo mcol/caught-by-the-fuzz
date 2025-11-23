@@ -46,8 +46,7 @@ test_that("check skipped functions", {
   ## must use `assign` otherwise the name cannot be found by the `get` call
   assign(".local_fun.", envir = .GlobalEnv,
          function(val) readline("Test"))
-  expect_skip_reason(fuzz(".local_fun.", list(NULL)),
-                     "Contains readline()")
+  expect_pass_message(fuzz(".local_fun.", list(NULL)))
   })
 })
 
@@ -128,7 +127,9 @@ test_that("check classes returned", {
 test_that("fuzzer", {
   testthat::skip_on_cran()
 
-  res <- fuzzer("list", NULL)
+  ## start the session
+  rs <-  callr::r_session$new()
+  res <- fuzzer(rs, "list", NULL)
   expect_s3_class(res,
                   "data.frame")
   expect_equal(res$res,
@@ -136,21 +137,21 @@ test_that("fuzzer", {
   expect_equal(attr(res, "what"),
                "")
 
-  res <- fuzzer("list", NULL, what_char = "NA")
+  res <- fuzzer(rs, "list", NULL, what_char = "NA")
   expect_equal(attr(res, "what"),
                "NA")
 
-  res <- fuzzer("ls", NA)
+  res <- fuzzer(rs, "ls", NA)
   expect_equal(res$res,
                "FAIL")
   expect_equal(res$msg,
                "invalid object for 'as.environment'")
-  res <- fuzzer("median", letters)
+  res <- fuzzer(rs, "median", letters)
   expect_equal(res$res,
                "WARN")
   expect_equal(res$msg,
                "argument is not numeric or logical: returning NA")
-  res <- fuzzer("median", letters, ignore_warnings = TRUE)
+  res <- fuzzer(rs, "median", letters, ignore_warnings = TRUE)
   expect_equal(res$res,
                "OK")
   expect_equal(res$msg,
@@ -163,7 +164,7 @@ test_that("fuzzer", {
            warning("a warning")
            stop("an error", call. = FALSE)
          })
-  res <- fuzzer(".local_fun.", list(NA))
+  res <- fuzzer(rs, ".local_fun.", list(NA))
   expect_equal(res$res,
                "FAIL")
   expect_equal(res$msg,

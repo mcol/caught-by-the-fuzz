@@ -14,6 +14,7 @@ Description: A simple runner for fuzz-testing functions in an R package's
 URL: https://mcol.github.io/caught-by-the-fuzz/
 BugReports: https://github.com/mcol/caught-by-the-fuzz/issues
 Imports:
+    callr,
     cli (>= 3.6.5)
 Suggests:
     testthat (>= 3.2.3),
