@@ -39,11 +39,11 @@ validate_class <- function(arg, class, from = "fuzz",
     fuzz_error(name, "should be of class", paste(class, collapse = ", "),
                from = from)
   }
-  if (scalar && length(arg) > 1)
+  scalar && length(arg) > 1 &&
     fuzz_error(name, "should be a", class, "scalar", from = from)
   if (remove_empty)
     arg <- arg[nchar(arg) > 0]
-  if (length(arg) == 0)
+  length(arg) == 0 &&
     fuzz_error(name, "is an empty", class, from = from)
 }
 
@@ -77,23 +77,23 @@ check_fuzzable <- function(fun, pkg, ignore_deprecated = TRUE) {
              silent = TRUE)
 
   ## skip non-existing names
-  if (inherits(fun, "try-error"))
+  inherits(fun, "try-error") &&
     return(sprintf("Object not found in the %s namespace",
                    if (is.null(pkg)) "global" else sprintf("'%s'", pkg)))
 
   ## skip non-functions
-  if (!is.function(fun))
+  is.function(fun) ||
     return("Not a function")
 
   ## skip functions accept no arguments
-  if (suppressWarnings(length(formals(fun))) == 0 && !is.primitive(fun))
+  suppressWarnings(length(formals(fun))) == 0 && !is.primitive(fun) &&
     return("Doesn't accept arguments")
 
   ## skip deprecated functions
-  if (ignore_deprecated && any(grepl("\\.Deprecated", body(fun))))
+  ignore_deprecated && any(grepl("\\.Deprecated", body(fun))) &&
     return("Deprecated function")
 
-  return(fun)
+  fun
 }
 
 #' Generate coloured summary statistics from the results

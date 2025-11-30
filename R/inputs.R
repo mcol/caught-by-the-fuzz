@@ -44,12 +44,11 @@ test_inputs <- function(use = "all", skip = "") {
               "raw_inputs",
               "list_inputs")
   valid <- names(inputs) <- gsub("_inputs", "", inputs)
-  if ("help" %in% use)
-    return(c("all", valid))
+  "help" %in% use && return(c("all", valid))
   if ("all" %in% use)
     use <- valid
   use <- setdiff(use[use %in% valid], skip)
-  if (length(use) == 0)
+  length(use) == 0 &&
     fuzz_error("No valid tests selected, valid names are:",
                toString(sQuote(c("all", valid), q = FALSE)),
                from = "test_inputs")

@@ -60,7 +60,7 @@ get_exported_functions <- function(package, ignore_names = "",
   })
   funs <- setdiff(funs[keep.idx], ignore_names)
   attr(funs, "package") <- package
-  return(funs)
+  funs
 }
 
 #' Fuzz-test the specified functions
@@ -240,7 +240,7 @@ fuzz <- function(funs, what = test_inputs(),
   ## returned object
   structure(list(runs = runs,
                  funs = funs,
-                 package = if (!is.null(package)) package else NA,
+                 package = package %||% NA,
                  ignore_patterns = ignore_patterns,
                  ignore_warnings = ignore_warnings),
             class = "cbtf")
@@ -274,9 +274,7 @@ fuzzer <- function(funs, what, what_char = "", package = NULL,
                    ignore_warnings = FALSE) {
   fuzzer.core <- quote({
     fun <- check_fuzzable(fun_name, package, ignore_deprecated = FALSE)
-    if (is.character(fun)) {
-      return(data.frame(res = "SKIP", msg = fun))
-    }
+    is.character(fun) && return(data.frame(res = "SKIP", msg = fun))
 
     whitelist_and_label <- function(label, msg) {
       res <- if (ignore_warnings ||
@@ -338,11 +336,9 @@ fuzzer <- function(funs, what, what_char = "", package = NULL,
   out.res <- lapply(
       mirai::collect_mirai(res, options = list(.progress = progress.opts)),
       function(out) {
-        if (mirai::is_error_value(out) && as.integer(out) == 5L)
-          data.frame(res = "OK",
-                     msg = sprintf("Timed out after %d seconds", timeout_secs))
-        else
-          out
+        (mirai::is_error_value(out) && as.integer(out) == 5L) || return(out)
+        data.frame(res = "OK",
+                   msg = sprintf("Timed out after %d seconds", timeout_secs))
       })
 
   ## transform results to a data frame
