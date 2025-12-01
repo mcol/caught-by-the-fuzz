@@ -90,9 +90,7 @@ asynchronously in parallel processes. Therefore, persistent background
 processes (daemons) should be made available before the start of fuzzing;
 the function will check for their presence and not run otherwise. This can
 be done with the \link{daemons} function, which allows to control the number of
-processes to use. This is a re-export of \link[mirai:daemons]{mirai::daemons}; refer to the
-original \code{mirai} documentation for a complete description of its arguments
-and behaviour.
+processes to use.
 }
 \section{Whitelisting}{
 

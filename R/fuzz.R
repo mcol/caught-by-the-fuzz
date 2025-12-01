@@ -75,9 +75,7 @@ get_exported_functions <- function(package, ignore_names = "",
 #' processes (daemons) should be made available before the start of fuzzing;
 #' the function will check for their presence and not run otherwise. This can
 #' be done with the [daemons] function, which allows to control the number of
-#' processes to use. This is a re-export of [mirai::daemons]; refer to the
-#' original `mirai` documentation for a complete description of its arguments
-#' and behaviour.
+#' processes to use.
 #'
 #' @section Whitelisting:
 #'
@@ -394,9 +392,20 @@ whitelist <- function(object, patterns) {
 
 #' Set up persistent background processes on the local machine
 #'
-#' This allows to control the number of processes to use. This is a re-export
-#' of [mirai::daemons]; refer to the original `mirai` documentation for a
-#' complete description of its arguments and behaviour.
+#' This allows to control the number of processes to use. This should be at
+#' most one less than the number of processor cores, to leave one for the main
+#' R process. `daemons(0)` can be used to close the daemon connections.
+#'
+#' This function is a re-export of [mirai::daemons]; refer to the
+#' original `mirai` documentation for a complete description of its arguments
+#' and behaviour.
+#'
+#' @examples
+#' ## set up persistent background processes
+#' daemons(2)
+#'
+#' ## close the background processes
+#' daemons(0)
 #'
 #' @name daemons
 #' @importFrom mirai daemons

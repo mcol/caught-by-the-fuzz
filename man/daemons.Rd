@@ -4,7 +4,20 @@
 \alias{daemons}
 \title{Set up persistent background processes on the local machine}
 \description{
-This allows to control the number of processes to use. This is a re-export
-of \link[mirai:daemons]{mirai::daemons}; refer to the original \code{mirai} documentation for a
-complete description of its arguments and behaviour.
+This allows to control the number of processes to use. This should be at
+most one less than the number of processor cores, to leave one for the main
+R process. \code{daemons(0)} can be used to close the daemon connections.
+}
+\details{
+This function is a re-export of \link[mirai:daemons]{mirai::daemons}; refer to the
+original \code{mirai} documentation for a complete description of its arguments
+and behaviour.
+}
+\examples{
+## set up persistent background processes
+daemons(2)
+
+## close the background processes
+daemons(0)
+
 }
