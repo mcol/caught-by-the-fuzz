@@ -117,6 +117,33 @@ print.cbtf <- function(x, show_all = FALSE, ...) {
   cat("\n", summary.stats, "\n")
 }
 
+#' Extract the results for a specific test input
+#'
+#' @param x An object of class `cbtf`.
+#' @param i An index between 1 and the number of test inputs used.
+#'
+#' @return
+#' If the index is valid, a data frame containing the following columns and
+#' attributes:
+#' \item{res}{One of "OK", "FAIL", "WARN" or "SKIP" for each combination of
+#'       function and input tested (see the *Value* section in [fuzz]).}
+#' \item{msg}{The message received in case of error, warning or skip,
+#'       or an empty string if no failure occurred.}
+#' \item{attr(*, "what")}{The character representation of the input tested.}
+#' Otherwise, `FALSE`.
+#'
+#' @examples
+#' daemons(2)
+#' res <- fuzz(funs = c("list", "matrix", "mean"),
+#'             what = test_inputs(c("numeric", "raw")))
+#' res[[6]]
+#' daemons(0)
+#'
+#' @export
+`[[.cbtf` <- function(x, i) {
+  i %in% seq_along(x$runs) && return(x$runs[[i]])
+}
+
 #' Compute the number of tests performed
 #'
 #' @param x An object of class `cbtf`.

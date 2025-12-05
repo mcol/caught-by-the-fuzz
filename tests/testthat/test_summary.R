@@ -32,3 +32,19 @@ test_that("print", {
   expect_snapshot(print(res, show_all = TRUE))
   })
 })
+
+test_that("[[", {
+  testthat::skip_on_cran()
+
+  SW({
+  res <- fuzz("list", list(NA, c(1, 2, 3)))
+  expect_s3_class(res[[1]],
+                  "data.frame")
+  expect_equal(colnames(res[[1]]),
+               c("res", "msg"))
+  expect_equal(attr(res[[1]], "what"),
+               "NA")
+  expect_false(res[[0]])
+  expect_false(res[[10]])
+  })
+})

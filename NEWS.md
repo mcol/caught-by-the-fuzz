@@ -7,6 +7,7 @@
   `cli.unicode` option, so that `options(cli.unicode = FALSE)` can be used to
   disable all unicode output.
 - Ignore deprecated functions by default in `get_exported_functions()`.
+- Add the `[[` operator to extract the results for a specific test input.
 
 # CBTF 0.5.0 (2025-08-21)
 

@@ -64,11 +64,11 @@ test_that("check object returned", {
                c("runs", "funs", "package", "ignore_patterns", "ignore_warnings"))
   expect_length(res,
                 length(funs))
-  expect_s3_class(res$runs[[1]],
+  expect_s3_class(res[[1]],
                   "data.frame")
   expect_named(res$runs[[1]],
                c("res", "msg"))
-  expect_equal(nrow(res$runs[[1]]),
+  expect_equal(nrow(res[[1]]),
                length(funs))
   expect_equal(res$runs[[1]]$res,
                c("OK", "OK", "OK"))
