@@ -38,7 +38,7 @@
     Message
       v    You didn't get caught by the fuzz!
       
-      -- Test input: NA 
+      -- Test input [[1]]: NA 
     Output
          list    OK  
        median    OK  

@@ -102,12 +102,13 @@ print.cbtf <- function(x, show_all = FALSE, ...) {
   summary.stats <- compute_summary_stats(x)
   max.name <- max(c(0, nchar(x$funs))) + 1
   res.size <- nchar(tocolour("FAIL")) # include ANSI formatting, if present
-  for (run in x$runs) {
+  for (idx in seq_along(x$runs)) {
+    run <- x$runs[[idx]]
     run$fun <- x$funs
     if (!show_all)
       run <- run[run$res %in% c("FAIL", "WARN"), ]
     if (nrow(run) > 0) {
-      cli::cli_h3(paste("Test input:", cli::style_bold(attributes(run)$what)))
+      cli::cli_h3("Test input [[{idx}]]: {.strong {attributes(run)$what}}")
       cat(sprintf("%*s  %*s  %s\n",
                   max.name, run$fun, res.size, tocolour(run$res), run$msg),
           sep = "")

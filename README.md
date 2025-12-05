@@ -70,7 +70,7 @@ daemons(2)
     ## ℹ Fuzzing 2 functions on 1 input
     ## ✖  🚨   CAUGHT BY THE FUZZ!   🚨
     ## 
-    ## ── Test input: TRUE
+    ## ── Test input [[1]]: TRUE
     ##       guess_type  FAIL  a character vector argument expected
     ##  parse_multipart  FAIL  $ operator is invalid for atomic vectors
     ## 
@@ -91,7 +91,7 @@ whitelist(res, "a character vector argument expected")
 
     ## ✖  🚨   CAUGHT BY THE FUZZ!   🚨
     ## 
-    ## ── Test input: TRUE
+    ## ── Test input [[1]]: TRUE
     ##  parse_multipart  FAIL  $ operator is invalid for atomic vectors
     ## 
     ##  [ FAIL 1 | WARN 0 | SKIP 0 | OK 1 ]
@@ -115,10 +115,10 @@ fuzz(funs, what = list(letters, data.frame(a = 1, b = "a")))
     ## ℹ Fuzzing 2 functions on 2 inputs
     ## ✖  🚨   CAUGHT BY THE FUZZ!   🚨
     ## 
-    ## ── Test input: c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l",
+    ## ── Test input [[1]]: c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l",
     ##  parse_multipart  FAIL  $ operator is invalid for atomic vectors
     ## 
-    ## ── Test input: structure(list(a = 1, b = "a"), class = "data.frame", row.names = c(NA,
+    ## ── Test input [[2]]: structure(list(a = 1, b = "a"), class = "data.frame", row.names = c(NA,
     ##       guess_type  FAIL  a character vector argument expected
     ## 
     ##  [ FAIL 2 | WARN 0 | SKIP 0 | OK 2 ]
@@ -132,10 +132,10 @@ fuzz(funs, what = namify(letters, data.frame(a = 1, b = "a")))
     ## ℹ Fuzzing 2 functions on 2 inputs
     ## ✖  🚨   CAUGHT BY THE FUZZ!   🚨
     ## 
-    ## ── Test input: letters
+    ## ── Test input [[1]]: letters
     ##  parse_multipart  FAIL  $ operator is invalid for atomic vectors
     ## 
-    ## ── Test input: data.frame(a = 1, b = "a")
+    ## ── Test input [[2]]: data.frame(a = 1, b = "a")
     ##       guess_type  FAIL  a character vector argument expected
     ## 
     ##  [ FAIL 2 | WARN 0 | SKIP 0 | OK 2 ]
@@ -180,10 +180,10 @@ fuzz(funs, what = namify(letters), listify_what = TRUE)
     ## ℹ Fuzzing 2 functions on 2 inputs
     ## ✖  🚨   CAUGHT BY THE FUZZ!   🚨
     ## 
-    ## ── Test input: letters
+    ## ── Test input [[1]]: letters
     ##  parse_multipart  FAIL  $ operator is invalid for atomic vectors
     ## 
-    ## ── Test input: list(letters)
+    ## ── Test input [[2]]: list(letters)
     ##       guess_type  FAIL  a character vector argument expected
     ## 
     ##  [ FAIL 2 | WARN 0 | SKIP 0 | OK 2 ]
@@ -206,10 +206,10 @@ fuzz("curried.matrix", what = list(NA, NULL))
     ## ℹ Functions will be searched in the global namespace as 'package' was not specified
     ## ✖  🚨   CAUGHT BY THE FUZZ!   🚨
     ## 
-    ## ── Test input: NA
+    ## ── Test input [[1]]: NA
     ##  curried.matrix  FAIL  invalid 'nrow' value (too large or NA)
     ## 
-    ## ── Test input: NULL
+    ## ── Test input [[2]]: NULL
     ##  curried.matrix  FAIL  non-numeric matrix extent
     ## 
     ##  [ FAIL 2 | WARN 0 | SKIP 0 | OK 0 ]

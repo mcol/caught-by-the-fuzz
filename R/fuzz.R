@@ -231,7 +231,7 @@ fuzz <- function(funs, what = test_inputs(),
       what_char <- deparse(what[[idx]])[[1]]
 
     ## fuzz all functions with this input
-    runs[[idx]] <- fuzzer(funs, what[[idx]], what_char, package,
+    runs[[idx]] <- fuzzer(funs, what[[idx]], what_char, idx, package,
                           joined_patterns, ignore_warnings)
   }
 
@@ -254,6 +254,7 @@ fuzz <- function(funs, what = test_inputs(),
 #'        functions in `funs`.
 #' @param what_char A string representation of the input in `what`, used for
 #'        pretty-printing the output.
+#' @param what_num Numerical index of the input being tested.
 #' @param package A character string specifying the name of the package to
 #'        search for function names.
 #' @param ignore_patterns A character string containing a regular expression
@@ -267,7 +268,7 @@ fuzz <- function(funs, what = test_inputs(),
 #' tested.
 #'
 #' @noRd
-fuzzer <- function(funs, what, what_char = "", package = NULL,
+fuzzer <- function(funs, what, what_char = "", what_num = 1, package = NULL,
                    ignore_patterns = "is missing, with no default",
                    ignore_warnings = FALSE) {
   fuzzer.core <- quote({
@@ -300,14 +301,14 @@ fuzzer <- function(funs, what, what_char = "", package = NULL,
   })
 
   timeout_secs <- 2
+  test.name <- paste0("Test input [[", what_num, "]]: {.strong ",
+                      strtrim(what_char, 40), "}")
   progress.opts <- list(type = "task",
                         format = paste(
-                            "{cli::pb_spin} Test input:",
-                            "{.strong", strtrim(what_char, 40), "}",
+                            "{cli::pb_spin}", test.name,
                             "{.timestamp {cli::pb_current}/{cli::pb_total}}"),
                         format_done = paste(
-                            "{.alert-success Test input:}",
-                            "{.strong", what_char, "}",
+                            "{.alert-success", test.name, "}",
                             "{.timestamp {cli::pb_elapsed}}"
                         ),
                         clear = FALSE)
