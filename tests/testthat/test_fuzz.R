@@ -77,6 +77,45 @@ test_that("check object returned", {
   expect_equal(res$package,
                NA)
 
+  SW({
+  res <- fuzz("ls", list(NA))
+  })
+  expect_fuzz_result(res,
+                     "FAIL", "invalid object for 'as.environment'")
+
+  SW({
+  res <- fuzz("median", list(letters))
+  })
+  expect_fuzz_result(res,
+                     "WARN", "argument is not numeric or logical: returning NA")
+
+  SW({
+  res <- fuzz("median", list(letters), ignore_warnings = TRUE)
+  })
+  expect_fuzz_result(res,
+                     "OK", "argument is not numeric or logical: returning NA")
+
+  ## timeout
+  assign(".local_fun.", envir = .GlobalEnv,
+         function(arg) Sys.sleep(10))
+  SW({
+  res <- fuzz(".local_fun.", list(NA))
+  })
+  expect_fuzz_result(res,
+                     "OK", "Timed out after 2 seconds")
+
+  ## in case of both error and warning, we should report the error
+  SW({
+  assign(".local_fun.", envir = .GlobalEnv,
+         function(arg) {
+           warning("a warning")
+           stop("an error", call. = FALSE)
+         })
+  res <- fuzz(".local_fun.", list(NA))
+  })
+  expect_fuzz_result(res,
+                     "FAIL", "an error")
+
   ## check that we store the package attribute correctly
   funs <- structure(c("list", "data.frame"), package = "packagename")
   SW({
@@ -121,61 +160,6 @@ test_that("check classes returned", {
   what <- letters
   expect_what(fuzz("list", list(input = what)),
               "input")
-  })
-})
-
-test_that("fuzzer", {
-  testthat::skip_on_cran()
-
-  res <- fuzzer("list", NULL)
-  expect_s3_class(res,
-                  "data.frame")
-  expect_equal(res$res,
-               "OK")
-  expect_equal(attr(res, "what"),
-               "")
-
-  res <- fuzzer("list", NULL, what_char = "NA")
-  expect_equal(attr(res, "what"),
-               "NA")
-
-  res <- fuzzer("ls", NA)
-  expect_equal(res$res,
-               "FAIL")
-  expect_equal(res$msg,
-               "invalid object for 'as.environment'")
-  res <- fuzzer("median", letters)
-  expect_equal(res$res,
-               "WARN")
-  expect_equal(res$msg,
-               "argument is not numeric or logical: returning NA")
-  res <- fuzzer("median", letters, ignore_warnings = TRUE)
-  expect_equal(res$res,
-               "OK")
-  expect_equal(res$msg,
-               "argument is not numeric or logical: returning NA")
-
-  ## timeout
-  assign(".local_fun.", envir = .GlobalEnv,
-         function(arg) Sys.sleep(10))
-  res <- fuzzer(".local_fun.", list(NA))
-  expect_equal(res$res,
-               "OK")
-  expect_equal(res$msg,
-               "Timed out after 2 seconds")
-
-  ## in case of both error and warning, we should report the error
-  SW({
-  assign(".local_fun.", envir = .GlobalEnv,
-         function(arg) {
-           warning("a warning")
-           stop("an error", call. = FALSE)
-         })
-  res <- fuzzer(".local_fun.", list(NA))
-  expect_equal(res$res,
-               "FAIL")
-  expect_equal(res$msg,
-               "an error")
   })
 })
 

@@ -259,8 +259,7 @@ fuzz <- function(funs, what = test_inputs(),
 #'        search for function names.
 #' @param ignore_patterns A character string containing a regular expression
 #'        to match the messages to ignore.
-#' @param ignore_warnings Whether warnings should be ignored (`FALSE` by
-#'        default).
+#' @param ignore_warnings Whether warnings should be ignored.
 #'
 #' @return
 #' A data.frame of results obtained for each of the functions tested, with
@@ -268,9 +267,8 @@ fuzz <- function(funs, what = test_inputs(),
 #' tested.
 #'
 #' @noRd
-fuzzer <- function(funs, what, what_char = "", what_num = 1, package = NULL,
-                   ignore_patterns = "is missing, with no default",
-                   ignore_warnings = FALSE) {
+fuzzer <- function(funs, what, what_char, what_num, package,
+                   ignore_patterns, ignore_warnings) {
   fuzzer.core <- quote({
     fun <- check_fuzzable(fun_name, package, ignore_deprecated = FALSE)
     is.character(fun) && return(data.frame(res = "SKIP", msg = fun))
