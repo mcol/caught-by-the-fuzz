@@ -166,6 +166,9 @@ test_that("check classes returned", {
 test_that("self fuzz", {
   testthat::skip_on_cran()
 
+  ## start nested daemons
+  mirai::everywhere(mirai::daemons(1, dispatcher = FALSE))
+
   SW({
   expect_output(expect_pass_message(fuzz("fuzz", list(list())),
                                     "[fuzz] 'funs' should be of class character"),
@@ -197,6 +200,9 @@ test_that("self fuzz", {
          function(arg) fuzz("list", what = list(arg)))
   expect_pass_message(fuzz(".local_fun."))
   })
+
+  ## shut down nested daemons
+  mirai::everywhere(mirai::daemons(0))
 })
 
 test_that("whitelist", {
