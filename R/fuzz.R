@@ -228,17 +228,17 @@ fuzz <- function(funs, what = test_inputs(),
                     ignore_warnings = ignore_warnings,
                     check_fuzzable = check_fuzzable)
 
+  ## string representation of the input
+  what_chars <- mapply(function(name, value) {
+    !is.null(name) && nzchar(name) && return(name)
+    deparse(value)[1]
+  }, names(what) %||% "", what, USE.NAMES = FALSE)
+
   ## loop over the inputs
   runs <- list()
-  what_chars <- names(what)
   for (idx in seq_along(what)) {
-    ## string representation of the input
-    what_char <- what_chars[idx]
-    if (is.null(what_char) || what_char == "")
-      what_char <- deparse(what[[idx]])[[1]]
-
     ## fuzz all functions with this input
-    runs[[idx]] <- fuzzer(funs, what[[idx]], what_char, idx)
+    runs[[idx]] <- fuzzer(funs, what[[idx]], what_chars[idx], idx)
   }
 
   ## returned object
