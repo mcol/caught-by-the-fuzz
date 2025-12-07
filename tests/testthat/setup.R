@@ -1,6 +1,11 @@
 ## set up local daemons
 daemons(2)
 
+## ensure that these functions are available when self-fuzzing
+mirai::everywhere({},
+                  fuzz = fuzz,
+                  get_exported_functions = get_exported_functions)
+
 ## silence output and warnings
 SW <- function(expr) capture.output(suppressMessages(suppressWarnings(expr)))
 
