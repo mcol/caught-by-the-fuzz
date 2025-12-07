@@ -221,6 +221,13 @@ fuzz <- function(funs, what = test_inputs(),
     on.exit(options(opt), add = TRUE)
   }
 
+  ## export common data to the daemons
+  mirai::everywhere({},
+                    package = package,
+                    ignore_patterns = joined_patterns,
+                    ignore_warnings = ignore_warnings,
+                    check_fuzzable = check_fuzzable)
+
   ## loop over the inputs
   runs <- list()
   what_chars <- names(what)
@@ -231,8 +238,7 @@ fuzz <- function(funs, what = test_inputs(),
       what_char <- deparse(what[[idx]])[[1]]
 
     ## fuzz all functions with this input
-    runs[[idx]] <- fuzzer(funs, what[[idx]], what_char, idx, package,
-                          joined_patterns, ignore_warnings)
+    runs[[idx]] <- fuzzer(funs, what[[idx]], what_char, idx)
   }
 
   ## returned object
@@ -255,11 +261,6 @@ fuzz <- function(funs, what = test_inputs(),
 #' @param what_char A string representation of the input in `what`, used for
 #'        pretty-printing the output.
 #' @param what_num Numerical index of the input being tested.
-#' @param package A character string specifying the name of the package to
-#'        search for function names.
-#' @param ignore_patterns A character string containing a regular expression
-#'        to match the messages to ignore.
-#' @param ignore_warnings Whether warnings should be ignored.
 #'
 #' @return
 #' A data.frame of results obtained for each of the functions tested, with
@@ -267,8 +268,7 @@ fuzz <- function(funs, what = test_inputs(),
 #' tested.
 #'
 #' @noRd
-fuzzer <- function(funs, what, what_char, what_num, package,
-                   ignore_patterns, ignore_warnings) {
+fuzzer <- function(funs, what, what_char, what_num) {
   fuzzer.core <- quote({
     fun <- check_fuzzable(fun_name, package, ignore_deprecated = FALSE)
     is.character(fun) && return(data.frame(res = "SKIP", msg = fun))
@@ -321,11 +321,7 @@ fuzzer <- function(funs, what, what_char, what_num, package,
   for (idx in seq_along(funs)) {
     res[[idx]] <- mirai::mirai(fuzzer.core, env,
                                .args = list(fun_name = funs[idx],
-                                            what = what, package = package,
-                                            ignore_patterns = ignore_patterns,
-                                            ignore_warnings = ignore_warnings,
-                                            check_fuzzable = check_fuzzable,
-                                            timeout_secs = timeout_secs),
+                                            what = what),
                                .timeout = timeout_secs * 1000)
   }
 
