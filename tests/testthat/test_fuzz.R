@@ -89,6 +89,13 @@ test_that("check object returned", {
   expect_fuzz_result(res,
                      "WARN", "argument is not numeric or logical: returning NA")
 
+  ## ignore warnings
+  SW({
+  res <- fuzz("ls", list(NA), ignore_warnings = TRUE)
+  })
+  expect_fuzz_result(res,
+                     "FAIL", "invalid object for 'as.environment'")
+
   SW({
   res <- fuzz("median", list(letters), ignore_warnings = TRUE)
   })

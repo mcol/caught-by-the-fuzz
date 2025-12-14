@@ -274,7 +274,7 @@ fuzzer <- function(funs, what, what_char, what_num) {
     is.character(fun) && return(data.frame(res = "SKIP", msg = fun))
 
     whitelist_and_label <- function(label, msg) {
-      res <- if (ignore_warnings ||
+      res <- if ((label == "WARN" && ignore_warnings) ||
                  is.null(msg) ||
                  grepl(fun_name, msg) ||
                  grepl(ignore_patterns, msg)) {
