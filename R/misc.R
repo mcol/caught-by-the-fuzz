@@ -24,6 +24,7 @@
 #' @param from Name of the caller function.
 #' @param scalar Whether to consider the argument valid only if it's a scalar
 #'        value (`FALSE` by default).
+#' @param min Minimum value considered value, or `NULL`.
 #' @param remove_empty Discard empty elements before checking that `arg` is
 #'        empty (`FALSE` by default).
 #'
@@ -32,7 +33,7 @@
 #'
 #' @noRd
 validate_class <- function(arg, class, from = "fuzz",
-                           scalar = FALSE, remove_empty = FALSE) {
+                           scalar = FALSE, min = NULL, remove_empty = FALSE) {
   name <- sprintf("'%s'", all.vars(match.call())[1])
   if (missing(arg) || sum(inherits(arg, class)) == 0L ||
       (!is.list(arg) && length(arg) == 1 && is.na(arg))) {
@@ -41,6 +42,8 @@ validate_class <- function(arg, class, from = "fuzz",
   }
   scalar && length(arg) > 1 &&
     fuzz_error(name, "should be a", class, "scalar", from = from)
+  if (!is.null(min) && (length(arg) == 0 || arg < min))
+    fuzz_error(name, "should be at least", min, from = from)
   if (remove_empty)
     arg <- arg[nchar(arg) > 0]
   length(arg) == 0 &&

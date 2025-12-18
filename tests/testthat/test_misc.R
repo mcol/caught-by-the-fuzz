@@ -23,11 +23,18 @@ test_that("validate_class", {
   arg <- list("")
   expect_error(validate_class(arg, "list", remove_empty = TRUE),
                "'arg' is an empty list")
+  arg <- 1
+  expect_error(validate_class(arg, "numeric", min = 2),
+               "'arg' should be at least 2")
+  arg <- numeric()
+  expect_error(validate_class(arg, "numeric", min = 2),
+               "'arg' should be at least 2")
 
   expect_silent(validate_class(iris, "data.frame"))
   expect_silent(validate_class(iris, "data.frame", remove_empty = TRUE))
   expect_silent(validate_class("", "character"))
   expect_silent(validate_class(list(""), "list"))
+  expect_silent(validate_class(2, "numeric", min = 1))
 })
 
 test_that("fuzz_error", {
