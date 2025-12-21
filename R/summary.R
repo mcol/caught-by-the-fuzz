@@ -45,11 +45,9 @@
 #'       out.}
 #'
 #' @examples
-#' daemons(2)
 #' res <- fuzz(funs = c("list", "matrix", "mean"),
 #'             what = test_inputs(c("numeric", "raw")))
 #' summary(res)
-#' daemons(0)
 #'
 #' @seealso [print.cbtf]
 #'
@@ -89,11 +87,9 @@ summary.cbtf <- function(object, tabulate = TRUE, ...) {
 #' No return value, called for side effects.
 #'
 #' @examples
-#' daemons(2)
 #' res <- fuzz(funs = c("list", "matrix", "mean"),
 #'             what = test_inputs(c("numeric", "raw")))
 #' print(res, show.all = TRUE)
-#' daemons(0)
 #'
 #' @seealso [summary.cbtf]
 #'
@@ -133,11 +129,9 @@ print.cbtf <- function(x, show_all = FALSE, ...) {
 #' Otherwise, `FALSE`.
 #'
 #' @examples
-#' daemons(2)
 #' res <- fuzz(funs = c("list", "matrix", "mean"),
 #'             what = test_inputs(c("numeric", "raw")))
 #' res[[6]]
-#' daemons(0)
 #'
 #' @export
 `[[.cbtf` <- function(x, i) {
@@ -152,11 +146,9 @@ print.cbtf <- function(x, show_all = FALSE, ...) {
 #' An integer corresponding to the number of tests performed in a run.
 #'
 #' @examples
-#' daemons(2)
 #' res <- fuzz(funs = c("list", "matrix", "mean"),
 #'             what = test_inputs(c("numeric", "raw")))
 #' length(res)
-#' daemons(0)
 #'
 #' @export
 length.cbtf <- function(x) {

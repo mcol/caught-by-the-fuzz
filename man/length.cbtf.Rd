@@ -16,10 +16,8 @@ An integer corresponding to the number of tests performed in a run.
 Compute the number of tests performed
 }
 \examples{
-daemons(2)
 res <- fuzz(funs = c("list", "matrix", "mean"),
             what = test_inputs(c("numeric", "raw")))
 length(res)
-daemons(0)
 
 }

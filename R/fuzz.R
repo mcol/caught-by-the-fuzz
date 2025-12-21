@@ -70,12 +70,15 @@ get_exported_functions <- function(package, ignore_names = "",
 #' the first 2 seconds, the execution of the function being fuzzed is stopped
 #' and the next one is started.
 #'
-#' The implementation uses `mirai` as a backend, which allows to run functions
-#' asynchronously in parallel processes. Therefore, persistent background
-#' processes (daemons) should be made available before the start of fuzzing;
-#' the function will check for their presence and not run otherwise. This can
-#' be done with the [daemons] function, which allows to control the number of
-#' processes to use.
+#' @section Parallel execution:
+#'
+#' The implementation uses `mirai` as a backend to execute tasks asynchronously
+#' in parallel worker processes. The function can start a pool of persistent
+#' background processes (daemons) of size given by the `daemons` argument
+#' (note that starting more daemons than available cores yields no benefit).
+#' Alternatively, the function can also make use of already active daemons
+#' started with the [mirai::daemons] function: this allows to control in
+#' greater detail the number of processes to use, which can also be remote.
 #'
 #' @section Whitelisting:
 #'
@@ -122,6 +125,10 @@ get_exported_functions <- function(package, ignore_names = "",
 #'        default" is always ignored.
 #' @param ignore_warnings Whether warnings should be ignored (`FALSE` by
 #'        default).
+#' @param daemons Number of daemons to use (2 by default). As many `mirai`
+#'        daemons as specified will be started when entering the function and
+#'        closed at the end, unless active daemons are already available, in
+#'        which case the argument is ignored and the active daemons are used.
 #'
 #' @return
 #' An object of class `cbtf` that stores the results obtained for each of the
@@ -157,7 +164,7 @@ get_exported_functions <- function(package, ignore_names = "",
 #'
 #' @examples
 #' ## set up persistent background processes
-#' daemons(2)
+#' mirai::daemons(2L)
 #'
 #' ## this should produce no errors
 #' res <- fuzz(funs = c("list", "matrix", "mean"),
@@ -171,7 +178,7 @@ get_exported_functions <- function(package, ignore_names = "",
 #' fuzz(funs = "matrix",  what = test_inputs("scalar"))
 #'
 #' ## close the background processes
-#' daemons(0)
+#' mirai::daemons(0L)
 #'
 #' @seealso [get_exported_functions], [test_inputs], [namify], [whitelist],
 #' [summary.cbtf], [print.cbtf]
@@ -179,7 +186,7 @@ get_exported_functions <- function(package, ignore_names = "",
 #' @export
 fuzz <- function(funs, what = test_inputs(),
                  package = NULL, listify_what = FALSE,
-                 ignore_patterns = "", ignore_warnings = FALSE) {
+                 ignore_patterns = "", ignore_warnings = FALSE, daemons = 2L) {
 
   ## input validation
   validate_class(funs, "character", remove_empty = TRUE)
@@ -192,11 +199,14 @@ fuzz <- function(funs, what = test_inputs(),
   validate_class(listify_what, "logical", scalar = TRUE)
   validate_class(ignore_patterns, "character")
   validate_class(ignore_warnings, "logical", scalar = TRUE)
+  validate_class(daemons, c("integer", "numeric"), scalar = TRUE, min = 1)
 
-  ## check that daemons are available (unless we are self-fuzzing and we are
-  ## being run from a daemon)
-  mirai::daemons_set() || mirai::on_daemon() ||
-    fuzz_error("No daemons set, use `daemons(n)` to launch `n` local daemons")
+  ## start as many daemons as specified by the `daemons` argument, unless
+  ## there are daemons already running
+  mirai::daemons_set() || {
+    on.exit(mirai::daemons(0L), add = TRUE)
+    mirai::daemons(n = daemons)
+  }
 
   ## expand the set of inputs with their listified version
   if (listify_what)
@@ -210,7 +220,8 @@ fuzz <- function(funs, what = test_inputs(),
 
   ## start fuzzing
   cli::cli_alert_info(c("Fuzzing {length(funs)} function{?s} ",
-                        "on {length(what)} input{?s}"))
+                        "with {length(what)} input{?s} ",
+                        "(using {mirai::status()$connections} daemon{?s})"))
   if (is.null(package))
     cli::cli_alert_info(c("Functions will be searched in the global namespace ",
                           "as 'package' was not specified"))
@@ -352,17 +363,12 @@ fuzzer <- function(funs, what, what_char, what_num) {
 #' An object of class `cbtf` with the additional whitelist patterns applied.
 #'
 #' @examples
-#' ## set up persistent background processes
-#' daemons(2)
 #'
 #' ## this reports a false positive result
 #' (res <- fuzz(funs = "matrix", what = test_inputs("scalar")))
 #'
 #' ## with whitelisting, we can remove that
 #' whitelist(res, "must be of a vector type")
-#'
-#' ## close the background processes
-#' daemons(0)
 #'
 #' @seealso [fuzz]
 #'
@@ -384,25 +390,3 @@ whitelist <- function(object, patterns) {
   object$ignore_patterns <- setdiff(c(object$ignore_patterns, patterns), "")
   object
 }
-
-#' Set up persistent background processes on the local machine
-#'
-#' This allows to control the number of processes to use. This should be at
-#' most one less than the number of processor cores, to leave one for the main
-#' R process. `daemons(0)` can be used to close the daemon connections.
-#'
-#' This function is a re-export of [mirai::daemons]; refer to the
-#' original `mirai` documentation for a complete description of its arguments
-#' and behaviour.
-#'
-#' @examples
-#' ## set up persistent background processes
-#' daemons(2)
-#'
-#' ## close the background processes
-#' daemons(0)
-#'
-#' @name daemons
-#' @importFrom mirai daemons
-#' @export daemons
-NULL

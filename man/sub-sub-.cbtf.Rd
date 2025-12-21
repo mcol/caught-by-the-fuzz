@@ -25,10 +25,8 @@ Otherwise, \code{FALSE}.
 Extract the results for a specific test input
 }
 \examples{
-daemons(2)
 res <- fuzz(funs = c("list", "matrix", "mean"),
             what = test_inputs(c("numeric", "raw")))
 res[[6]]
-daemons(0)
 
 }

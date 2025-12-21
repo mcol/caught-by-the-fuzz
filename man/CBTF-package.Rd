@@ -26,11 +26,11 @@ actually shown. Using \link{whitelist} has the advantage of not requiring the
 completion of a fuzz run of all functions over all inputs again.
 
 Note that \link{fuzz} relies on the \code{mirai} package for asynchronous operations
-and parallelisation. Therefore, the function may be invoked only after
-persistent background processes are set up. This can be done with the
-\link{daemons} function, which allows to control the number of processes to use.
-This is a re-export of \link[mirai:daemons]{mirai::daemons}; refer to the original \code{mirai}
-documentation for a complete description of its arguments and behaviour.
+and parallelisation, and execution occurs on persistent background processes.
+These can be started automatically by specifying the \code{daemons} option;
+alternatively, they can be set up manually with the \code{mirai::daemons()}
+function; refer to the original \code{mirai} documentation for a complete
+description of its arguments and behaviour.
 
 The helper function \link{get_exported_functions} identifies the functions
 in the public interface of a given package, facilitating the generation of

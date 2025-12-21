@@ -28,11 +28,12 @@ upon are actually shown. Using `whitelist()` has the advantage of not
 requiring to run the fuzzer over all functions and all inputs again.
 
 Note that `fuzz()` uses the [`mirai` package](https://mirai.r-lib.org/)
-for asynchronous operations and parallelisation. Therefore, the function
-may be invoked only after persistent background processes are set up.
-This can be done with the `daemons()` function, which allows to control
-the number of processes to use; refer to the original `mirai`
-documentation for a complete description of its arguments and behaviour.
+for asynchronous operations and parallelisation, and execution occurs on
+persistent background processes. These can be started automatically by
+specifying the `daemons` option; alternatively, they can be set up
+manually with the `mirai::daemons()` function; refer to the original
+`mirai` documentation for a complete description of its arguments and
+behaviour.
 
 The helper function `get_exported_functions()` identifies the functions
 in the public interface of a given package, facilitating the generation
@@ -63,7 +64,6 @@ and is likely installed on most systems.
 ``` r
 library(CBTF)
 funs <- get_exported_functions("mime")
-daemons(2)
 (res <- fuzz(funs, what = list(TRUE)))
 ```
 
@@ -97,6 +97,44 @@ whitelist(res, "a character vector argument expected")
     ##  [ FAIL 1 | WARN 0 | SKIP 0 | OK 1 ]
 
 ## Advanced uses
+
+### Parallel execution
+
+The implementation of `fuzz()` uses the [`mirai`
+package](https://mirai.r-lib.org/) for asynchronous operations and
+parallelisation. This allows to fuzz the functions on persistent
+background processes (daemons) in parallel.
+
+There are two main approaches to control parallel execution:
+
+1.  Setting the `daemons` argument (this is set to 2 by default) 1: this
+    will take care of starting as many daemons as specified; they will
+    also automatically be shut down when the function ends. Note that
+    there is no benefit in starting more daemons than the number of
+    available cores.
+
+    ``` r
+    ## this will start 4 daemons
+    res <- fuzz(funs, daemons = 4)
+    ```
+
+2.  Manually setting up the daemons before the start of the function:
+    this can be accomplished via `mirai::daemons()`, which allows to
+    specify remote daemons as well as local one. This also avoids the
+    cost of starting and closing daemons if `fuzz()` were to be called
+    multiple times. It remains resposibility of the user to close the
+    daemons when no longer in use. Refer to the original `mirai`
+    documentation for a complete description of its arguments and
+    behaviour.
+
+    ``` r
+    ## set up persistent background processes on the local machine
+    mirai::daemons(4)
+    res <- fuzz(funs)
+
+    ## close the background processes
+    mirai::daemons(0)
+    ```
 
 ### Better-looking output
 

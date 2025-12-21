@@ -1,5 +1,5 @@
 ## set up local daemons
-daemons(2)
+mirai::daemons(2L)
 
 ## ensure that these functions are available when self-fuzzing
 mirai::everywhere({},

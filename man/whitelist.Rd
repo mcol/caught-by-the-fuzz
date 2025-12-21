@@ -20,17 +20,12 @@ This allows for post-hoc whitelisting of results according to the patterns
 specified.
 }
 \examples{
-## set up persistent background processes
-daemons(2)
 
 ## this reports a false positive result
 (res <- fuzz(funs = "matrix", what = test_inputs("scalar")))
 
 ## with whitelisting, we can remove that
 whitelist(res, "must be of a vector type")
-
-## close the background processes
-daemons(0)
 
 }
 \seealso{

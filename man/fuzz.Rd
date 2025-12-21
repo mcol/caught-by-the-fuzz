@@ -10,7 +10,8 @@ fuzz(
   package = NULL,
   listify_what = FALSE,
   ignore_patterns = "",
-  ignore_warnings = FALSE
+  ignore_warnings = FALSE,
+  daemons = 2L
 )
 }
 \arguments{
@@ -43,6 +44,11 @@ default" is always ignored.}
 
 \item{ignore_warnings}{Whether warnings should be ignored (\code{FALSE} by
 default).}
+
+\item{daemons}{Number of daemons to use (2 by default). As many \code{mirai}
+daemons as specified will be started when entering the function and
+closed at the end, unless active daemons are already available, in
+which case the argument is ignored and the active daemons are used.}
 }
 \value{
 An object of class \code{cbtf} that stores the results obtained for each of the
@@ -84,14 +90,18 @@ records any errors or warnings that are thrown. If no error occurs within
 the first 2 seconds, the execution of the function being fuzzed is stopped
 and the next one is started.
 }
-\details{
-The implementation uses \code{mirai} as a backend, which allows to run functions
-asynchronously in parallel processes. Therefore, persistent background
-processes (daemons) should be made available before the start of fuzzing;
-the function will check for their presence and not run otherwise. This can
-be done with the \link{daemons} function, which allows to control the number of
-processes to use.
+\section{Parallel execution}{
+
+
+The implementation uses \code{mirai} as a backend to execute tasks asynchronously
+in parallel worker processes. The function can start a pool of persistent
+background processes (daemons) of size given by the \code{daemons} argument
+(note that starting more daemons than available cores yields no benefit).
+Alternatively, the function can also make use of already active daemons
+started with the \link[mirai:daemons]{mirai::daemons} function: this allows to control in
+greater detail the number of processes to use, which can also be remote.
 }
+
 \section{Whitelisting}{
 
 
@@ -118,7 +128,7 @@ run using the \link{whitelist} function.
 
 \examples{
 ## set up persistent background processes
-daemons(2)
+mirai::daemons(2L)
 
 ## this should produce no errors
 res <- fuzz(funs = c("list", "matrix", "mean"),
@@ -132,7 +142,7 @@ print(res, show_all = TRUE)
 fuzz(funs = "matrix",  what = test_inputs("scalar"))
 
 ## close the background processes
-daemons(0)
+mirai::daemons(0L)
 
 }
 \seealso{

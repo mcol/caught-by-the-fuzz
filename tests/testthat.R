@@ -1,5 +1,5 @@
 library(testthat)
 library(CBTF)
 
-daemons(2)
+mirai::daemons(2L)
 test_check("CBTF")
