@@ -221,7 +221,7 @@ fuzz <- function(funs, what = test_inputs(),
   ## start fuzzing
   cli::cli_alert_info(c("Fuzzing {length(funs)} function{?s} ",
                         "with {length(what)} input{?s} ",
-                        "(using {mirai::status()$connections} daemon{?s})"))
+                        "(using {mirai::info()[['connections']]} daemon{?s})"))
   if (is.null(package))
     cli::cli_alert_info(c("Functions will be searched in the global namespace ",
                           "as 'package' was not specified"))
