@@ -228,7 +228,7 @@ fuzz <- function(funs, what = test_inputs(),
 
   ## ensure that we always show some progress
   if (is.null(getOption("cli.progress_show_after"))) {
-    opt <- options(cli.progress_show_after = 0.2)
+    opt <- options(cli.progress_show_after = 0.1)
     on.exit(options(opt), add = TRUE)
   }
 
