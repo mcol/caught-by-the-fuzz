@@ -245,41 +245,7 @@ fuzz <- function(funs, what = test_inputs(),
     deparse(value)[1]
   }, names(what) %||% "", what, USE.NAMES = FALSE)
 
-  ## loop over the inputs
-  runs <- list()
-  for (idx in seq_along(what)) {
-    ## fuzz all functions with this input
-    runs[[idx]] <- fuzzer(funs, what[[idx]], what_chars[idx], idx)
-  }
-
-  ## returned object
-  structure(list(runs = runs,
-                 funs = funs,
-                 package = package %||% NA,
-                 ignore_patterns = ignore_patterns,
-                 ignore_warnings = ignore_warnings),
-            class = "cbtf")
-}
-
-#' Fuzzing engine
-#'
-#' This is where the actual fuzzing happens. This function supports only one
-#' input, which is passed to each of the functions in `funs`.
-#'
-#' @param funs A character vector of function names to test.
-#' @param what The object to be passed as the first argument to each of the
-#'        functions in `funs`.
-#' @param what_char A string representation of the input in `what`, used for
-#'        pretty-printing the output.
-#' @param what_num Numerical index of the input being tested.
-#'
-#' @return
-#' A data.frame of results obtained for each of the functions tested, with
-#' the attribute `"what"` set to contain the string representation of the input
-#' tested.
-#'
-#' @noRd
-fuzzer <- function(funs, what, what_char, what_num) {
+  ## fuzzing engine
   fuzzer.core <- quote({
     fun <- check_fuzzable(fun_name, package, ignore_deprecated = FALSE)
     is.character(fun) && return(data.frame(res = "SKIP", msg = fun))
@@ -308,36 +274,37 @@ fuzzer <- function(funs, what, what_char, what_num) {
           whitelist_and_label("FAIL", conditionMessage(e))
         })
   })
-
   timeout_secs <- 2
-  test.name <- paste0("Test input [[", what_num, "]]: {.strong ",
-                      strtrim(what_char, 40), "}")
-  progress.opts <- list(type = "task",
-                        format = paste(
-                            "{cli::pb_spin}", test.name,
-                            "{.timestamp {cli::pb_current}/{cli::pb_total}}"),
-                        format_done = paste(
-                            "{.alert-success", test.name, "}",
-                            "{.timestamp {cli::pb_elapsed}}"
-                        ),
-                        clear = FALSE)
 
   ## for performance reason, we pass only the functions we need
   env <- sapply(funs, function(x) .GlobalEnv[[x]])
   env[vapply(env, is.null, logical(1))] <- NULL
   env <- as.environment(env)
 
-  ## fuzz the functions asynchronously
-  res <- list()
-  for (idx in seq_along(funs)) {
-    res[[idx]] <- mirai::mirai(fuzzer.core, env,
-                               .args = list(fun_name = funs[idx],
-                                            what = what),
-                               .timeout = timeout_secs * 1000)
-  }
+  ## loop over the inputs
+  runs <- lapply(seq_along(what), function(idx) {
+    test.name <- paste0("Test input [[", idx, "]]: {.strong ",
+                        strtrim(what_chars[idx], 40), "}")
+    progress.opts <- list(type = "task",
+                          format = paste(
+                              "{cli::pb_spin}", test.name,
+                              "{.timestamp {cli::pb_current}/{cli::pb_total}}"),
+                          format_done = paste(
+                              "{.alert-success", test.name, "}",
+                              "{.timestamp {cli::pb_elapsed}}"
+                          ),
+                          clear = FALSE)
 
-  ## collect the results
-  out.res <- lapply(
+    ## fuzz the functions on this input asynchronously
+    res <- lapply(funs, function(fun_name) {
+      mirai::mirai(fuzzer.core, env,
+                   .args = list(fun_name = fun_name,
+                                what = what[[idx]]),
+                   .timeout = timeout_secs * 1000)
+    })
+
+    ## collect the results
+    out.res <- lapply(
       mirai::collect_mirai(res, options = list(.progress = progress.opts)),
       function(out) {
         (mirai::is_error_value(out) && as.integer(out) == 5L) || return(out)
@@ -345,9 +312,18 @@ fuzzer <- function(funs, what, what_char, what_num) {
                    msg = sprintf("Timed out after %d seconds", timeout_secs))
       })
 
-  ## transform results to a data frame
-  structure(as.data.frame(do.call(rbind, out.res)),
-            what = what_char)
+    ## transform results to a data frame
+    structure(as.data.frame(do.call(rbind, out.res)),
+              what = what_chars[idx])
+  })
+
+  ## returned object
+  structure(list(runs = runs,
+                 funs = funs,
+                 package = package %||% NA,
+                 ignore_patterns = ignore_patterns,
+                 ignore_warnings = ignore_warnings),
+            class = "cbtf")
 }
 
 #' Apply additional whitelist patterns to the results of a fuzz run
