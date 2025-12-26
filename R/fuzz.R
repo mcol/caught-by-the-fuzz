@@ -70,7 +70,8 @@ get_exported_functions <- function(package, ignore_names = "",
 #' the first 2 seconds, the execution of the function being fuzzed is stopped
 #' and the next one is started.
 #'
-#' @section Parallel execution:
+#' @details
+#' ## Parallel execution
 #'
 #' The implementation uses `mirai` as a backend to execute tasks asynchronously
 #' in parallel worker processes. The function can start a pool of persistent
@@ -80,7 +81,7 @@ get_exported_functions <- function(package, ignore_names = "",
 #' started with the [mirai::daemons] function: this allows to control in
 #' greater detail the number of processes to use, which can also be remote.
 #'
-#' @section Whitelisting:
+#' ## Whitelisting
 #'
 #' In order to reduce the number of false positive results produced, this
 #' function applies the following set rules, to establish if an error or

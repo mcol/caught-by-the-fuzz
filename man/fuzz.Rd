@@ -90,8 +90,8 @@ records any errors or warnings that are thrown. If no error occurs within
 the first 2 seconds, the execution of the function being fuzzed is stopped
 and the next one is started.
 }
-\section{Parallel execution}{
-
+\details{
+\subsection{Parallel execution}{
 
 The implementation uses \code{mirai} as a backend to execute tasks asynchronously
 in parallel worker processes. The function can start a pool of persistent
@@ -102,8 +102,7 @@ started with the \link[mirai:daemons]{mirai::daemons} function: this allows to c
 greater detail the number of processes to use, which can also be remote.
 }
 
-\section{Whitelisting}{
-
+\subsection{Whitelisting}{
 
 In order to reduce the number of false positive results produced, this
 function applies the following set rules, to establish if an error or
@@ -125,7 +124,7 @@ was received is stored in the \verb{$msg} field (see the \emph{Value} section).
 \emph{Note:} Whitelisting can also be applied post-hoc on the results of a fuzz
 run using the \link{whitelist} function.
 }
-
+}
 \examples{
 ## set up persistent background processes
 mirai::daemons(2L)
