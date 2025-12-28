@@ -233,13 +233,6 @@ fuzz <- function(funs, what = test_inputs(),
     on.exit(options(opt), add = TRUE)
   }
 
-  ## export common data to the daemons
-  mirai::everywhere({},
-                    package = package,
-                    ignore_patterns = joined_patterns,
-                    ignore_warnings = ignore_warnings,
-                    check_fuzzable = check_fuzzable)
-
   ## string representation of the input
   what_chars <- mapply(function(name, value) {
     !is.null(name) && nzchar(name) && return(name)
@@ -247,7 +240,7 @@ fuzz <- function(funs, what = test_inputs(),
   }, names(what) %||% "", what, USE.NAMES = FALSE)
 
   ## fuzzing engine
-  fuzzer.core <- quote({
+  fuzzer <- quote({
     fun <- check_fuzzable(fun_name, package, ignore_deprecated = FALSE)
     is.character(fun) && return(data.frame(res = "SKIP", msg = fun))
 
@@ -277,10 +270,17 @@ fuzz <- function(funs, what = test_inputs(),
   })
   timeout_secs <- 2
 
+  ## export common data to the daemons
   ## for performance reason, we pass only the functions we need
   env <- sapply(funs, function(x) .GlobalEnv[[x]])
   env[vapply(env, is.null, logical(1))] <- NULL
   env <- as.environment(env)
+  list2env(list(package = package,
+                ignore_patterns = joined_patterns,
+                ignore_warnings = ignore_warnings,
+                check_fuzzable = check_fuzzable,
+                fuzzer = fuzzer), envir = env)
+  mirai::everywhere({}, env)
 
   ## loop over the inputs
   runs <- lapply(seq_along(what), function(idx) {
@@ -298,7 +298,7 @@ fuzz <- function(funs, what = test_inputs(),
 
     ## fuzz the functions on this input asynchronously
     res <- lapply(funs, function(fun_name) {
-      mirai::mirai(fuzzer.core, env,
+      mirai::mirai(eval(fuzzer),
                    .args = list(fun_name = fun_name,
                                 what = what[[idx]]),
                    .timeout = timeout_secs * 1000)
