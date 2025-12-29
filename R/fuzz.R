@@ -234,7 +234,7 @@ fuzz <- function(funs, what = test_inputs(),
   }
 
   ## string representation of the input
-  what_chars <- mapply(function(name, value) {
+  char <- mapply(function(name, value) {
     !is.null(name) && nzchar(name) && return(name)
     deparse(value)[1]
   }, names(what) %||% "", what, USE.NAMES = FALSE)
@@ -285,7 +285,7 @@ fuzz <- function(funs, what = test_inputs(),
   ## loop over the inputs
   runs <- lapply(seq_along(what), function(idx) {
     test.name <- paste0("Test input [[", idx, "]]: {.strong ",
-                        strtrim(what_chars[idx], 40), "}")
+                        strtrim(char[idx], 40), "}")
     progress.opts <- list(type = "task",
                           format = paste(
                               "{cli::pb_spin}", test.name,
@@ -315,7 +315,7 @@ fuzz <- function(funs, what = test_inputs(),
 
     ## transform results to a data frame
     structure(as.data.frame(do.call(rbind, out.res)),
-              what = what_chars[idx])
+              what = char[idx])
   })
 
   ## returned object
