@@ -11,9 +11,9 @@ SW <- function(expr) capture.output(suppressMessages(suppressWarnings(expr)))
 
 ## check that the `res` and `msg` fields match the expectation
 expect_fuzz_result <- function(res, exp_res, exp_msg) {
-  expect_equal(sapply(res$runs, function(x) x$res),
+  expect_equal(c(sapply(res$runs, function(x) x$res)),
                exp_res)
-  expect_equal(sapply(res$runs, function(x) x$msg),
+  expect_equal(c(sapply(res$runs, function(x) x$msg)),
                exp_msg)
 }
 
