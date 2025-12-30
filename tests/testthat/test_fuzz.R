@@ -117,13 +117,14 @@ test_that("check object returned", {
   expect_fuzz_result(res,
                      "OK", "Timed out after 2 seconds")
 
+  ## no timeouts
   assign(".local_fun.", envir = .GlobalEnv,
          function(arg) Sys.sleep(1))
   SW({
   res <- fuzz(rep(".local_fun.", 5), list(NA))
   })
   expect_fuzz_result(res,
-                     rep("OK", 5), c("", "", rep("Timed out after 2 seconds", 3)))
+                     rep("OK", 5), rep("", 5))
 
   ## in case of both error and warning, we should report the error
   SW({

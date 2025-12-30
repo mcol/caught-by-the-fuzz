@@ -268,7 +268,9 @@ fuzz <- function(funs, what = test_inputs(),
           whitelist_and_label("FAIL", conditionMessage(e))
         })
   })
-  timeout_secs <- 2
+
+  ## create the queue
+  queue <- setup_queue(funs, what, char, timeout = 2)
 
   ## export common data to the daemons
   ## for performance reason, we pass only the functions we need
@@ -282,40 +284,15 @@ fuzz <- function(funs, what = test_inputs(),
                 fuzzer = fuzzer), envir = env)
   mirai::everywhere({}, env)
 
-  ## loop over the inputs
+  ## fuzz the functions asynchronously
+  res <- do.call(rbind, queue$process())
+
+  ## collect the results by input
   runs <- lapply(seq_along(what), function(idx) {
-    test.name <- paste0("Test input [[", idx, "]]: {.strong ",
-                        strtrim(char[idx], 40), "}")
-    progress.opts <- list(type = "task",
-                          format = paste(
-                              "{cli::pb_spin}", test.name,
-                              "{.timestamp {cli::pb_current}/{cli::pb_total}}"),
-                          format_done = paste(
-                              "{.alert-success", test.name, "}",
-                              "{.timestamp {cli::pb_elapsed}}"
-                          ),
-                          clear = FALSE)
-
-    ## fuzz the functions on this input asynchronously
-    res <- lapply(funs, function(fun_name) {
-      mirai::mirai(eval(fuzzer),
-                   .args = list(fun_name = fun_name,
-                                what = what[[idx]]),
-                   .timeout = timeout_secs * 1000)
-    })
-
-    ## collect the results
-    out.res <- lapply(
-      mirai::collect_mirai(res, options = list(.progress = progress.opts)),
-      function(out) {
-        (mirai::is_error_value(out) && as.integer(out) == 5L) || return(out)
-        data.frame(res = "OK",
-                   msg = sprintf("Timed out after %d seconds", timeout_secs))
-      })
-
-    ## transform results to a data frame
-    structure(as.data.frame(do.call(rbind, out.res)),
-              what = char[idx])
+    sub <- res[(idx - 1) * length(funs) + seq_along(funs), ]
+    rownames(sub) <- NULL
+    attr(sub, "what") <- char[[idx]]
+    sub
   })
 
   ## returned object
