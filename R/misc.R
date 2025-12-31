@@ -36,7 +36,7 @@ validate_class <- function(arg, class, from = "fuzz",
                            scalar = FALSE, min = NULL, remove_empty = FALSE) {
   name <- sprintf("'%s'", all.vars(match.call())[1])
   if (missing(arg) || sum(inherits(arg, class)) == 0L ||
-      (!is.list(arg) && length(arg) == 1 && is.na(arg))) {
+      (!is.list(arg) && length(arg) == 1 && (is.na(arg) || is.infinite(arg)))) {
     fuzz_error(name, "should be of class", paste(class, collapse = ", "),
                from = from)
   }

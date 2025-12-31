@@ -16,6 +16,9 @@ test_that("validate_class", {
                "'letters' should be a character scalar")
   expect_error(validate_class(letters, c("numeric", "character"), scalar = TRUE),
                "^\\[fuzz\\] 'letters' should be a character scalar$")
+  arg <- "Inf"
+  expect_error(validate_class(arg, "numeric"),
+               "'arg' should be of class numeric")
   arg <- ""
   expect_error(validate_class(arg, "character", remove_empty = TRUE),
                "'arg' is an empty character")
