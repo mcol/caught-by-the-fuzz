@@ -14,6 +14,8 @@ test_that("validate_class", {
                "'iris' should be a data.frame scalar")
   expect_error(validate_class(letters, "character", scalar = TRUE),
                "'letters' should be a character scalar")
+  expect_error(validate_class(letters, c("numeric", "character"), scalar = TRUE),
+               "^\\[fuzz\\] 'letters' should be a character scalar$")
   arg <- ""
   expect_error(validate_class(arg, "character", remove_empty = TRUE),
                "'arg' is an empty character")

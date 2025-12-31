@@ -41,13 +41,13 @@ validate_class <- function(arg, class, from = "fuzz",
                from = from)
   }
   scalar && length(arg) > 1 &&
-    fuzz_error(name, "should be a", class, "scalar", from = from)
+    fuzz_error(name, "should be a", class(arg), "scalar", from = from)
   if (!is.null(min) && (length(arg) == 0 || arg < min))
     fuzz_error(name, "should be at least", min, from = from)
   if (remove_empty)
     arg <- arg[nchar(arg) > 0]
   length(arg) == 0 &&
-    fuzz_error(name, "is an empty", class, from = from)
+    fuzz_error(name, "is an empty", class(arg), from = from)
 }
 
 #' @title Stop with an error message
