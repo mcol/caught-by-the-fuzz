@@ -3,6 +3,8 @@
 - Rewrite `fuzz()` to use a backend based on the `mirai` package. This allows
   to parallelize computations and support a timeout to stop non-failing
   functions (#4).
+- Add the `timeout` argument to `fuzz()` to control the number of seconds to
+  wait before interrupting the execution of a function being fuzzed.
 - Use unicode symbols only on terminals that support UTF8, and respect the
   `cli.unicode` option, so that `options(cli.unicode = FALSE)` can be used to
   disable all unicode output.

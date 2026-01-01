@@ -11,7 +11,8 @@ fuzz(
   listify_what = FALSE,
   ignore_patterns = "",
   ignore_warnings = FALSE,
-  daemons = 2L
+  daemons = 2L,
+  timeout = 2
 )
 }
 \arguments{
@@ -49,6 +50,9 @@ default).}
 daemons as specified will be started when entering the function and
 closed at the end, unless active daemons are already available, in
 which case the argument is ignored and the active daemons are used.}
+
+\item{timeout}{Number of seconds (2 by default) after which the function
+being fuzzed is interrupted with result status set to "OK".}
 }
 \value{
 An object of class \code{cbtf} that stores the results obtained for each of the
@@ -74,7 +78,8 @@ contain the following values:
 \itemize{
 \item \strong{OK}: either no error or warning was produced (in which case, the \code{msg}
 entry is left blank), or it was whitelisted (in which case, the message
-received is stored in \code{msg}).
+received is stored in \code{msg}), or it was timed out (in which case, \code{msg}
+records that a timeout was applied).
 \item \strong{SKIP}: no test was run, either because the given name cannot be found, or
 it doesn't correspond to a function, or the function accepts no arguments;
 the exact reason is given in \code{msg}.
@@ -87,8 +92,8 @@ is stored in \code{msg}.
 \description{
 The fuzzer calls each function in \code{funs} with each object in \code{what} and
 records any errors or warnings that are thrown. If no error occurs within
-the first 2 seconds, the execution of the function being fuzzed is stopped
-and the next one is started.
+the first \code{timeout} seconds, the execution of the function being fuzzed is
+interrupted and the next one is started.
 }
 \details{
 \subsection{Parallel execution}{

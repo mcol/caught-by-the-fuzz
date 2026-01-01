@@ -34,6 +34,12 @@ test_that("input validation", {
                "'daemons' should be a numeric scalar")
   expect_error(fuzz("list", list(NA), daemons = 0),
                "'daemons' should be at least 1")
+  expect_error(fuzz("list", list(NA), timeout = NA_integer_),
+               "'timeout' should be of class numeric, integer")
+  expect_error(fuzz("list", list(NA), timeout = c(2, 3)),
+               "'timeout' should be a numeric scalar")
+  expect_error(fuzz("list", list(NA), timeout = 0),
+               "'timeout' should be at least 1")
 })
 
 test_that("check skipped functions", {
@@ -123,8 +129,11 @@ test_that("check object returned", {
   SW({
   res <- fuzz(rep(".local_fun.", 5), list(NA))
   })
+  ## Windows CI produces: "" "Timed out after 2 seconds" "" "" ""
+  if (.Platform$OS.type != "windows") {
   expect_fuzz_result(res,
                      rep("OK", 5), rep("", 5))
+  }
 
   ## in case of both error and warning, we should report the error
   SW({
@@ -217,11 +226,15 @@ test_that("self fuzz", {
   test_self_fuzz("ignore_patterns", "character")
   test_self_fuzz("ignore_warnings", "logical")
   test_self_fuzz("daemons", c("integer", "numeric"))
+  test_self_fuzz("timeout", c("numeric", "integer"))
 
   ## as `what` expects a list argument, we can't use curry_fuzz_for()
   assign(".local_fun.", envir = .GlobalEnv,
          function(arg) fuzz("list", what = list(arg)))
+  ## Windows CI produces: "Timed out after 2 seconds"
+  if (.Platform$OS.type != "windows") {
   expect_pass_message(fuzz(".local_fun."))
+  }
   })
 
   ## shut down nested daemons

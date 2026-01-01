@@ -1,6 +1,6 @@
 ##===========================================================================
 ##
-## Copyright (c) 2024-2025 Marco Colombo
+## Copyright (c) 2024-2026 Marco Colombo
 ##
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -67,8 +67,8 @@ get_exported_functions <- function(package, ignore_names = "",
 #'
 #' The fuzzer calls each function in `funs` with each object in `what` and
 #' records any errors or warnings that are thrown. If no error occurs within
-#' the first 2 seconds, the execution of the function being fuzzed is stopped
-#' and the next one is started.
+#' the first `timeout` seconds, the execution of the function being fuzzed is
+#' interrupted and the next one is started.
 #'
 #' @details
 #' ## Parallel execution
@@ -130,6 +130,8 @@ get_exported_functions <- function(package, ignore_names = "",
 #'        daemons as specified will be started when entering the function and
 #'        closed at the end, unless active daemons are already available, in
 #'        which case the argument is ignored and the active daemons are used.
+#' @param timeout Number of seconds (2 by default) after which the function
+#'        being fuzzed is interrupted with result status set to "OK".
 #'
 #' @return
 #' An object of class `cbtf` that stores the results obtained for each of the
@@ -154,7 +156,8 @@ get_exported_functions <- function(package, ignore_names = "",
 #' contain the following values:
 #' * **OK**: either no error or warning was produced (in which case, the `msg`
 #'   entry is left blank), or it was whitelisted (in which case, the message
-#'   received is stored in `msg`).
+#'   received is stored in `msg`), or it was timed out (in which case, `msg`
+#'   records that a timeout was applied).
 #' * **SKIP**: no test was run, either because the given name cannot be found, or
 #'   it doesn't correspond to a function, or the function accepts no arguments;
 #'   the exact reason is given in `msg`.
@@ -187,7 +190,8 @@ get_exported_functions <- function(package, ignore_names = "",
 #' @export
 fuzz <- function(funs, what = test_inputs(),
                  package = NULL, listify_what = FALSE,
-                 ignore_patterns = "", ignore_warnings = FALSE, daemons = 2L) {
+                 ignore_patterns = "", ignore_warnings = FALSE,
+                 daemons = 2L, timeout = 2) {
 
   ## input validation
   validate_class(funs, "character", remove_empty = TRUE)
@@ -201,6 +205,7 @@ fuzz <- function(funs, what = test_inputs(),
   validate_class(ignore_patterns, "character")
   validate_class(ignore_warnings, "logical", scalar = TRUE)
   validate_class(daemons, c("integer", "numeric"), scalar = TRUE, min = 1)
+  validate_class(timeout, c("numeric", "integer"), scalar = TRUE, min = 1)
 
   ## start as many daemons as specified by the `daemons` argument, unless
   ## there are daemons already running
@@ -270,7 +275,7 @@ fuzz <- function(funs, what = test_inputs(),
   })
 
   ## create the queue
-  queue <- setup_queue(funs, what, char, timeout = 2)
+  queue <- setup_queue(funs, what, char, timeout = timeout)
 
   ## export common data to the daemons
   ## for performance reason, we pass only the functions we need
