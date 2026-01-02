@@ -290,15 +290,7 @@ fuzz <- function(funs, what = test_inputs(),
   mirai::everywhere({}, env)
 
   ## fuzz the functions asynchronously
-  res <- do.call(rbind, queue$process())
-
-  ## collect the results by input
-  runs <- lapply(seq_along(what), function(idx) {
-    sub <- res[(idx - 1) * length(funs) + seq_along(funs), ]
-    rownames(sub) <- NULL
-    attr(sub, "what") <- char[[idx]]
-    sub
-  })
+  runs <- queue$process()
 
   ## returned object
   structure(list(runs = runs,

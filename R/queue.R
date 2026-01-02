@@ -30,7 +30,7 @@ setup_queue <- function(funs, what, char, timeout) {
     cli::cli_progress_done()
     cli::cli_alert_info("{n_tasks} tests run  {.timestamp {elapsed}}")
 
-    results
+    collect_results()
   }
 
   ## Start running a task
@@ -48,11 +48,11 @@ setup_queue <- function(funs, what, char, timeout) {
       current <<- current + 1L
     }
 
-    get_results()
+    get_tasks()
   }
 
   ## Get the results from a task
-  get_results <- function() {
+  get_tasks <- function() {
     ## return early if no more tasks are running
     length(running) || return(current < n_tasks)
 
@@ -80,6 +80,19 @@ setup_queue <- function(funs, what, char, timeout) {
     }
 
     length(running) || current < n_tasks
+  }
+
+  ## Collect the final results
+  collect_results <- function() {
+    res <- do.call(rbind, results)
+
+    ## group the results by input
+    lapply(seq_along(what), function(idx) {
+      sub <- res[(idx - 1) * length(funs) + seq_along(funs), ]
+      rownames(sub) <- NULL
+      attr(sub, "what") <- char[[idx]]
+      sub
+    })
   }
 
   environment()
