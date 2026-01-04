@@ -244,50 +244,9 @@ fuzz <- function(funs, what = test_inputs(),
     deparse(value)[1]
   }, names(what) %||% "", what, USE.NAMES = FALSE)
 
-  ## fuzzing engine
-  fuzzer <- quote({
-    fun <- check_fuzzable(fun_name, package, ignore_deprecated = FALSE)
-    is.character(fun) && return(data.frame(res = "SKIP", msg = fun))
-
-    whitelist_and_label <- function(label, msg) {
-      res <- if ((label == "WARN" && ignore_warnings) ||
-                 is.null(msg) ||
-                 grepl(fun_name, msg) ||
-                 grepl(ignore_patterns, msg)) {
-               "OK"
-             } else {
-               label
-             }
-      data.frame(res = res, msg = toString(msg))
-    }
-
-    warnings <- NULL
-    tryCatch(
-        withCallingHandlers({
-          fun(what)
-          whitelist_and_label("WARN", warnings)
-        }, warning = function(w) {
-          warnings <<- conditionMessage(w)
-        }),
-        error = function(e) {
-          whitelist_and_label("FAIL", conditionMessage(e))
-        })
-  })
-
   ## create the queue
-  queue <- setup_queue(funs, what, char, timeout = timeout)
-
-  ## export common data to the daemons
-  ## for performance reason, we pass only the functions we need
-  env <- sapply(funs, function(x) .GlobalEnv[[x]])
-  env[vapply(env, is.null, logical(1))] <- NULL
-  env <- as.environment(env)
-  list2env(list(package = package,
-                ignore_patterns = joined_patterns,
-                ignore_warnings = ignore_warnings,
-                check_fuzzable = check_fuzzable,
-                fuzzer = fuzzer), envir = env)
-  mirai::everywhere({}, env)
+  queue <- setup_queue(funs, what, char, timeout = timeout,
+                       package, joined_patterns, ignore_warnings)
 
   ## fuzz the functions asynchronously
   runs <- queue$process()

@@ -1,4 +1,24 @@
-setup_queue <- function(funs, what, char, timeout) {
+##===========================================================================
+##
+## Copyright (c) 2025-2026 Marco Colombo
+##
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+##
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+##
+## You should have received a copy of the GNU General Public License
+## along with this program.  If not, see <http://www.gnu.org/licenses/>.
+##
+##===========================================================================
+
+setup_queue <- function(funs, what, char, timeout,
+                        package, ignore_patterns, ignore_warnings) {
   n_tasks <- length(funs) * length(what)
   daemons <- mirai::info()[["connections"]]
   results <- vector(mode = "list", length = n_tasks)
@@ -7,8 +27,47 @@ setup_queue <- function(funs, what, char, timeout) {
   finishd <- 0L
   message <- ""
 
-  ## silence note from R CMD check, `fuzzer` is already on the daemons
-  fuzzer <- NULL
+  ## fuzzing engine
+  fuzzer <- quote({
+    fun <- check_fuzzable(name, package, ignore_deprecated = FALSE)
+    is.character(fun) && return(data.frame(res = "SKIP", msg = fun))
+
+    whitelist_and_label <- function(label, msg) {
+      res <- if ((label == "WARN" && ignore_warnings) ||
+                 is.null(msg) ||
+                 grepl(name, msg) ||
+                 grepl(ignore_patterns, msg)) {
+               "OK"
+             } else {
+               label
+             }
+      data.frame(res = res, msg = toString(msg))
+    }
+
+    warnings <- NULL
+    tryCatch(
+        withCallingHandlers({
+          fun(what)
+          whitelist_and_label("WARN", warnings)
+        }, warning = function(w) {
+          warnings <<- conditionMessage(w)
+        }),
+        error = function(e) {
+          whitelist_and_label("FAIL", conditionMessage(e))
+        })
+  })
+
+  ## export common data to the daemons
+  ## for performance reason, we pass only the functions we need
+  env <- sapply(funs, function(x) .GlobalEnv[[x]])
+  env[vapply(env, is.null, logical(1))] <- NULL
+  env <- as.environment(env)
+  list2env(list(package = package,
+                ignore_patterns = ignore_patterns,
+                ignore_warnings = ignore_warnings,
+                check_fuzzable = check_fuzzable,
+                fuzzer = fuzzer), envir = env)
+  mirai::everywhere({}, env)
 
   ## Run tasks and collect the results
   process <- function() {
@@ -38,7 +97,7 @@ setup_queue <- function(funs, what, char, timeout) {
     while (length(running) < daemons && current < n_tasks) {
       fidx <- current %% length(funs) + 1L
       widx <- current %/% length(funs) + 1L
-      args <- list(fun_name = funs[[fidx]],
+      args <- list(name = funs[[fidx]],
                    what = what[[widx]],
                    char = char[[widx]])
       running[[length(running) + 1]] <<- list(index = current,
