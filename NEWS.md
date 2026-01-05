@@ -8,6 +8,8 @@
 - Use unicode symbols only on terminals that support UTF8, and respect the
   `cli.unicode` option, so that `options(cli.unicode = FALSE)` can be used to
   disable all unicode output.
+- Fix bug that caused failures in the `+()` operator to be whitelisted just
+  because the `+` was interpreted as a regular expression quantifier.
 - Ignore deprecated functions by default in `get_exported_functions()`.
 - Add the `[[` operator to extract the results for a specific test input.
 

@@ -35,7 +35,7 @@ setup_queue <- function(funs, what, char, timeout,
     whitelist_and_label <- function(label, msg) {
       res <- if ((label == "WARN" && ignore_warnings) ||
                  is.null(msg) ||
-                 grepl(name, msg) ||
+                 grepl(name, msg, fixed = TRUE) ||
                  grepl(ignore_patterns, msg)) {
                "OK"
              } else {

@@ -83,7 +83,7 @@ test_that("check object returned", {
   expect_equal(nrow(res[[1]]),
                length(funs))
   expect_equal(res$runs[[1]]$res,
-               c("OK", "OK", "OK"))
+               c("OK", "OK", "FAIL"))
   expect_equal(res$runs[[1]]$msg,
                c("", "", "invalid argument to unary operator"))
   expect_equal(res$package,
