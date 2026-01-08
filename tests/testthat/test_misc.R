@@ -60,6 +60,8 @@ test_that("check_fuzzable", {
                "Object not found in the 'package_name' namespace")
   expect_equal(check_fuzzable(".Device", NULL),
                "Not a function")
+  expect_equal(check_fuzzable(":", NULL),
+               "Doesn't specify number of arguments")
   expect_equal(check_fuzzable("Sys.Date", NULL),
                "Doesn't accept arguments")
 

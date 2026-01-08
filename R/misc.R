@@ -88,8 +88,12 @@ check_fuzzable <- function(fun, pkg, ignore_deprecated = TRUE) {
   is.function(fun) ||
     return("Not a function")
 
+  ## skip primitive functions that don't report arguments
+  is.null(args(fun)) &&
+    return("Doesn't specify number of arguments")
+
   ## skip functions accept no arguments
-  suppressWarnings(length(formals(fun))) == 0 && !is.primitive(fun) &&
+  length(formals(args(fun))) == 0 &&
     return("Doesn't accept arguments")
 
   ## skip deprecated functions
