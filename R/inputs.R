@@ -88,9 +88,16 @@ namify <- function(...) {
 scalar_inputs <- function() {
   namify(
       NA,
+      NA_real_,
+      NA_integer_,
+      NA_character_,
+      3L,
       0L,
+      -4L,
+      .Machine$integer.max,
       1.2,
-      "a test",
+      -2.5,
+      6i,
       NaN,
       Inf,
       NULL
@@ -102,6 +109,7 @@ numeric_inputs <- function() {
       c(1.309605, 0.585381, -0.461072),
       c(-1, 0, NaN, 1e4),
       c(Inf, -0.5, 1234),
+      c(0, 0),
       c(0, NA),
       numeric()
   )
@@ -126,6 +134,7 @@ logical_inputs <- function() {
 character_inputs <- function() {
   namify(
       "",
+      "a test",
       c("A", NA, "7", "+"),
       character()
   )
@@ -154,6 +163,7 @@ data.frame_inputs <- function() {
       data.frame(a = NA),
       data.frame(a = letters),
       data.frame(a = 1:10, b = NA),
+      data.frame(a = c(12, -2.1, 7), b = c(1.34, 2.28, 0.0), c = (-1:1 + 0.1)),
       datasets::iris[0, ],
       datasets::iris[, 0],
       datasets::iris[1, , drop = FALSE],

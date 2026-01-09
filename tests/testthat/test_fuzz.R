@@ -256,6 +256,7 @@ test_that("whitelist", {
                "'patterns' is an empty character")
 
   ignore_patterns <- c("cannot be coerced to type",
+                       "imaginary parts discarded in coercion",
                        "NAs introduced by coercion")
   res.new <- whitelist(res, c("", ignore_patterns))
   SW({
