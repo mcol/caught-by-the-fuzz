@@ -318,3 +318,13 @@ test_that("get_exported_functions", {
   expect_equal(as.character(funs),
                c("guess_type", "parse_multipart"))
 })
+
+test_that("regression test", {
+  testthat::skip_on_cran()
+
+  ## don't use SW as that would suppress warnings
+  capture.output(suppressMessages(
+  expect_pass_message(fuzz("median", list(NA),
+                           timeout = .Machine$integer.max))
+  ))
+})

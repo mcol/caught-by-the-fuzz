@@ -207,6 +207,9 @@ fuzz <- function(funs, what = test_inputs(),
   validate_class(daemons, c("integer", "numeric"), scalar = TRUE, min = 1)
   validate_class(timeout, c("numeric", "integer"), scalar = TRUE, min = 1)
 
+  ## cap the timeout so that converting to milliseconds won't overflow
+  timeout <- min(timeout, 10000)
+
   ## start as many daemons as specified by the `daemons` argument, unless
   ## there are daemons already running
   mirai::daemons_set() || {
