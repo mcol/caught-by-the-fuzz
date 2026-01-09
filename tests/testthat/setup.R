@@ -35,7 +35,7 @@ expect_pass_message <- function(res, msg = "") {
                  "You didn't get caught by the fuzz!")
   expect_output(print(res),
                 "FAIL 0 | WARN 0 | SKIP 0", fixed = TRUE)
-  expect_equal(res$runs[[1]]$msg, msg)
+  expect_equal(res$runs[[length(res$runs)]]$msg, msg)
 }
 
 ## check that fuzzing found errors

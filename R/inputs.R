@@ -6,7 +6,7 @@
 #'
 #' @param use Names of input classes to use. Valid names are "all" (default),
 #'        "scalar", "numeric", "integer", "logical", "character", "factor",
-#'        "data.frame", "matrix", "array", "date", "raw" and "list". A vector
+#'        "data.frame", "matrix", "array", "date", "raw", "na" and "list". A vector
 #'        of valid classes can be retrieved programmatically by setting this
 #'        argument to "help".
 #' @param skip Names of input classes to skip.
@@ -42,6 +42,7 @@ test_inputs <- function(use = "all", skip = "") {
               "array_inputs",
               "date_inputs",
               "raw_inputs",
+              "na_inputs",
               "list_inputs")
   valid <- names(inputs) <- gsub("_inputs", "", inputs)
   "help" %in% use && return(c("all", valid))
@@ -87,10 +88,6 @@ namify <- function(...) {
 
 scalar_inputs <- function() {
   namify(
-      NA,
-      NA_real_,
-      NA_integer_,
-      NA_character_,
       3L,
       0L,
       -4L,
@@ -204,6 +201,15 @@ raw_inputs <- function() {
       charToRaw("0"),
       charToRaw("abc"),
       raw()
+  )
+}
+
+na_inputs <- function() {
+  namify(
+      NA_real_,
+      NA_integer_,
+      NA_character_,
+      NA
   )
 }
 

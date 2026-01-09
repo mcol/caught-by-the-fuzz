@@ -9,7 +9,7 @@ test_inputs(use = "all", skip = "")
 \arguments{
 \item{use}{Names of input classes to use. Valid names are "all" (default),
 "scalar", "numeric", "integer", "logical", "character", "factor",
-"data.frame", "matrix", "array", "date", "raw" and "list". A vector
+"data.frame", "matrix", "array", "date", "raw", "na" and "list". A vector
 of valid classes can be retrieved programmatically by setting this
 argument to "help".}
 

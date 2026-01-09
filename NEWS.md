@@ -13,6 +13,8 @@
 - Ignore deprecated functions by default in `get_exported_functions()`.
 - Add more inputs to `test_inputs()`, bringing the total number of inputs from
   60 to 70.
+- Move the NA inputs in `test_inputs()` from the "scalar" to the new "na"
+  class.
 - Add the `[[` operator to extract the results for a specific test input.
 
 # CBTF 0.5.0 (2025-08-21)
