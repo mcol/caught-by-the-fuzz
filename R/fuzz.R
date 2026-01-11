@@ -233,7 +233,7 @@ fuzz <- function(funs, what = test_inputs(),
                         "(using {mirai::info()[['connections']]} daemon{?s})"))
   if (is.null(package))
     cli::cli_alert_info(c("Functions will be searched in the global namespace ",
-                          "as 'package' was not specified"))
+                          "as {.arg package} was not specified"))
 
   ## ensure that we always show some progress
   if (is.null(getOption("cli.progress_show_after"))) {
