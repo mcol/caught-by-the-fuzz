@@ -1,6 +1,6 @@
 ##===========================================================================
 ##
-## Copyright (c) 2025 Marco Colombo
+## Copyright (c) 2025-2026 Marco Colombo
 ##
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -21,6 +21,8 @@
 #'
 #' @param arg Argument to validate.
 #' @param class A character string for the candidate class or type.
+#' @param null.ok Whether a `NULL` value should be considered valid (`FALSE`
+#'        by default).
 #' @param from Name of the caller function.
 #' @param scalar Whether to consider the argument valid only if it's a scalar
 #'        value (`FALSE` by default).
@@ -32,8 +34,9 @@
 #' Nothing in case of success, otherwise an error is thrown.
 #'
 #' @noRd
-validate_class <- function(arg, class, from = "fuzz",
+validate_class <- function(arg, class, null.ok = FALSE, from = "fuzz",
                            scalar = FALSE, min = NULL, remove_empty = FALSE) {
+  !missing(arg) && is.null(arg) && null.ok && return()
   name <- sprintf("'%s'", all.vars(match.call())[1])
   if (missing(arg) || sum(inherits(arg, class)) == 0L ||
       (!is.list(arg) && length(arg) == 1 && (is.na(arg) || is.infinite(arg)))) {

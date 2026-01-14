@@ -19,6 +19,9 @@ test_that("validate_class", {
   arg <- "Inf"
   expect_error(validate_class(arg, "numeric"),
                "'arg' should be of class numeric")
+  arg <- NULL
+  expect_error(validate_class(arg, "character"),
+               "'arg' should be of class character")
   arg <- ""
   expect_error(validate_class(arg, "character", remove_empty = TRUE),
                "'arg' is an empty character")
@@ -36,6 +39,7 @@ test_that("validate_class", {
                "'arg' should be at least 2")
 
   expect_silent(validate_class(iris, "data.frame"))
+  expect_silent(validate_class(NULL, "data.frame", null.ok = TRUE))
   expect_silent(validate_class(iris, "data.frame", remove_empty = TRUE))
   expect_silent(validate_class("", "character"))
   expect_silent(validate_class(list(""), "list"))
