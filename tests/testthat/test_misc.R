@@ -143,3 +143,16 @@ test_that("append_listified", {
   expect_equal(append_listified(alist(list())),
                list(quote(list()), list(quote(list()))))
 })
+
+test_that("get_element_names", {
+  testthat::skip_on_cran()
+
+  expect_equal(get_element_names(list(NA, NULL)),
+               c("NA", "NULL"))
+  expect_equal(get_element_names(list(first = NA, NULL)),
+               c("first", "NULL"))
+  expect_equal(get_element_names(namify(first = NA, NULL)),
+               c("first", "NULL"))
+  expect_equal(get_element_names(namify(df = iris, iris)),
+               c("df", "iris"))
+})

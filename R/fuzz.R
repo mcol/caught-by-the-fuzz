@@ -221,6 +221,9 @@ fuzz <- function(funs, what = test_inputs(),
   if (listify_what)
     what <- append_listified(what)
 
+  ## string representation of the input
+  char <- get_element_names(what)
+
   ## join all regular expression patterns
   joined_patterns <- paste0(c(ignore_patterns,
                               "is missing, with no default"),
@@ -240,12 +243,6 @@ fuzz <- function(funs, what = test_inputs(),
     opt <- options(cli.progress_show_after = 0.1)
     on.exit(options(opt), add = TRUE)
   }
-
-  ## string representation of the input
-  char <- mapply(function(name, value) {
-    !is.null(name) && nzchar(name) && return(name)
-    deparse(value)[1]
-  }, names(what) %||% "", what, USE.NAMES = FALSE)
 
   ## create the queue
   queue <- setup_queue(funs, what, char, timeout = timeout,

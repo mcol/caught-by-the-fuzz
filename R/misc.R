@@ -181,3 +181,18 @@ append_listified <- function(input) {
     names(transformed) <- sprintf("list(%s)", names(transformed))
   c(input, transformed)
 }
+
+#' Retrieve or generate names for all elements in a list
+#'
+#' @param input A list of possibly named elements.
+#'
+#' @return
+#' A character vector of names.
+#'
+#' @noRd
+get_element_names <- function(input) {
+  mapply(function(name, value) {
+    !is.null(name) && nzchar(name) && return(name)
+    deparse(value)[1]
+  }, names(input) %||% "", input, USE.NAMES = FALSE)
+}
