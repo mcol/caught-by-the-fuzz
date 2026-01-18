@@ -181,6 +181,10 @@ get_exported_functions <- function(package, ignore_names = "",
 #' ## this will catch an error (false positive)
 #' fuzz(funs = "matrix",  what = test_inputs("scalar"))
 #'
+#' ## apply a whitelist pattern to remove the false positive
+#' fuzz(funs = "matrix",  what = test_inputs("scalar"),
+#'      ignore_patterns = "'data' must be of a vector type")
+#'
 #' ## close the background processes
 #' mirai::daemons(0L)
 #'
