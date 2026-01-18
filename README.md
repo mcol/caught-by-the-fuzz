@@ -50,11 +50,6 @@ especially when structures such as data frames, matrices, and more
 complex objects are involved. These names are based on the deparsed
 representation of the unevaluated inputs.
 
-At the moment the functionality of the package is extremely limited: it
-operates only on the first argument and it doesn’t introduce any
-randomness. However, it’s convenient when there are a large number of
-functions to test.
-
 ## Usage
 
 This is a simple example that displays how to use `CBTF` to fuzz an R
@@ -67,7 +62,8 @@ funs <- get_exported_functions("mime")
 (res <- fuzz(funs, what = list(TRUE)))
 ```
 
-    ## ℹ Fuzzing 2 functions on 1 input
+    ## ℹ Fuzzing 2 functions with 1 input (using 2 daemons)
+    ## ℹ 2 tests run  [4ms]
     ## ✖  🚨   CAUGHT BY THE FUZZ!   🚨
     ## 
     ## ── Test input [[1]]: TRUE
@@ -97,6 +93,48 @@ whitelist(res, "a character vector argument expected")
     ##  [ FAIL 1 | WARN 0 | SKIP 0 | OK 1 ]
 
 ## Advanced uses
+
+### Fuzzing multiple arguments
+
+By using the `arg` argument, it’s possible to specify the list of
+arguments to be passed to the functions being fuzzed. Fuzzing is more
+effective if the arguments provided are valid for the functions being
+fuzzed, but this is not strictly necessary.
+
+The `arg` list is expanded into multiple lists, each one of them
+differing from the others for having one of its elements modified by an
+element in the `what` list. For example, if `what = list(NA, "")` and
+`args = list(1, 2, 3)`, the following input lists will be generated and
+tested:
+
+- `list(NA, 2, 3)`
+- `list("", 2, 3)`
+- `list(1, NA, 3)`
+- `list(1, "", 3)`
+- `list(1, 2, NA)`
+- `list(1, 2, "")`
+
+To fuzz the first three arguments of `matrix()`, we could do the
+following:
+
+``` r
+fuzz("matrix", what = namify(NA, NULL), args = namify(1:4, 2, 2))
+```
+    ## ℹ Fuzzing 1 function with 6 inputs (using 2 daemons)
+    ## ℹ Functions will be searched in the global namespace as `package` was not specified
+    ## ℹ 6 tests run  [6ms]
+    ## ✖  🚨   CAUGHT BY THE FUZZ!   🚨
+    ## 
+    ## ── Test input [[2]]: NULL, 2, 2
+    ##  matrix  FAIL  'data' must be of a vector type, was 'NULL'
+    ## 
+    ## ── Test input [[3]]: 1:4, NA, 2
+    ##  matrix  FAIL  invalid 'nrow' value (too large or NA)
+    ## 
+    ## ── Test input [[5]]: 1:4, 2, NA
+    ##  matrix  FAIL  invalid 'ncol' value (too large or NA)
+    ## 
+    ##  [ FAIL 3 | WARN 0 | SKIP 0 | OK 3 ]
 
 ### Parallel execution
 
@@ -138,10 +176,10 @@ There are two main approaches to control parallel execution:
 
 ### Better-looking output
 
-When the inputs contains complex structures, it is better to provide a
-named list to the `what` argument of `fuzz()`: these names will be used
-instead of relying on deparsing of the input, which may be poor. A
-convenient way of generating names is by using the `namify()` helper
+When inputs contain complex structures, it is better to provide named
+lists to the `what` and `args` arguments of `fuzz()`: these names will
+be used instead of relying on deparsing of the input, which may be poor.
+A convenient way of generating names is by using the `namify()` helper
 function.
 
 For example, compare this:
@@ -150,7 +188,8 @@ For example, compare this:
 fuzz(funs, what = list(letters, data.frame(a = 1, b = "a")))
 ```
 
-    ## ℹ Fuzzing 2 functions on 2 inputs
+    ## ℹ Fuzzing 2 functions with 2 inputs (using 2 daemons)
+    ## ℹ 4 tests run  [4ms]
     ## ✖  🚨   CAUGHT BY THE FUZZ!   🚨
     ## 
     ## ── Test input [[1]]: c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l",
@@ -167,7 +206,8 @@ to this:
 fuzz(funs, what = namify(letters, data.frame(a = 1, b = "a")))
 ```
 
-    ## ℹ Fuzzing 2 functions on 2 inputs
+    ## ℹ Fuzzing 2 functions with 2 inputs (using 2 daemons)
+    ## ℹ 4 tests run  [5ms]
     ## ✖  🚨   CAUGHT BY THE FUZZ!   🚨
     ## 
     ## ── Test input [[1]]: letters
@@ -203,7 +243,7 @@ test_inputs("help")
 
     ##  [1] "all"        "scalar"     "numeric"    "integer"    "logical"   
     ##  [6] "character"  "factor"     "data.frame" "matrix"     "array"     
-    ## [11] "date"       "raw"        "list"
+    ## [11] "date"       "raw"        "na"         "list"
 
 ### Fuzzing list inputs automatically
 
@@ -215,7 +255,8 @@ additional coding effort.
 fuzz(funs, what = namify(letters), listify_what = TRUE)
 ```
 
-    ## ℹ Fuzzing 2 functions on 2 inputs
+    ## ℹ Fuzzing 2 functions with 2 inputs (using 2 daemons)
+    ## ℹ 4 tests run  [5ms]
     ## ✖  🚨   CAUGHT BY THE FUZZ!   🚨
     ## 
     ## ── Test input [[1]]: letters
@@ -225,32 +266,6 @@ fuzz(funs, what = namify(letters), listify_what = TRUE)
     ##       guess_type  FAIL  a character vector argument expected
     ## 
     ##  [ FAIL 2 | WARN 0 | SKIP 0 | OK 2 ]
-
-### Fuzzing for arguments other than the first
-
-At the moment, the only way to fuzz an argument other than the first is
-by currying the function, ensuring that the preceding arguments before
-are filled in.
-
-For example, to fuzz the `nrow` argument of `matrix()`, we could do the
-following:
-
-``` r
-curried.matrix <- function(nrow) matrix(1:10, nrow = nrow)
-fuzz("curried.matrix", what = list(NA, NULL))
-```
-
-    ## ℹ Fuzzing 1 function on 2 inputs
-    ## ℹ Functions will be searched in the global namespace as 'package' was not specified
-    ## ✖  🚨   CAUGHT BY THE FUZZ!   🚨
-    ## 
-    ## ── Test input [[1]]: NA
-    ##  curried.matrix  FAIL  invalid 'nrow' value (too large or NA)
-    ## 
-    ## ── Test input [[2]]: NULL
-    ##  curried.matrix  FAIL  non-numeric matrix extent
-    ## 
-    ##  [ FAIL 2 | WARN 0 | SKIP 0 | OK 0 ]
 
 ## Funding
 

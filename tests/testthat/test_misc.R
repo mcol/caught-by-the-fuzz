@@ -162,3 +162,29 @@ test_that("get_element_names", {
   expect_equal(get_element_names(namify(df = iris, iris)),
                c("df", "iris"))
 })
+
+test_that("modify_args", {
+  testthat::skip_on_cran()
+
+  expect_equal(modify_args(namify(1, 2, 3), args = NULL),
+               lapply(namify(1, 2, 3), list))
+  expect_equal(modify_args(namify(NA, 1.2), args = namify(TRUE, 2:5)),
+               structure(list(list(NA, 2:5), list(1.2, 2:5),
+                              list(TRUE, NA), list(TRUE, 1.2)),
+                         names = c("NA, 2:5", "1.2, 2:5",
+                                   "TRUE, NA", "TRUE, 1.2")))
+
+  ## unique
+  expect_equal(modify_args(namify(1, 2, 3), args = namify(1, 2)),
+               structure(list(list(1, 2), list(2, 2), list(3, 2),
+                              list(1, 1), list(1, 3)),
+                         names = c("1, 2", "2, 2", "3, 2",
+                                   "1, 1", "1, 3")))
+
+  ## NULL
+  expect_equal(modify_args(namify(0, NULL), args = namify(1, 2)),
+               structure(list(list(0, 2), list(NULL, 2),
+                              list(1, 0), list(1, NULL)),
+                         names = c("0, 2", "NULL, 2",
+                                   "1, 0", "1, NULL")))
+})

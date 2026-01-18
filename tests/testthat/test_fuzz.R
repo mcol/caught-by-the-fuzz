@@ -14,6 +14,8 @@ test_that("input validation", {
                "'funs' is an empty character")
   expect_error(fuzz("list", list()),
                "'what' is an empty list")
+  expect_error(fuzz("median", args = c(NA, TRUE)),
+               "'args' should be of class list")
   expect_error(fuzz("list", package = letters),
                "'package' should be a character scalar")
   expect_error(fuzz("list", package = ""),
@@ -155,6 +157,17 @@ test_that("check object returned", {
   expect_equal(res$package,
                "packagename")
 
+  ## check that we don't generate spurious lists
+  SW({
+  assign(".local_fun.", envir = .GlobalEnv,
+         function(arg) {
+           is.list(arg) && stop("spurious list generated", call. = FALSE)
+         })
+  res <- fuzz(".local_fun.", list(NULL))
+  })
+  expect_fuzz_result(res,
+                     "OK", "")
+
   ## test with the default inputs
   SW({
   res <- fuzz("list")
@@ -168,6 +181,25 @@ test_that("check object returned", {
   })
   expect_length(res,
                 length(test_inputs()) * 2)
+
+
+  ## multiple arguments
+  SW({
+  res <- fuzz("median", what = list(NULL), args = list(1:5, TRUE))
+  })
+  expect_length(res, 2)
+
+  SW({
+  res <- fuzz("median", what = list(NULL, NA), args = list(1:5, TRUE),
+              listify_what = TRUE)
+  })
+  expect_length(res, 8)
+
+  SW({
+  res <- fuzz("+", what = list(NULL), args = list(1:5, 2, NA))
+  })
+  expect_fuzz_result(res,
+                     rep("SKIP", 3), rep("Accepts only up to 2 arguments", 3))
 })
 
 test_that("check classes returned", {

@@ -5,6 +5,8 @@
   functions (#4).
 - Add the `timeout` argument to `fuzz()` to control the number of seconds to
   wait before interrupting the execution of a function being fuzzed.
+- Add the `args` argument to allow fuzzing multiple function arguments instead
+  of only the first (#6).
 - Use unicode symbols only on terminals that support UTF8, and respect the
   `cli.unicode` option, so that `options(cli.unicode = FALSE)` can be used to
   disable all unicode output.

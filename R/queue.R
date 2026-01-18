@@ -17,7 +17,7 @@
 ##
 ##===========================================================================
 
-setup_queue <- function(funs, what, char, timeout,
+setup_queue <- function(funs, what, timeout,
                         package, ignore_patterns, ignore_warnings) {
   n_tasks <- length(funs) * length(what)
   daemons <- mirai::info()[["connections"]]
@@ -26,10 +26,11 @@ setup_queue <- function(funs, what, char, timeout,
   current <- 0L
   finishd <- 0L
   message <- ""
+  char <- names(what)
 
   ## fuzzing engine
   fuzzer <- quote({
-    fun <- check_fuzzable(name, package, ignore_deprecated = FALSE)
+    fun <- check_fuzzable(name, package, ignore_deprecated = FALSE, length(what))
     is.character(fun) && return(data.frame(res = "SKIP", msg = fun))
 
     whitelist_and_label <- function(label, msg) {
@@ -47,7 +48,7 @@ setup_queue <- function(funs, what, char, timeout,
     warnings <- NULL
     tryCatch(
         withCallingHandlers({
-          fun(what)
+          do.call(fun, what)
           whitelist_and_label("WARN", warnings)
         }, warning = function(w) {
           warnings <<- conditionMessage(w)

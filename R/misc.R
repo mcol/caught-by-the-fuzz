@@ -207,3 +207,35 @@ get_element_names <- function(input) {
     deparse(value)[1]
   }, names(input) %||% "", input, USE.NAMES = FALSE)
 }
+
+#' Create a list of argument lists modified according to the given inputs
+#'
+#' @param args A named list of arguments.
+#' @param input A named list of inputs.
+#'
+#' @return
+#' A list of named lists with the given arguments in turn replaced by each of
+#' the inputs. List elements with the same names are removed.
+#'
+#' @noRd
+modify_args <- function(args, input) {
+  is.null(args) && return(lapply(input, list))
+  names.input <- names(input)
+  names.args <- names(args)
+  res <- unlist(lapply(seq_along(args), function(idx) {
+    new <- lapply(input, function(inp) {
+      new <- unname(args)
+      new[idx] <- list(inp)
+      new
+    })
+    names(new) <- vapply(seq_along(input), function(i) {
+      new <- names.args
+      new[idx] <- names.input[i]
+      paste(new, collapse = ", ")
+    }, character(1))
+    new
+  }), recursive = FALSE)
+
+  ## keep unique elements according to their names
+  res[!duplicated(names(res))]
+}
