@@ -68,6 +68,12 @@ test_that("check_fuzzable", {
                "Doesn't specify number of arguments")
   expect_equal(check_fuzzable("Sys.Date", NULL),
                "Doesn't accept arguments")
+  expect_equal(check_fuzzable("+", NULL, num_args = 3),
+               "Accepts only up to 2 arguments")
+
+  ## check that the ... is interpreted correctly
+  expect_equal(check_fuzzable("list", NULL, num_args = 3),
+               list)
 
   ## must use `assign` otherwise the name cannot be found by the `get` call
   assign(".with.readline.", function(val) readline("Test"), envir = .GlobalEnv)

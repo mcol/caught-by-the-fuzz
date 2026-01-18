@@ -70,13 +70,14 @@ fuzz_error <- function(..., from = "fuzz") {
 #'        value corresponds to the global namespace.
 #' @param ignore_deprecated Whether deprecated functions should be ignored
 #'        (`TRUE` by default).
+#' @param num_args Number of arguments being fuzzed (1 by default).
 #'
 #' @return
 #' In case of failure, a character string containing the reason why the
 #' function cannot be fuzzed; otherwise the function itself.
 #'
 #' @noRd
-check_fuzzable <- function(fun, pkg, ignore_deprecated = TRUE) {
+check_fuzzable <- function(fun, pkg, ignore_deprecated = TRUE, num_args = 1L) {
   ## attempt to get a function from its name
   fun <- try(if (is.null(pkg)) get(fun)
              else utils::getFromNamespace(fun, pkg),
@@ -95,9 +96,19 @@ check_fuzzable <- function(fun, pkg, ignore_deprecated = TRUE) {
   is.null(args(fun)) &&
     return("Doesn't specify number of arguments")
 
-  ## skip functions accept no arguments
-  length(formals(args(fun))) == 0 &&
+  ## skip functions accepting no arguments
+  formal.args <- formals(args(fun))
+  num.formals <- length(formal.args)
+  num.formals == 0L &&
     return("Doesn't accept arguments")
+
+  ## adjust the number of arguments
+  if (any(grepl("...", names(formal.args), fixed = TRUE)))
+    num.formals <- Inf
+
+  ## skip functions accepting fewer arguments than provided
+  num.formals < num_args &&
+    return(sprintf("Accepts only up to %d arguments", num.formals))
 
   ## skip deprecated functions
   ignore_deprecated && any(grepl("\\.Deprecated", body(fun))) &&
