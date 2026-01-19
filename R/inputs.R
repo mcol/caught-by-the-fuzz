@@ -80,7 +80,7 @@ namify <- function(...) {
 
   ## use deparsed names for unnamed objects
   idx.empty <- if (is.null(names(what))) seq_along(what) else names(what) == ""
-  names(what)[idx.empty] <- sapply(what, function(x) deparse(x))[idx.empty]
+  names(what)[idx.empty] <- vapply(what, deparse1, character(1))[idx.empty]
 
   ## evaluate the arguments and remove the list() element added by substitute()
   lapply(what, eval)[-1]
