@@ -211,26 +211,26 @@ get_element_names <- function(input) {
 #' Create a list of argument lists modified according to the given inputs
 #'
 #' @param args A named list of arguments.
-#' @param input A named list of inputs.
+#' @param what A named list of inputs.
 #'
 #' @return
 #' A list of named lists with the given arguments in turn replaced by each of
 #' the inputs. List elements with the same names are removed.
 #'
 #' @noRd
-modify_args <- function(args, input) {
-  is.null(args) && return(lapply(input, list))
-  names.input <- names(input)
+modify_args <- function(args, what) {
+  is.null(args) && return(lapply(what, list))
+  names.what <- names(what)
   names.args <- names(args)
   res <- unlist(lapply(seq_along(args), function(idx) {
-    new <- lapply(input, function(inp) {
+    new <- lapply(what, function(inp) {
       new <- unname(args)
       new[idx] <- list(inp)
       new
     })
-    names(new) <- vapply(seq_along(input), function(i) {
+    names(new) <- vapply(seq_along(what), function(i) {
       new <- names.args
-      new[idx] <- names.input[i]
+      new[idx] <- names.what[i]
       paste(new, collapse = ", ")
     }, character(1))
     new
