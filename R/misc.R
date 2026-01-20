@@ -210,6 +210,8 @@ get_element_names <- function(input) {
 
 #' Create a list of argument lists modified according to the given inputs
 #'
+#' It is a precondition that `args` and `what` cannot be both `NULL`.
+#'
 #' @param args A named list of arguments.
 #' @param what A named list of inputs.
 #'
@@ -220,6 +222,8 @@ get_element_names <- function(input) {
 #' @noRd
 modify_args <- function(args, what) {
   is.null(args) && return(lapply(what, list))
+  nm <- paste(sapply(args, deparse, control = "nice", nlines = 1), collapse = ", ")
+  is.null(what) && return(setNames(list(unname(args)), nm))
   names.what <- names(what)
   names.args <- names(args)
   res <- unlist(lapply(seq_along(args), function(idx) {

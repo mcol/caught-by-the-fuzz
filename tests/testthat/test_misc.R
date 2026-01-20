@@ -168,6 +168,12 @@ test_that("modify_args", {
 
   expect_equal(modify_args(namify(1, 2, 3), args = NULL),
                lapply(namify(1, 2, 3), list))
+  expect_equal(modify_args(what = NULL, args = list(1, 2, 3)),
+               structure(list(list(1, 2, 3)),
+                         names = "1, 2, 3"))
+  expect_equal(modify_args(what = NULL, args = namify(1, 2, 3)),
+               structure(list(list(1, 2, 3)),
+                         names = "1, 2, 3"))
   expect_equal(modify_args(namify(NA, 1.2), args = namify(TRUE, 2:5)),
                structure(list(list(NA, 2:5), list(1.2, 2:5),
                               list(TRUE, NA), list(TRUE, 1.2)),

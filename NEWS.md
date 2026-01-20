@@ -7,6 +7,9 @@
   wait before interrupting the execution of a function being fuzzed.
 - Add the `args` argument to allow fuzzing multiple function arguments instead
   of only the first (#6).
+- Add support for `what = NULL`, which allows running the set of arguments
+  listed in `args` with no modifications. This can be used after a fuzz run to
+  collect results on just one set of problematic inputs.
 - Use unicode symbols only on terminals that support UTF8, and respect the
   `cli.unicode` option, so that `options(cli.unicode = FALSE)` can be used to
   disable all unicode output.

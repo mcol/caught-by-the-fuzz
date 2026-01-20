@@ -16,6 +16,8 @@ test_that("input validation", {
                "'what' is an empty list")
   expect_error(fuzz("median", args = c(NA, TRUE)),
                "'args' should be of class list")
+  expect_error(fuzz("median", what = NULL, args = NULL),
+               "'what' and 'args' cannot be both NULL")
   expect_error(fuzz("list", package = letters),
                "'package' should be a character scalar")
   expect_error(fuzz("list", package = ""),
@@ -182,6 +184,13 @@ test_that("check object returned", {
   expect_length(res,
                 length(test_inputs()) * 2)
 
+  ## NULL what
+  SW({
+  res <- fuzz("median", what = NULL, args = list(iris))
+  })
+  expect_length(res, 1)
+  expect_fuzz_result(res,
+                     "FAIL", "need numeric data")
 
   ## multiple arguments
   SW({
