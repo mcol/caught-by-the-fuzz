@@ -223,7 +223,7 @@ get_element_names <- function(input) {
 modify_args <- function(args, what) {
   is.null(args) && return(lapply(what, list))
   nm <- paste(sapply(args, deparse, nlines = 1), collapse = ", ")
-  is.null(what) && return(setNames(list(unname(args)), nm))
+  is.null(what) && return(stats::setNames(list(unname(args)), nm))
   names.what <- names(what)
   names.args <- names(args)
   res <- unlist(lapply(seq_along(args), function(idx) {
