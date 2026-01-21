@@ -222,7 +222,7 @@ get_element_names <- function(input) {
 #' @noRd
 modify_args <- function(args, what) {
   is.null(args) && return(lapply(what, list))
-  nm <- paste(sapply(args, deparse, control = "nice", nlines = 1), collapse = ", ")
+  nm <- paste(sapply(args, deparse, nlines = 1), collapse = ", ")
   is.null(what) && return(setNames(list(unname(args)), nm))
   names.what <- names(what)
   names.args <- names(args)
