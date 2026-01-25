@@ -19,29 +19,29 @@ test_that("input validation", {
   expect_error(fuzz("median", what = NULL, args = NULL),
                "'what' and 'args' cannot be both NULL")
   expect_error(fuzz("list", package = letters),
-               "'package' should be a character scalar")
+               "'package' should be a single character value")
   expect_error(fuzz("list", package = ""),
                "'package' is an empty character")
   expect_error(fuzz("list", listify_what = NULL),
                "'listify_what' should be of class logical")
   expect_error(fuzz("list", listify_what = c(TRUE, FALSE)),
-               "'listify_what' should be a logical scalar")
+               "'listify_what' should be a single logical value")
   expect_error(fuzz("list", ignore_patterns = TRUE),
                "'ignore_patterns' should be of class character")
   expect_error(fuzz("list", list(NA), ignore_warnings = NA),
                "'ignore_warnings' should be of class logical")
   expect_error(fuzz("list", list(NA), ignore_warnings = c(TRUE, FALSE)),
-               "'ignore_warnings' should be a logical scalar")
+               "'ignore_warnings' should be a single logical value")
   expect_error(fuzz("list", list(NA), daemons = NA_integer_),
                "'daemons' should be of class integer, numeric")
   expect_error(fuzz("list", list(NA), daemons = c(2, 3)),
-               "'daemons' should be a numeric scalar")
+               "'daemons' should be a single numeric value")
   expect_error(fuzz("list", list(NA), daemons = 0),
                "'daemons' should be at least 1")
   expect_error(fuzz("list", list(NA), timeout = NA_integer_),
                "'timeout' should be of class numeric, integer")
   expect_error(fuzz("list", list(NA), timeout = c(2, 3)),
-               "'timeout' should be a numeric scalar")
+               "'timeout' should be a single numeric value")
   expect_error(fuzz("list", list(NA), timeout = 0),
                "'timeout' should be at least 1")
 })
@@ -326,7 +326,7 @@ test_that("get_exported_functions", {
   expect_error(get_exported_functions("CBTF", "ignore", NA),
                "'ignore_deprecated' should be of class logical")
   expect_error(get_exported_functions("CBTF", "ignore", c(TRUE, FALSE)),
-               "'ignore_deprecated' should be a logical scalar")
+               "'ignore_deprecated' should be a single logical value")
 
   funs <- get_exported_functions("CBTF")
   expect_type(funs,

@@ -11,11 +11,11 @@ test_that("validate_class", {
   expect_error(validate_class(arg, "data.frame"),
                "'arg' is an empty data.frame")
   expect_error(validate_class(iris, "data.frame", scalar = TRUE),
-               "'iris' should be a data.frame scalar")
+               "'iris' should be a single data.frame value")
   expect_error(validate_class(letters, "character", scalar = TRUE),
-               "'letters' should be a character scalar")
+               "'letters' should be a single character value")
   expect_error(validate_class(letters, c("numeric", "character"), scalar = TRUE),
-               "^\\[fuzz\\] 'letters' should be a character scalar$")
+               "^\\[fuzz\\] 'letters' should be a single character value$")
   arg <- "Inf"
   expect_error(validate_class(arg, "numeric"),
                "'arg' should be of class numeric")

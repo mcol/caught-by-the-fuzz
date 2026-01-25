@@ -44,7 +44,7 @@ validate_class <- function(arg, class, null.ok = FALSE, from = "fuzz",
                from = from)
   }
   scalar && length(arg) > 1 &&
-    fuzz_error(name, "should be a", class(arg), "scalar", from = from)
+    fuzz_error(name, "should be a single", class(arg), "value", from = from)
   if (!is.null(min) && (length(arg) == 0 || arg < min))
     fuzz_error(name, "should be at least", min, from = from)
   if (remove_empty)
