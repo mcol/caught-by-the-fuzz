@@ -254,7 +254,7 @@ fuzz <- function(funs, what = test_inputs(), args = NULL,
     names(args) <- get_element_names(args)
 
   ## expand the set of inputs according to the arguments provided
-  what <- modify_args(args, what)
+  what <- modify_args(what, args)
 
   ## join all regular expression patterns
   joined_patterns <- paste0(c(ignore_patterns,

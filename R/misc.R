@@ -212,15 +212,15 @@ get_element_names <- function(input) {
 #'
 #' It is a precondition that `args` and `what` cannot be both `NULL`.
 #'
-#' @param args A named list of arguments.
 #' @param what A named list of inputs.
+#' @param args A named list of arguments.
 #'
 #' @return
 #' A list of named lists with the given arguments in turn replaced by each of
 #' the inputs. List elements with the same names are removed.
 #'
 #' @noRd
-modify_args <- function(args, what) {
+modify_args <- function(what, args) {
   is.null(args) && return(lapply(what, list))
   nm <- paste(sapply(args, deparse, nlines = 1), collapse = ", ")
   is.null(what) && return(stats::setNames(list(unname(args)), nm))
