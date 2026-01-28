@@ -195,17 +195,37 @@ append_listified <- function(input) {
 
 #' Retrieve or generate names for all elements in a list
 #'
-#' @param input A list of possibly named elements.
+#' @param input A quosure of a list of possibly named elements.
+#' @param use_names Whether the original element names should be used instead
+#'        of the deparsed inputs when present.
 #'
 #' @return
 #' A character vector of names.
 #'
 #' @noRd
-get_element_names <- function(input) {
-  mapply(function(name, value) {
-    !is.null(name) && nzchar(name) && return(name)
-    deparse(value)[1]
-  }, names(input) %||% "", input, USE.NAMES = FALSE)
+get_element_names <- function(input, use_names) {
+  if (rlang::quo_is_call(input, "list")) {
+    ## extract the call expression from a literal list(...) supplied as a quosure
+    expr <- rlang::quo_get_expr(input)
+  } else {
+    ## the quosure contains a symbol bound to a list: evaluate it to get the
+    ## actual list value, prepending the NA placeholder so that further down
+    ## as.list(expr)[-1] yields the list elements consistently
+    expr <- c(NA, rlang::eval_tidy(input))
+  }
+
+  ## get the list elements and discard the list head
+  elems <- as.list(expr)[-1]
+
+  ## deparse each element to produce default names
+  nm <- vapply(elems, deparse, character(1), nlines = 1)
+
+  ## use the provided names for named elements
+  if (use_names) {
+    idx.named <- nzchar(names(elems))
+    nm[idx.named] <- names(elems)[idx.named]
+  }
+  unname(nm)
 }
 
 #' Create a list of argument lists modified according to the given inputs

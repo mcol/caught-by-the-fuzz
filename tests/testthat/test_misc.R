@@ -153,14 +153,34 @@ test_that("append_listified", {
 test_that("get_element_names", {
   testthat::skip_on_cran()
 
-  expect_equal(get_element_names(list(NA, NULL)),
+  expect_equal(get_element_names(rlang::quo(list(NA, NULL)),
+                                 use_names = TRUE),
                c("NA", "NULL"))
-  expect_equal(get_element_names(list(first = NA, NULL)),
+  expect_equal(get_element_names(rlang::quo(list(first = NA, NULL)),
+                                 use_names = TRUE),
                c("first", "NULL"))
-  expect_equal(get_element_names(namify(first = NA, NULL)),
-               c("first", "NULL"))
-  expect_equal(get_element_names(namify(df = iris, iris)),
+  expect_equal(get_element_names(rlang::quo(list(first = NA, iris)),
+                                 use_names = TRUE),
+               c("first", "iris"))
+  expect_equal(get_element_names(rlang::quo(list(df = iris, iris)),
+                                 use_names = TRUE),
                c("df", "iris"))
+
+  ## list passed indirectly
+  what <- list(iris, data.frame())
+  expect_equal(get_element_names(rlang::quo(what),
+                                 use_names = TRUE),
+               c("structure(list(Sepal.Length = c(5.1, 4.9, 4.7, 4.6, 5, 5.4, 4.6, ",
+                 "structure(list(), names = character(0), row.names = integer(0), class = \"data.frame\")"))
+
+  what <- list(first = iris, data.frame())
+  expect_equal(get_element_names(rlang::quo(what),
+                                 use_names = TRUE),
+               c("first",
+                 "structure(list(), names = character(0), row.names = integer(0), class = \"data.frame\")"))
+  expect_equal(get_element_names(rlang::quo(test_inputs("na")),
+                                 use_names = TRUE),
+               c("NA_real_", "NA_integer_", "NA_character_", "NA"))
 })
 
 test_that("modify_args", {

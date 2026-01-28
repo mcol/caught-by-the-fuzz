@@ -15,6 +15,7 @@ URL: https://mcol.github.io/caught-by-the-fuzz/
 BugReports: https://github.com/mcol/caught-by-the-fuzz/issues
 Imports:
     mirai (>= 2.5.2),
+    rlang (>= 1.1.7),
     cli (>= 3.6.5)
 Suggests:
     testthat (>= 3.2.3),

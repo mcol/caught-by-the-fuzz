@@ -74,7 +74,7 @@ test_inputs <- function(use = "all", skip = "") {
 #'
 #' @seealso [fuzz]
 #'
-#' @export
+#' @noRd
 namify <- function(...) {
   what <- substitute(list(...))
 

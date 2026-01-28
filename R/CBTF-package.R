@@ -54,9 +54,4 @@
 #' potentially problematic inputs, but these can be limited just to the
 #' desired classes of inputs.
 #'
-#' The helper function [namify] can be used to generate automatically pretty
-#' names in the list of input object, which can improve the output, especially
-#' when structures such as data frames, matrices, and more complex objects are
-#' involved. These names are based on the deparsed representation of the
-#' unevaluated inputs.
 "_PACKAGE"

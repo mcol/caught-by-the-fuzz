@@ -225,8 +225,6 @@ test_that("check classes returned", {
               "list()")
   expect_what(fuzz("list", list(1:3)),
               "1:3")
-  expect_what(fuzz("list", list(letters = letters)),
-              "letters")
   expect_what(fuzz("list", list(NA, letters = letters)),
               c("NA", "letters"))
   what <- letters
@@ -334,7 +332,6 @@ test_that("get_exported_functions", {
   expect_equal(as.character(funs),
                c("fuzz",
                  "get_exported_functions",
-                 "namify",
                  "test_inputs",
                  "whitelist"))
   expect_equal(attr(funs, "package"),

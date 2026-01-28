@@ -44,12 +44,6 @@ doesn’t specify the set of inputs to be tested. By default it generates
 a large set of potentially problematic inputs, but these can be limited
 just to the desired classes of inputs.
 
-The helper function `namify()` can be used to generate automatically
-pretty names in the list of input object, which can improve the output,
-especially when structures such as data frames, matrices, and more
-complex objects are involved. These names are based on the deparsed
-representation of the unevaluated inputs.
-
 ## Usage
 
 This is a simple example that displays how to use `CBTF` to fuzz an R
@@ -118,7 +112,7 @@ To fuzz the first three arguments of `matrix()`, we could do the
 following:
 
 ``` r
-fuzz("matrix", what = namify(NA, NULL), args = namify(1:4, 2, 2))
+fuzz("matrix", what = list(NA, NULL), args = list(1:4, 2, 2))
 ```
     ## ℹ Fuzzing 1 function with 6 inputs (using 2 daemons)
     ## ℹ Functions will be searched in the global namespace as `package` was not specified
@@ -174,50 +168,6 @@ There are two main approaches to control parallel execution:
     mirai::daemons(0)
     ```
 
-### Better-looking output
-
-When inputs contain complex structures, it is better to provide named
-lists to the `what` and `args` arguments of `fuzz()`: these names will
-be used instead of relying on deparsing of the input, which may be poor.
-A convenient way of generating names is by using the `namify()` helper
-function.
-
-For example, compare this:
-
-``` r
-fuzz(funs, what = list(letters, data.frame(a = 1, b = "a")))
-```
-
-    ## ℹ Fuzzing 2 functions with 2 inputs (using 2 daemons)
-    ## ℹ 4 tests run  [4ms]
-    ## ✖  🚨   CAUGHT BY THE FUZZ!   🚨
-    ## 
-    ## ── Test input [[1]]: c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l",
-    ##  parse_multipart  FAIL  $ operator is invalid for atomic vectors
-    ## 
-    ## ── Test input [[2]]: structure(list(a = 1, b = "a"), class = "data.frame", row.names = c(NA,
-    ##       guess_type  FAIL  a character vector argument expected
-    ## 
-    ##  [ FAIL 2 | WARN 0 | SKIP 0 | OK 2 ]
-
-to this:
-
-``` r
-fuzz(funs, what = namify(letters, data.frame(a = 1, b = "a")))
-```
-
-    ## ℹ Fuzzing 2 functions with 2 inputs (using 2 daemons)
-    ## ℹ 4 tests run  [5ms]
-    ## ✖  🚨   CAUGHT BY THE FUZZ!   🚨
-    ## 
-    ## ── Test input [[1]]: letters
-    ##  parse_multipart  FAIL  $ operator is invalid for atomic vectors
-    ## 
-    ## ── Test input [[2]]: data.frame(a = 1, b = "a")
-    ##       guess_type  FAIL  a character vector argument expected
-    ## 
-    ##  [ FAIL 2 | WARN 0 | SKIP 0 | OK 2 ]
-
 ### Controlling the inputs tested
 
 By default, `fuzz()` tests all the inputs produced by `test_inputs()`.
@@ -252,7 +202,7 @@ same. This effectively doubles the number of tests run with no
 additional coding effort.
 
 ``` r
-fuzz(funs, what = namify(letters), listify_what = TRUE)
+fuzz(funs, what = list(letters), listify_what = TRUE)
 ```
 
     ## ℹ Fuzzing 2 functions with 2 inputs (using 2 daemons)

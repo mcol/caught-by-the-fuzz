@@ -21,6 +21,7 @@
 - Move the NA inputs in `test_inputs()` from the "scalar" to the new "na"
   class.
 - Add the `[[` operator to extract the results for a specific test input.
+- Stop exporting the `namify()` helper.
 
 # CBTF 0.5.0 (2025-08-21)
 
