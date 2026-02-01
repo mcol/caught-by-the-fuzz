@@ -6,7 +6,7 @@
 - Add the `timeout` argument to `fuzz()` to control the number of seconds to
   wait before interrupting the execution of a function being fuzzed.
 - Add the `args` argument to allow fuzzing multiple function arguments instead
-  of only the first (#6).
+  of only the first, with support for named arguments (#6, #7).
 - Add support for `what = NULL`, which allows running the set of arguments
   listed in `args` with no modifications. This can be used after a fuzz run to
   collect results on just one set of problematic inputs.

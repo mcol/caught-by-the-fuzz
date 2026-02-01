@@ -31,7 +31,9 @@ arguments with no fuzzing occurring.}
 \item{args}{A list of default values for function arguments. Each argument
 in the list is in turn replaced by each element of \code{what}, then each
 modified argument list is used to fuzz the functions in \code{funs}. If
-\code{NULL} (default), only the first argument of each function is fuzzed.}
+named arguments are present, their names are used as argument names
+in the fuzzed functions. If \code{NULL} (default), only the first argument
+of each function is fuzzed.}
 
 \item{package}{A character string specifying the name of the package to
 search for functions. If \code{NULL} (default), the function will first
@@ -44,8 +46,8 @@ if \code{what} is \code{list(x = x)}, the function will operate as if it
 were \code{list(x = x, "list(x)" = list(x))}, for any input object \code{x}.}
 
 \item{ignore_patterns}{One or more strings containing regular expressions
-to match the errors to ignore. The string "is missing, with no
-default" is always ignored.}
+to match the errors to ignore. The strings "unused argument" and
+"is missing, with no default" are always ignored.}
 
 \item{ignore_warnings}{Whether warnings should be ignored (\code{FALSE} by
 default).}
@@ -112,6 +114,12 @@ turn by each object in \code{what} and the resulting list of arguments is then
 passed to each function via \code{do.call()}. If more arguments are given than
 the number formal arguments accepted by a function, that function will
 produce a "SKIP" result.
+
+If arguments are named, they will be passed with their name to the fuzzed
+functions. If a function doesn't have a formal argument of that name and
+doesn't accept \code{...}, then the standard R behaviour is to return an "unused
+argument" error. This is whitelisted by default in \code{fuzz()}, and the
+corresponding result status is set to "OK".
 }
 
 \subsection{Parallel execution}{

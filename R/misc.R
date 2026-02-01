@@ -230,34 +230,55 @@ get_element_names <- function(input, use_names) {
 
 #' Create a list of argument lists modified according to the given inputs
 #'
-#' It is a precondition that `args` and `what` cannot be both `NULL`.
+#' This function generates all inputs to be tested. It is a precondition that
+#' `args` and `what` cannot be both `NULL`.
 #'
 #' @param what A named list of inputs.
 #' @param args A named list of arguments.
+#' @param keys A vector of argument keys (`NULL` by default).
 #'
 #' @return
 #' A list of named lists with the given arguments in turn replaced by each of
-#' the inputs. List elements with the same names are removed.
+#' the inputs. Each of the generated argument lists is named by concatenating
+#' the (possibly keyed) deparsed representation of its elements. If `keys` is
+#' not empty, it is used to assign names to the individual elements in the
+#' inner lists. Argument lists with the same names are removed.
 #'
 #' @noRd
-modify_args <- function(what, args) {
+modify_args <- function(what, args, keys = NULL) {
+  ## a list label is a comma-separated concatenation of element names, with
+  ## element names transformed into the form `key =` if a key was given
+  list_label <- function(vals, idx = NULL, what = NULL) {
+    vals[idx] <- what
+    vals[is.key] <- paste(keys[is.key], "=", vals[is.key])
+    paste(vals, collapse = ", ")
+  }
+
+  ## no arguments provided: return each element of `what` wrapped in a list
   is.null(args) && return(lapply(what, list))
-  nm <- paste(sapply(args, deparse, nlines = 1), collapse = ", ")
-  is.null(what) && return(stats::setNames(list(unname(args)), nm))
-  names.what <- names(what)
-  names.args <- names(args)
+
+  ## names corresponding to the argument values
+  vals_names <- names(args)
+  is.key <- nzchar(keys)
+
+  ## `args` must be named after its keys, as they will be used by do.call()
+  names(args) <- keys
+
+  ## no inputs provided: return `args` without changes wrapped in a named list
+  is.null(what) && return(stats::setNames(list(args), list_label(vals_names)))
+
+  ## create a list of modified argument lists, where the element at index
+  ## idx is replaced in turn by each element in `what`
   res <- unlist(lapply(seq_along(args), function(idx) {
     new <- lapply(what, function(inp) {
-      new <- unname(args)
+      new <- args
       new[idx] <- list(inp)
       new
     })
-    names(new) <- vapply(seq_along(what), function(i) {
-      new <- names.args
-      new[idx] <- names.what[i]
-      paste(new, collapse = ", ")
+    labels <- vapply(names(what), function(what_name) {
+      list_label(vals_names, idx, what_name)
     }, character(1))
-    new
+    stats::setNames(new, labels)
   }), recursive = FALSE)
 
   ## keep unique elements according to their names

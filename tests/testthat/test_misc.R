@@ -188,12 +188,6 @@ test_that("modify_args", {
 
   expect_equal(modify_args(namify(1, 2, 3), args = NULL),
                lapply(namify(1, 2, 3), list))
-  expect_equal(modify_args(what = NULL, args = list(1, 2, 3)),
-               structure(list(list(1, 2, 3)),
-                         names = "1, 2, 3"))
-  expect_equal(modify_args(what = NULL, args = namify(1, 2, 3)),
-               structure(list(list(1, 2, 3)),
-                         names = "1, 2, 3"))
   expect_equal(modify_args(namify(NA, 1.2), args = namify(TRUE, 2:5)),
                structure(list(list(NA, 2:5), list(1.2, 2:5),
                               list(TRUE, NA), list(TRUE, 1.2)),
@@ -213,4 +207,34 @@ test_that("modify_args", {
                               list(1, 0), list(1, NULL)),
                          names = c("0, 2", "NULL, 2",
                                    "1, 0", "1, NULL")))
+
+  ## keys
+  res <- modify_args(what = NULL, args = namify(1, 2, 3),
+                     keys = NULL)
+  expect_equal(res,
+               structure(list(list(1, 2, 3)),
+                         names = "1, 2, 3"))
+  expect_named(res[[1]], NULL)
+
+  res <- modify_args(what = NULL, args = namify(1, 2, 3),
+                     keys = c("x", "y", "z"))
+  expect_equal(res,
+               structure(list(list(x = 1, y = 2, z = 3)),
+                         names = "x = 1, y = 2, z = 3"))
+  expect_named(res[[1]], c("x", "y", "z"))
+
+  res <- modify_args(what = NULL, args = namify(iris, TRUE),
+                     keys = c("", "verbose"))
+  expect_equal(res,
+               structure(list(list(iris, verbose = TRUE)),
+                         names = c("iris, verbose = TRUE")))
+
+  res <- modify_args(what = namify(0, NULL), args = namify(1, 2),
+                     keys = c("x", ""))
+  expect_equal(res,
+               structure(list(list(x = 0, 2), list(x = NULL, 2),
+                              list(x = 1, 0), list(x = 1, NULL)),
+                         names = c("x = 0, 2", "x = NULL, 2",
+                                   "x = 1, 0", "x = 1, NULL")))
+  expect_named(res[[1]], c("x", ""))
 })

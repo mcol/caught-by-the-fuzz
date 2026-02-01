@@ -79,22 +79,21 @@ first function argument was fuzzed. By setting `args`, it's possible to
 provide a list of arguments (of any length) to pass to the functions being
 fuzzed.
 
-The `args` list is expanded into multiple lists, each one of them differing
-from the others for having one of its elements modified by an element in the
-`what` list. For example, if `what = list(NA, "")` and `args = list(1, 2, 3)`,
-the following input lists will be generated and tested:
-
-- `list(NA, 2, 3)`
-- `list("", 2, 3)`
-- `list(1, NA, 3)`
-- `list(1, "", 3)`
-- `list(1, 2, NA)`
-- `list(1, 2, "")`
-
 To fuzz the first three arguments of `matrix()` (`data`, `nrow` and `ncol`),
 we could do the following:
 ```{r}
 fuzz("matrix", what = list(NA, NULL), args = list(1:4, 2, 2))
+```
+
+If names are given to elements in `args`, they will be used in the input lists
+generated. This can be helpful to fuzz a specific argument across several
+function, or to fuzz an argument that comes later in the argument list or that
+are passed via `...`.
+
+For example, the following will fuzz the `data`, `nrow` and `dimnames`
+arguments:
+```{r}
+fuzz("matrix", what = list(NA, NULL), args = list(1:4, 2, dimnames = NULL))
 ```
 
 Fuzzing is generally more effective when the values in `args` provide a good
@@ -128,6 +127,16 @@ However, the full potential of `CBTF` is realised by specifying both `what`
 `test_inputs()`) and `args`. In such cases, `args` is expanded internally into
 multiple lists, each differing by one elements modified according to an
 element in `what`.
+
+For example, if `what = list(NA, "")` and `args = list(x = 11, y = 22, 33)`,
+the following input lists will be generated and tested:
+
+- `list(x = NA, y = 22, 33)`
+- `list(x = "", y = 22, 33)`
+- `list(x = 11, y = NA, 33)`
+- `list(x = 11, y = "", 33)`
+- `list(x = 11, y = 22, NA)`
+- `list(x = 11, y = 22, "")`
 
 ### Parallel execution
 

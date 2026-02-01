@@ -81,6 +81,12 @@ get_exported_functions <- function(package, ignore_names = "",
 #' the number formal arguments accepted by a function, that function will
 #' produce a "SKIP" result.
 #'
+#' If arguments are named, they will be passed with their name to the fuzzed
+#' functions. If a function doesn't have a formal argument of that name and
+#' doesn't accept `...`, then the standard R behaviour is to return an "unused
+#' argument" error. This is whitelisted by default in `fuzz()`, and the
+#' corresponding result status is set to "OK".
+#'
 #' ## Parallel execution
 #'
 #' The implementation uses `mirai` as a backend to execute tasks asynchronously
@@ -124,7 +130,9 @@ get_exported_functions <- function(package, ignore_names = "",
 #' @param args A list of default values for function arguments. Each argument
 #'        in the list is in turn replaced by each element of `what`, then each
 #'        modified argument list is used to fuzz the functions in `funs`. If
-#'        `NULL` (default), only the first argument of each function is fuzzed.
+#'        named arguments are present, their names are used as argument names
+#'        in the fuzzed functions. If `NULL` (default), only the first argument
+#'        of each function is fuzzed.
 #' @param package A character string specifying the name of the package to
 #'        search for functions. If `NULL` (default), the function will first
 #'        check the `"package"` attribute of `funs`, and if that is not set,
@@ -134,8 +142,8 @@ get_exported_functions <- function(package, ignore_names = "",
 #'        if `what` is `list(x = x)`, the function will operate as if it
 #'        were `list(x = x, "list(x)" = list(x))`, for any input object `x`.
 #' @param ignore_patterns One or more strings containing regular expressions
-#'        to match the errors to ignore. The string "is missing, with no
-#'        default" is always ignored.
+#'        to match the errors to ignore. The strings "unused argument" and
+#'        "is missing, with no default" are always ignored.
 #' @param ignore_warnings Whether warnings should be ignored (`FALSE` by
 #'        default).
 #' @param daemons Number of daemons to use (2 by default). As many `mirai`
@@ -243,6 +251,10 @@ fuzz <- function(funs, what = test_inputs(), args = NULL,
     mirai::daemons(n = daemons)
   }
 
+  ## preserve the original argument names, as get_element_names() overwrites
+  ## them with the deparsed elements
+  keys <- names(args)
+
   ## ensure that `what` and `args` have names assigned
   if (!is.null(what))
     names(what) <- get_element_names(what.quo, use_names = TRUE)
@@ -255,10 +267,11 @@ fuzz <- function(funs, what = test_inputs(), args = NULL,
     what <- append_listified(what)
 
   ## expand the set of inputs according to the arguments provided
-  what <- modify_args(what, args)
+  what <- modify_args(what, args, keys)
 
   ## join all regular expression patterns
   joined_patterns <- paste0(c(ignore_patterns,
+                              "unused argument",
                               "is missing, with no default"),
                             collapse = "|")
   joined_patterns <- gsub("^\\|", "", joined_patterns) # remove extra |

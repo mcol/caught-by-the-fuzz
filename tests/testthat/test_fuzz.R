@@ -199,10 +199,15 @@ test_that("check object returned", {
   expect_length(res, 2)
 
   SW({
-  res <- fuzz("median", what = list(NULL, NA), args = list(1:5, TRUE),
+  res <- fuzz("median", what = list(NULL, NA), args = list(x = 1:5, TRUE),
               listify_what = TRUE)
   })
   expect_length(res, 8)
+  expect_equal(sapply(res$runs, attr, "what"),
+               c("x = NULL, TRUE", "x = NA, TRUE",
+                 "x = list(NULL), TRUE", "x = list(NA), TRUE",
+                 "x = 1:5, NULL", "x = 1:5, NA",
+                 "x = 1:5, list(NULL)", "x = 1:5, list(NA)"))
 
   SW({
   res <- fuzz("+", what = list(NULL), args = list(1:5, 2, NA))
