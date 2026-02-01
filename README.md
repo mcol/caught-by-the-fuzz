@@ -190,6 +190,17 @@ generated and tested:
 - `list(x = 11, y = 22, NA)`
 - `list(x = 11, y = 22, "")`
 
+Sometimes it may be helpful to specify an argument ho have a fixed
+value, so that it remains unchanged while fuzzing. This can be done by
+prepending “..” to the argument name. For example, to fix argument `x`
+at 11, we would use `args = list(..x = 11, y = 22, 33)`, and only these
+inputs will be tested:
+
+- `list(x = 11, y = NA, 33)`
+- `list(x = 11, y = "", 33)`
+- `list(x = 11, y = 22, NA)`
+- `list(x = 11, y = 22, "")`
+
 ### Parallel execution
 
 The implementation of `fuzz()` uses the [`mirai`

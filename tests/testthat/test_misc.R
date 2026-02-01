@@ -237,4 +237,17 @@ test_that("modify_args", {
                          names = c("x = 0, 2", "x = NULL, 2",
                                    "x = 1, 0", "x = 1, NULL")))
   expect_named(res[[1]], c("x", ""))
+
+  ## fixed keys
+  res <- modify_args(what = namify(NA, NULL), args = namify(1, 2),
+                     keys = c("", "..x"))
+  expect_equal(res,
+               structure(list(list(NA, x = 2), list(NULL, x = 2)),
+                         names = c("NA, x = 2", "NULL, x = 2")))
+  expect_message(res <- modify_args(what = namify(NA, NULL), args = namify(1, 2),
+                                    keys = c("..x", "..y")),
+                 "'args' contains only fixed elements")
+  expect_equal(res,
+               structure(list(list(x = 1, y = 2)),
+                         names = c("x = 1, y = 2")))
 })

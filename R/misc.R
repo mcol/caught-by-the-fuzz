@@ -261,6 +261,17 @@ modify_args <- function(what, args, keys = NULL) {
   vals_names <- names(args)
   is.key <- nzchar(keys)
 
+  ## mark the arguments that should not be fuzzed
+  idx.fixed <- which(startsWith(keys %||% "", ".."))
+  if (!is.null(keys)) {
+    keys <- gsub("^\\.\\.", "", keys)
+    if (length(idx.fixed) == length(args)) {
+      cli::cli_alert_warning(c("'args' contains only fixed elements, ",
+                               "'what' will be ignored"))
+      what <- NULL
+    }
+  }
+
   ## `args` must be named after its keys, as they will be used by do.call()
   names(args) <- keys
 
@@ -270,6 +281,7 @@ modify_args <- function(what, args, keys = NULL) {
   ## create a list of modified argument lists, where the element at index
   ## idx is replaced in turn by each element in `what`
   res <- unlist(lapply(seq_along(args), function(idx) {
+    idx %in% idx.fixed && return(NULL)
     new <- lapply(what, function(inp) {
       new <- args
       new[idx] <- list(inp)

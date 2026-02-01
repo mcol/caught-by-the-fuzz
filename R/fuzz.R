@@ -87,6 +87,14 @@ get_exported_functions <- function(package, ignore_names = "",
 #' argument" error. This is whitelisted by default in `fuzz()`, and the
 #' corresponding result status is set to "OK".
 #'
+#' It is possible to define arguments that should remain unchanged while
+#' fuzzing by prefixing their name with `..`. These arguments will use the
+#' values assigned in `args` without modification. For example, to ensure that
+#' the argument `na.rm` is always set to `TRUE`, it should be specified as
+#' `..na.rm = TRUE` in `args`. If all elements in `args` are fixed, `what` is
+#' ignored and all functions in `funs` will be called with the provided `args`
+#' list.
+#'
 #' ## Parallel execution
 #'
 #' The implementation uses `mirai` as a backend to execute tasks asynchronously
