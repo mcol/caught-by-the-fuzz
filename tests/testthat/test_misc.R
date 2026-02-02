@@ -250,4 +250,7 @@ test_that("modify_args", {
   expect_equal(res,
                structure(list(list(x = 1, y = 2)),
                          names = c("x = 1, y = 2")))
+  expect_no_message(modify_args(what = NULL, args = namify(1, 2),
+                                keys = c("..x", "..y")),
+                    message = "'args' contains only fixed elements")
 })

@@ -265,7 +265,7 @@ modify_args <- function(what, args, keys = NULL) {
   idx.fixed <- which(startsWith(keys %||% "", ".."))
   if (!is.null(keys)) {
     keys <- gsub("^\\.\\.", "", keys)
-    if (length(idx.fixed) == length(args)) {
+    if (length(idx.fixed) == length(args) && !is.null(what)) {
       cli::cli_alert_warning(c("'args' contains only fixed elements, ",
                                "'what' will be ignored"))
       what <- NULL
