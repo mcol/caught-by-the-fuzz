@@ -14,6 +14,12 @@ test_that("summary", {
   expect_s3_class(attr(sum, "summary_table"),
                   "table")
 
+  expect_error(summary(res, tabulate = NA),
+               "[summary] 'tabulate' should be of class logical",
+               fixed = TRUE)
+  expect_error(summary(res, tabulate = c(TRUE, FALSE)),
+               "[summary] 'tabulate' should be a single logical value",
+               fixed = TRUE)
   expect_snapshot(summary(res))
   expect_snapshot(summary(res, tabulate = FALSE))
 })

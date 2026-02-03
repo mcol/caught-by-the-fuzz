@@ -1,6 +1,6 @@
 ##===========================================================================
 ##
-## Copyright (c) 2025 Marco Colombo
+## Copyright (c) 2025-2026 Marco Colombo
 ##
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -53,6 +53,7 @@
 #'
 #' @export
 summary.cbtf <- function(object, tabulate = TRUE, ...) {
+  validate_class(tabulate, "logical", scalar = TRUE, from = "summary")
   df <- cbind(do.call(rbind, object$runs),
               fun = rep(object$funs, length(object$runs)),
               what = sapply(object$runs, function(x) attr(x, "what")))
