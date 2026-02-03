@@ -4,15 +4,13 @@
 \alias{print.cbtf}
 \title{Print the results from a fuzz run}
 \usage{
-\method{print}{cbtf}(x, show_all = FALSE, ...)
+\method{print}{cbtf}(x, show = c("fail", "warn"), ...)
 }
 \arguments{
 \item{x}{An object of class \code{cbtf}.}
 
-\item{show_all}{Whether all results should be printed. By default (\code{FALSE}),
-only the functions that reported an error or a warning are printed.
-If \code{TRUE}, all functions tested are printed, including those that
-were successful or were skipped.}
+\item{show}{A character vector representing the subset of results be
+printed, any of "fail", "warn", "skip", "ok" and "all".}
 
 \item{...}{Further arguments passed to or from other methods.
 These are currently ignored.}
@@ -21,7 +19,7 @@ These are currently ignored.}
 No return value, called for side effects.
 }
 \description{
-This formats with colours the results from a fuzz run and prints them to
+This formats the results from a fuzz run with colours and prints them to
 the terminal.
 }
 \details{
@@ -31,7 +29,8 @@ The use of unicode icons in the output messages can be disabled by setting
 \examples{
 res <- fuzz(funs = c("list", "matrix", "mean"),
             what = test_inputs(c("numeric", "raw")))
-print(res, show.all = TRUE)
+print(res)
+print(res, show = "all")
 
 }
 \seealso{

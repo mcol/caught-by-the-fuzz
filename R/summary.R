@@ -70,17 +70,15 @@ summary.cbtf <- function(object, tabulate = TRUE, ...) {
 
 #' Print the results from a fuzz run
 #'
-#' This formats with colours the results from a fuzz run and prints them to
+#' This formats the results from a fuzz run with colours and prints them to
 #' the terminal.
 #'
 #' The use of unicode icons in the output messages can be disabled by setting
 #' `options(cli.unicode = FALSE)`.
 #'
 #' @param x An object of class `cbtf`.
-#' @param show_all Whether all results should be printed. By default (`FALSE`),
-#'        only the functions that reported an error or a warning are printed.
-#'        If `TRUE`, all functions tested are printed, including those that
-#'        were successful or were skipped.
+#' @param show A character vector representing the subset of results be
+#'        printed, any of "fail", "warn", "skip", "ok" and "all".
 #' @param ... Further arguments passed to or from other methods.
 #'        These are currently ignored.
 #'
@@ -90,20 +88,24 @@ summary.cbtf <- function(object, tabulate = TRUE, ...) {
 #' @examples
 #' res <- fuzz(funs = c("list", "matrix", "mean"),
 #'             what = test_inputs(c("numeric", "raw")))
-#' print(res, show.all = TRUE)
+#' print(res)
+#' print(res, show = "all")
 #'
 #' @seealso [summary.cbtf]
 #'
 #' @export
-print.cbtf <- function(x, show_all = FALSE, ...) {
+print.cbtf <- function(x, show = c("fail", "warn"), ...) {
+  validate_class(show, "character", from = "print")
+  show <- tolower(show)
+  if ("all" %in% show)
+    show <- c("fail", "warn", "skip", "ok")
   summary.stats <- compute_summary_stats(x)
   max.name <- max(c(0, nchar(x$funs))) + 1
   res.size <- nchar(tocolour("FAIL")) # include ANSI formatting, if present
   for (idx in seq_along(x$runs)) {
     run <- x$runs[[idx]]
     run$fun <- x$funs
-    if (!show_all)
-      run <- run[run$res %in% c("FAIL", "WARN"), ]
+    run <- run[tolower(run$res) %in% show, ]
     if (nrow(run) > 0) {
       cli::cli_h3("Test input [[{idx}]]: {.strong {attributes(run)$what}}")
       cat(sprintf("%*s  %*s  %s\n",

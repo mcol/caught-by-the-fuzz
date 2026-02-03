@@ -34,8 +34,13 @@ test_that("print", {
                 "FAIL 2")
 
   res <- fuzz(c("list", "median"), list(NA))
+
+  expect_error(print(res, show = NA),
+               "[print] 'show' should be of class character",
+               fixed = TRUE)
   expect_snapshot(print(res))
-  expect_snapshot(print(res, show_all = TRUE))
+  expect_snapshot(print(res, show = "all"))
+  expect_snapshot(print(res, show = "skip"))
   })
 })
 

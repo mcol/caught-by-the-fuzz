@@ -34,7 +34,7 @@
 ---
 
     Code
-      print(res, show_all = TRUE)
+      print(res, show = "all")
     Message
       v    You didn't get caught by the fuzz!
       
@@ -42,6 +42,16 @@
     Output
          list    OK  
        median    OK  
+      
+       [ FAIL 0 | WARN 0 | SKIP 0 | OK 2 ] 
+
+---
+
+    Code
+      print(res, show = "skip")
+    Message
+      v    You didn't get caught by the fuzz!
+    Output
       
        [ FAIL 0 | WARN 0 | SKIP 0 | OK 2 ] 
 

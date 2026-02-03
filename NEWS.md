@@ -20,6 +20,9 @@
   60 to 70.
 - Move the NA inputs in `test_inputs()` from the "scalar" to the new "na"
   class.
+- Replace the `show_all` logical argument of `print()` with a `show` argument
+  that accepts the class of results to be printed, any fo "fail", "warn",
+  "skip", "ok" or "all" (#9).
 - Add the `[[` operator to extract the results for a specific test input.
 - Stop exporting the `namify()` helper.
 
