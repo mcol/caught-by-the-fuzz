@@ -1,5 +1,7 @@
 # Current development version
 
+## New features
+
 - Rewrite `fuzz()` to use a backend based on the `mirai` package. This allows
   to parallelize computations and support a timeout to stop non-failing
   functions (#4).
@@ -10,6 +12,12 @@
 - Add support for `what = NULL`, which allows running the set of arguments
   listed in `args` with no modifications. This can be used after a fuzz run to
   collect results on just one set of problematic inputs.
+- Replace the `show_all` logical argument of `print()` with a `show` argument
+  that accepts the class of results to be printed, any of "fail", "warn",
+  "skip", "ok" or "all" (#9).
+
+## Updates
+
 - Use unicode symbols only on terminals that support UTF8, and respect the
   `cli.unicode` option, so that `options(cli.unicode = FALSE)` can be used to
   disable all unicode output.
@@ -20,9 +28,6 @@
   60 to 70.
 - Move the NA inputs in `test_inputs()` from the "scalar" to the new "na"
   class.
-- Replace the `show_all` logical argument of `print()` with a `show` argument
-  that accepts the class of results to be printed, any fo "fail", "warn",
-  "skip", "ok" or "all" (#9).
 - Add the `[[` operator to extract the results for a specific test input.
 - Stop exporting the `namify()` helper.
 
