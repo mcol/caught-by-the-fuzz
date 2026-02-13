@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">CBTF</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,11 +34,32 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/mcol/caught-by-the-fuzz/blob/v0.5.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/mcol/caught-by-the-fuzz/blob/v0.6.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.5.0" id="cbtf-050-2025-08-21">CBTF 0.5.0 (2025-08-21)<a class="anchor" aria-label="anchor" href="#cbtf-050-2025-08-21"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.6.0" id="cbtf-060-2026-02-13">CBTF 0.6.0 (2026-02-13)<a class="anchor" aria-label="anchor" href="#cbtf-060-2026-02-13"></a></h2>
+<div class="section level3">
+<h3 id="new-features-0-6-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-6-0"></a></h3>
+<ul><li>Rewrite <code><a href="../reference/fuzz.html">fuzz()</a></code> to use a backend based on the <code>mirai</code> package. This allows to parallelize computations and support a timeout to stop non-failing functions (<a href="https://github.com/mcol/caught-by-the-fuzz/issues/4" class="external-link">#4</a>).</li>
+<li>Add the <code>timeout</code> argument to <code><a href="../reference/fuzz.html">fuzz()</a></code> to control the number of seconds to wait before interrupting the execution of a function being fuzzed.</li>
+<li>Add the <code>args</code> argument to allow fuzzing multiple function arguments instead of only the first, with support for named and fixed arguments (<a href="https://github.com/mcol/caught-by-the-fuzz/issues/6" class="external-link">#6</a>, <a href="https://github.com/mcol/caught-by-the-fuzz/issues/7" class="external-link">#7</a>, <a href="https://github.com/mcol/caught-by-the-fuzz/issues/8" class="external-link">#8</a>).</li>
+<li>Add support for <code>what = NULL</code>, which allows running the set of arguments listed in <code>args</code> with no modifications. This can be used after a fuzz run to collect results on just one set of problematic inputs.</li>
+<li>Replace the <code>show_all</code> logical argument of <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> with a <code>show</code> argument that accepts the class of results to be printed, any of “fail”, “warn”, “skip”, “ok” or “all” (<a href="https://github.com/mcol/caught-by-the-fuzz/issues/9" class="external-link">#9</a>).</li>
+</ul></div>
+<div class="section level3">
+<h3 id="updates-0-6-0">Updates<a class="anchor" aria-label="anchor" href="#updates-0-6-0"></a></h3>
+<ul><li>Use unicode symbols only on terminals that support UTF8, and respect the <code>cli.unicode</code> option, so that <code>options(cli.unicode = FALSE)</code> can be used to disable all unicode output.</li>
+<li>Fix bug that caused failures in the <code>+()</code> operator to be whitelisted just because the <code>+</code> was interpreted as a regular expression quantifier.</li>
+<li>Ignore deprecated functions by default in <code><a href="../reference/get_exported_functions.html">get_exported_functions()</a></code>.</li>
+<li>Add more inputs to <code><a href="../reference/test_inputs.html">test_inputs()</a></code>, bringing the total number of inputs from 60 to 70.</li>
+<li>Move the NA inputs in <code><a href="../reference/test_inputs.html">test_inputs()</a></code> from the “scalar” to the new “na” class.</li>
+<li>Add the <code>[[</code> operator to extract the results for a specific test input.</li>
+<li>Stop exporting the <code>namify()</code> helper.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.5.0" id="cbtf-050-2025-08-21">CBTF 0.5.0 (2025-08-21)<a class="anchor" aria-label="anchor" href="#cbtf-050-2025-08-21"></a></h2><p class="text-muted">CRAN release: 2025-08-21</p>
 <ul><li>Streamline the progress report from <code><a href="../reference/fuzz.html">fuzz()</a></code>.</li>
 <li>In case both an error and a warning are raised by the function being fuzzed, we now report the error; previously the warning was reported because of how <code><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch()</a></code> is implemented.</li>
 <li>The <code><a href="https://rdrr.io/r/base/length.html" class="external-link">length()</a></code> S3 method for objects of class <code>cbtf</code> now counts the total number of tests performed, instead of the number of inputs tested.</li>
@@ -47,7 +68,7 @@
 <li>Store the values of the <code>ignore_patterns</code> and <code>ignore_warnings</code> options in the <code>cbtf</code> object.</li>
 <li>Add the <code><a href="../reference/whitelist.html">whitelist()</a></code> function to remove false positives from a <code>cbtf</code> object.</li>
 <li>Make <code>test_input()</code> recognise the <code>"help"</code> keyword, in which case it returns a vector of valid input classes.</li>
-<li>Add the <code><a href="../reference/namify.html">namify()</a></code> function to help create a named list of custom input objects.</li>
+<li>Add the <code>namify()</code> function to help create a named list of custom input objects.</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.0" id="cbtf-040-2025-07-31">CBTF 0.4.0 (2025-07-31)<a class="anchor" aria-label="anchor" href="#cbtf-040-2025-07-31"></a></h2><p class="text-muted">CRAN release: 2025-08-19</p>
@@ -91,7 +112,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
