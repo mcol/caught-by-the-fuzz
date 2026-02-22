@@ -6,9 +6,9 @@
 #'
 #' @param use Names of input classes to use. Valid names are "all" (default),
 #'        "scalar", "numeric", "integer", "logical", "character", "factor",
-#'        "data.frame", "matrix", "array", "date", "raw", "na" and "list". A vector
-#'        of valid classes can be retrieved programmatically by setting this
-#'        argument to "help".
+#'        "data.frame", "matrix", "array", "date", "time", "raw", "na" and
+#'        "list". A vector of valid classes can be retrieved programmatically
+#'        by setting this argument to "help".
 #' @param skip Names of input classes to skip.
 #'
 #' @return
@@ -41,6 +41,7 @@ test_inputs <- function(use = "all", skip = "") {
               "matrix_inputs",
               "array_inputs",
               "date_inputs",
+              "time_inputs",
               "raw_inputs",
               "na_inputs",
               "list_inputs")
@@ -132,6 +133,7 @@ character_inputs <- function() {
   namify(
       "",
       "a test",
+      c("", "B", ""),
       c("A", NA, "7", "+"),
       character()
   )
@@ -141,6 +143,8 @@ factor_inputs <- function() {
   namify(
       factor(""),
       factor(c("A", NA, "7", "+")),
+      factor(c("a", NA, "c", "d"), levels = letters[1:4]),
+      factor(c(NA, NA, NA, NA)),
       factor()
   )
 }
@@ -152,6 +156,17 @@ date_inputs <- function() {
       as.Date(0),
       as.Date(c("2025-01-01", NA, "930-12-31")),
       Sys.Date()
+  )
+}
+
+time_inputs <- function() {
+  namify(
+      as.POSIXct(NA),
+      as.POSIXct(NULL),
+      as.POSIXct("2065-01-01 00:00:00"),
+      as.POSIXct(0, origin = "1970-01-01"),
+      as.POSIXlt(Sys.time()),
+      Sys.time()
   )
 }
 
@@ -199,6 +214,7 @@ array_inputs <- function() {
 raw_inputs <- function() {
   namify(
       charToRaw("0"),
+      charToRaw(NA_character_),
       charToRaw("abc"),
       raw()
   )

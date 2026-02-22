@@ -17,14 +17,14 @@ test_that("test_inputs", {
                test_inputs(use = "scalar"))
   expect_equal(test_inputs(use = c("scalar", "scalar")),
                test_inputs(use = "scalar"))
-  expect_equal(test_inputs(use = c("all", "scalar")),
-               test_inputs())
-  expect_equal(test_inputs(c("all", "error")),
-               test_inputs())
+  expect_equal(test_inputs(use = c("all", "scalar"), skip = "time"),
+               test_inputs(skip = "time"))
+  expect_equal(test_inputs(c("all", "error"), skip = "time"),
+               test_inputs(skip = "time"))
   expect_equal(test_inputs("help"),
                c("all", "scalar", "numeric", "integer", "logical",
                  "character", "factor", "data.frame", "matrix", "array",
-                 "date", "raw", "na", "list"))
+                 "date", "time", "raw", "na", "list"))
   expect_equal(test_inputs("help"),
                test_inputs(c("scalar", "help")))
 })

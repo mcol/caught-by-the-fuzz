@@ -1,5 +1,13 @@
 ## Current development version
 
+### New features
+
+- Add the "time" class of inputs to `test_inputs()`.
+
+### Updates
+
+- Add more inputs in `test_inputs()`, bringing the total number of inputs from
+  70 to 80.
 
 # CBTF 0.6.0 (2026-02-13)
 
