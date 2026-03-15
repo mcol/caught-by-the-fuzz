@@ -44,6 +44,10 @@ doesn’t specify the set of inputs to be tested. By default it generates
 a large set of potentially problematic inputs, but these can be limited
 just to the desired classes of inputs.
 
+A write-up on the background of the development of `CBTF` is available
+in [this post on the REPLAY
+website](https://replay.geog.uni-heidelberg.de/REPLAY-website/post/2025/08/fuzzing-luminescence-to-improve-it/).
+
 ## Usage
 
 This is a simple example that displays how to use `CBTF` to fuzz an R
@@ -85,6 +89,10 @@ whitelist(res, "a character vector argument expected")
     ##  parse_multipart  FAIL  $ operator is invalid for atomic vectors
     ## 
     ##  [ FAIL 1 | WARN 0 | SKIP 0 | OK 1 ]
+
+For real-life application of `CBTF`, see [Luminescence issue
+439](https://github.com/R-Lum/Luminescence/issues/439) and the bugs
+linked from there.
 
 ### Fuzzing multiple arguments
 
@@ -253,7 +261,7 @@ seconds) can be controlled via the `timeout` argument of `fuzz()`
 ### Controlling the inputs tested
 
 By default, `fuzz()` tests all the inputs produced by `test_inputs()`
-(currently 70 inputs). However, this can be controlled by specifying the
+(currently 80 inputs). However, this can be controlled by specifying the
 classes that should be tested:
 
 ``` r
@@ -275,7 +283,7 @@ test_inputs("help")
 
     ##  [1] "all"        "scalar"     "numeric"    "integer"    "logical"   
     ##  [6] "character"  "factor"     "data.frame" "matrix"     "array"     
-    ## [11] "date"       "raw"        "na"         "list"
+    ## [11] "date"       "time"       "raw"        "na"         "list"
 
 ### Fuzzing list inputs automatically
 

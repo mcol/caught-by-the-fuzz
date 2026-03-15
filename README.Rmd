@@ -44,6 +44,9 @@ specify the set of inputs to be tested. By default it generates a large set of
 potentially problematic inputs, but these can be limited just to the desired
 classes of inputs.
 
+A write-up on the background of the development of `CBTF` is available in
+[this post on the REPLAY website](https://replay.geog.uni-heidelberg.de/REPLAY-website/post/2025/08/fuzzing-luminescence-to-improve-it/).
+
 ## Usage
 
 ```{r, echo = FALSE}
@@ -71,6 +74,10 @@ pattern:
 ```{r}
 whitelist(res, "a character vector argument expected")
 ```
+
+For real-life application of `CBTF`, see
+[Luminescence issue 439](https://github.com/R-Lum/Luminescence/issues/439)
+and the bugs linked from there.
 
 ### Fuzzing multiple arguments
 
