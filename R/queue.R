@@ -75,7 +75,7 @@ setup_queue <- function(funs, what, timeout,
     cli::cli_progress_bar(format = paste(
                               "{cli::pb_spin} Test input: {cli::pb_bar}|",
                               "{.timestamp {cli::pb_current}/{cli::pb_total}}",
-                              " {.strong {strtrim(message, 40)}}"),
+                              " {.strong {message}}"),
                           auto_terminate = FALSE,
                           total = length(what))
 

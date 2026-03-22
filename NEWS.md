@@ -8,6 +8,8 @@
 
 - Add more inputs in `test_inputs()`, bringing the total number of inputs from
   70 to 80.
+- Use the full terminal size to display the progress report, so that the list
+  of arguments currently tested is shown as much as possible (#11).
 
 # CBTF 0.6.0 (2026-02-13)
 
