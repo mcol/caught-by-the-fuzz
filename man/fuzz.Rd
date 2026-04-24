@@ -174,7 +174,7 @@ res <- fuzz(funs = c("list", "matrix", "mean"),
 summary(res)
 
 ## display all results even for successful tests
-print(res, show_all = TRUE)
+print(res, show = "all")
 
 ## this will catch an error (false positive)
 fuzz(funs = "matrix",  what = test_inputs("scalar"))
