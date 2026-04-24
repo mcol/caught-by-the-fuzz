@@ -198,7 +198,7 @@ generated and tested:
 - `list(x = 11, y = 22, NA)`
 - `list(x = 11, y = 22, "")`
 
-Sometimes it may be helpful to specify an argument ho have a fixed
+Sometimes it may be helpful to specify an argument to have a fixed
 value, so that it remains unchanged while fuzzing. This can be done by
 prepending “..” to the argument name. For example, to fix argument `x`
 at 11, we would use `args = list(..x = 11, y = 22, 33)`, and only these
@@ -256,7 +256,7 @@ corresponding `$msg` field recording that a timeout was applied.
 
 However, the default timeout may be too short (or perhaps too long) in
 some applications. If desired, the maximum running time of a job (in
-seconds) can be controlled via the `timeout` argument of `fuzz()`
+seconds) can be controlled via the `timeout` argument of `fuzz()`.
 
 ### Controlling the inputs tested
 
