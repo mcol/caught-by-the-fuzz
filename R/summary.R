@@ -77,7 +77,7 @@ summary.cbtf <- function(object, tabulate = TRUE, ...) {
 #' `options(cli.unicode = FALSE)`.
 #'
 #' @param x An object of class `cbtf`.
-#' @param show A character vector representing the subset of results be
+#' @param show A character vector representing the subset of results to be
 #'        printed, any of "fail", "warn", "skip", "ok" and "all".
 #' @param ... Further arguments passed to or from other methods.
 #'        These are currently ignored.

@@ -18,7 +18,7 @@ fuzz(
 }
 \arguments{
 \item{funs}{A character vector of function names to test. If a \code{"package"}
-attribute is set and is no \code{package} argument is provided, functions
+attribute is set and no \code{package} argument is provided, functions
 are loaded from the namespace specified in the attribute.}
 
 \item{what}{A list of objects; each is used, in turn, to modify the list of
@@ -108,21 +108,21 @@ interrupted and the next one is started.
 \details{
 \subsection{Multiple arguments}{
 
-An list of arguments to be passed to the functions being fuzzed can be
+A list of arguments to be passed to the functions being fuzzed can be
 provided via the \code{args} argument. Each element in that list is modified in
 turn by each object in \code{what} and the resulting list of arguments is then
 passed to each function via \code{do.call()}. If more arguments are given than
-the number formal arguments accepted by a function, that function will
+the number of formal arguments accepted by a function, that function will
 produce a "SKIP" result.
 
-If arguments are named, they will be passed with their name to the fuzzed
+If arguments are named, they will be passed with their names to the fuzzed
 functions. If a function doesn't have a formal argument of that name and
 doesn't accept \code{...}, then the standard R behaviour is to return an "unused
 argument" error. This is whitelisted by default in \code{fuzz()}, and the
 corresponding result status is set to "OK".
 
 It is possible to define arguments that should remain unchanged while
-fuzzing by prefixing their name with \code{..}. These arguments will use the
+fuzzing by prefixing their names with \code{..}. These arguments will use the
 values assigned in \code{args} without modification. For example, to ensure that
 the argument \code{na.rm} is always set to \code{TRUE}, it should be specified as
 \code{..na.rm = TRUE} in \code{args}. If all elements in \code{args} are fixed, \code{what} is
@@ -144,8 +144,8 @@ greater detail the number of processes to use, which can also be remote.
 \subsection{Whitelisting}{
 
 In order to reduce the number of false positive results produced, this
-function applies the following set rules, to establish if an error or
-warning condition should ignored (whitelisting):
+function applies the following set of rules, to establish if an error or
+warning condition should be ignored (whitelisting):
 \itemize{
 \item If the name of the function appears in the error or warning message, as
 it is considered that the condition has been handled by the developer.

@@ -59,7 +59,7 @@ setup_queue <- function(funs, what, timeout,
   })
 
   ## export common data to the daemons
-  ## for performance reason, we pass only the functions we need
+  ## for performance reasons, we pass only the functions we need
   env <- sapply(funs, function(x) .GlobalEnv[[x]])
   env[vapply(env, is.null, logical(1))] <- NULL
   env <- as.environment(env)

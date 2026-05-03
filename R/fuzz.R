@@ -28,13 +28,13 @@
 #' @param ignore_names Names of functions to ignore: these are removed from
 #'        the names returned. This can be helpful, for example, to discard
 #'        function aliases.
-#' @param ignore_deprecated Whether deprecated function should be ignored
+#' @param ignore_deprecated Whether deprecated functions should be ignored
 #'        (`TRUE` by default).
 #'
 #' @return
 #' A character vector of the names of the fuzzable functions exported from
 #' the given package, with the `"package"` attribute set. This can be used
-#' directly as the `funs` argument of [fuzz] without need to specify the
+#' directly as the `funs` argument of [fuzz] without the need to specify the
 #' `package` argument.
 #'
 #' @examples
@@ -74,21 +74,21 @@ get_exported_functions <- function(package, ignore_names = "",
 #' @details
 #' ## Multiple arguments
 #'
-#' An list of arguments to be passed to the functions being fuzzed can be
+#' A list of arguments to be passed to the functions being fuzzed can be
 #' provided via the `args` argument. Each element in that list is modified in
 #' turn by each object in `what` and the resulting list of arguments is then
 #' passed to each function via `do.call()`. If more arguments are given than
-#' the number formal arguments accepted by a function, that function will
+#' the number of formal arguments accepted by a function, that function will
 #' produce a "SKIP" result.
 #'
-#' If arguments are named, they will be passed with their name to the fuzzed
+#' If arguments are named, they will be passed with their names to the fuzzed
 #' functions. If a function doesn't have a formal argument of that name and
 #' doesn't accept `...`, then the standard R behaviour is to return an "unused
 #' argument" error. This is whitelisted by default in `fuzz()`, and the
 #' corresponding result status is set to "OK".
 #'
 #' It is possible to define arguments that should remain unchanged while
-#' fuzzing by prefixing their name with `..`. These arguments will use the
+#' fuzzing by prefixing their names with `..`. These arguments will use the
 #' values assigned in `args` without modification. For example, to ensure that
 #' the argument `na.rm` is always set to `TRUE`, it should be specified as
 #' `..na.rm = TRUE` in `args`. If all elements in `args` are fixed, `what` is
@@ -108,8 +108,8 @@ get_exported_functions <- function(package, ignore_names = "",
 #' ## Whitelisting
 #'
 #' In order to reduce the number of false positive results produced, this
-#' function applies the following set rules, to establish if an error or
-#' warning condition should ignored (whitelisting):
+#' function applies the following set of rules, to establish if an error or
+#' warning condition should be ignored (whitelisting):
 #'
 #' * If the name of the function appears in the error or warning message, as
 #'   it is considered that the condition has been handled by the developer.
@@ -127,7 +127,7 @@ get_exported_functions <- function(package, ignore_names = "",
 #' run using the [whitelist] function.
 #'
 #' @param funs A character vector of function names to test. If a `"package"`
-#'        attribute is set and is no `package` argument is provided, functions
+#'        attribute is set and no `package` argument is provided, functions
 #'        are loaded from the namespace specified in the attribute.
 #' @param what A list of objects; each is used, in turn, to modify the list of
 #'        arguments in `args` before calling each of the functions in `funs`.

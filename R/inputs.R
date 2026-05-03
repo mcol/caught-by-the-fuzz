@@ -60,7 +60,7 @@ test_inputs <- function(use = "all", skip = "") {
 #' Add names to a list of inputs
 #'
 #' This function can be used to generate automatically pretty names in a
-#' list of custom input object. This can improve the output, especially when
+#' list of custom input objects. This can improve the output, especially when
 #' structures such as data frames, matrices, and more complex objects are
 #' involved.
 #'

@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{An object of class \code{cbtf}.}
 
-\item{show}{A character vector representing the subset of results be
+\item{show}{A character vector representing the subset of results to be
 printed, any of "fail", "warn", "skip", "ok" and "all".}
 
 \item{...}{Further arguments passed to or from other methods.

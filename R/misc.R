@@ -26,7 +26,7 @@
 #' @param from Name of the caller function.
 #' @param scalar Whether to consider the argument valid only if it's a scalar
 #'        value (`FALSE` by default).
-#' @param min Minimum value considered value, or `NULL`.
+#' @param min Minimum value considered, or `NULL`.
 #' @param remove_empty Discard empty elements before checking that `arg` is
 #'        empty (`FALSE` by default).
 #'

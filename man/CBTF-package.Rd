@@ -52,4 +52,9 @@ Useful links:
 \author{
 \strong{Maintainer}: Marco Colombo \email{mar.colombo13@gmail.com} (\href{https://orcid.org/0000-0001-6672-0623}{ORCID})
 
+Authors:
+\itemize{
+  \item Marco Colombo \email{mar.colombo13@gmail.com} (\href{https://orcid.org/0000-0001-6672-0623}{ORCID})
+}
+
 }

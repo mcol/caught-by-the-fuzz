@@ -13,13 +13,13 @@ get_exported_functions(package, ignore_names = "", ignore_deprecated = TRUE)
 the names returned. This can be helpful, for example, to discard
 function aliases.}
 
-\item{ignore_deprecated}{Whether deprecated function should be ignored
+\item{ignore_deprecated}{Whether deprecated functions should be ignored
 (\code{TRUE} by default).}
 }
 \value{
 A character vector of the names of the fuzzable functions exported from
 the given package, with the \code{"package"} attribute set. This can be used
-directly as the \code{funs} argument of \link{fuzz} without need to specify the
+directly as the \code{funs} argument of \link{fuzz} without the need to specify the
 \code{package} argument.
 }
 \description{
