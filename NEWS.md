@@ -10,6 +10,8 @@
   70 to 80.
 - Use the full terminal size to display the progress report, so that the list
   of arguments currently tested is shown as much as possible (#11).
+- Fix a crash in the strange case when `conditionMessage()` produces more than
+  one error message (#12).
 
 # CBTF 0.6.0 (2026-02-13)
 

@@ -54,7 +54,7 @@ setup_queue <- function(funs, what, timeout,
           warnings <<- conditionMessage(w)
         }),
         error = function(e) {
-          whitelist_and_label("FAIL", conditionMessage(e))
+          whitelist_and_label("FAIL", conditionMessage(e)[1])
         })
   })
 
