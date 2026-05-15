@@ -7,7 +7,7 @@
 ### Updates
 
 - Add more inputs in `test_inputs()`, bringing the total number of inputs from
-  70 to 80.
+  70 to 85.
 - Use the full terminal size to display the progress report, so that the list
   of arguments currently tested is shown as much as possible (#11).
 - Fix a crash in the strange case when `conditionMessage()` produces more than

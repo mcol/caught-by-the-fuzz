@@ -93,6 +93,8 @@ scalar_inputs <- function() {
       0L,
       -4L,
       .Machine$integer.max,
+      .Machine$double.xmin,
+      .Machine$double.xmax,
       1.2,
       -2.5,
       6i,
@@ -175,6 +177,7 @@ data.frame_inputs <- function() {
       data.frame(a = NA),
       data.frame(a = letters),
       data.frame(a = 1:10, b = NA),
+      data.frame(a = -1:1, b = Inf),
       data.frame(a = c(12, -2.1, 7), b = c(1.34, 2.28, 0.0), c = (-1:1 + 0.1)),
       datasets::iris[0, ],
       datasets::iris[, 0],
@@ -192,6 +195,7 @@ matrix_inputs <- function() {
       matrix(c(1.995874, 1.225707, -0.565287, -2.120309, 0.236326), 1, 5),
       matrix(c(-1.005770, 0.589365, 0.955131, -0.972982, 1.058721), 5, 1),
       matrix(c(1:7, NA, -1:-4), 3, 4),
+      matrix(c(-1:6, Inf), 3, 3),
       matrix(letters, 13, 2),
       matrix()
   )
@@ -207,6 +211,7 @@ array_inputs <- function() {
       array(c(-0.57441, -1.9585, -0.24757, -0.2467, -2.04617), c(5, 1, 1)),
       array(c(1:7, NA), c(2, 4, 1)),
       array(c(1:5, NA, NA), c(2, 4, 2)),
+      array(c(1:3, Inf, 12.5), c(2, 4, 2)),
       array()
   )
 }
