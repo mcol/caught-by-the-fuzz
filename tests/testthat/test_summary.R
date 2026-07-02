@@ -33,7 +33,12 @@ test_that("print", {
   expect_output(expect_fail_message(fuzz("ls", list(NA, c(1, 2, 3)))),
                 "FAIL 2")
 
-  res <- fuzz(c("list", "median"), list(NA))
+  ## no failures
+  res <- fuzz("list", list(NA, c(1, 2, 3)))
+  expect_snapshot(print(res))
+
+  ## with failures and skips
+  res <- fuzz(c("list", "median", "Sys.date"), list(NA), args = list(1:3, TRUE))
 
   expect_error(print(res, show = NA),
                "[print] 'show' should be of class character",
