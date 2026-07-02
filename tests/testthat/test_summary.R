@@ -36,6 +36,7 @@ test_that("print", {
   ## no failures
   res <- fuzz("list", list(NA, c(1, 2, 3)))
   expect_snapshot(print(res))
+  expect_snapshot(print(res, group = "function", show = "all"))
 
   ## with failures and skips
   res <- fuzz(c("list", "median", "Sys.date"), list(NA), args = list(1:3, TRUE))
@@ -47,6 +48,7 @@ test_that("print", {
   expect_snapshot(print(res, show = "all"))
   expect_snapshot(print(res, show = "skip"))
   expect_snapshot(print(res, show = "none"))
+  expect_snapshot(print(res, group = "function", show = "all"))
   })
 })
 

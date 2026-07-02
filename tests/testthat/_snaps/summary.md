@@ -34,6 +34,20 @@
 ---
 
     Code
+      print(res, group = "function", show = "all")
+    Message
+      v    You didn't get caught by the fuzz!
+      
+      -- Function `list`: 
+    Output
+         OK                                 | NA
+         OK                                 | c(1, 2, 3)
+      
+       [ FAIL 0 | WARN 0 | SKIP 0 | OK 2 ] 
+
+---
+
+    Code
       print(res)
     Message
       x      CAUGHT BY THE FUZZ!    
@@ -90,4 +104,30 @@
       print(res, show = "none")
     Output
       [ FAIL 1 | WARN 0 | SKIP 2 | OK 3 ] 
+
+---
+
+    Code
+      print(res, group = "function", show = "all")
+    Message
+      x      CAUGHT BY THE FUZZ!    
+      
+      -- Function `list`: 
+    Output
+         OK                                 | NA, TRUE
+         OK                                 | 1:3, NA
+    Message
+      
+      -- Function `median`: 
+    Output
+         OK                                        | NA, TRUE
+       FAIL  missing value where TRUE/FALSE needed | 1:3, NA
+    Message
+      
+      -- Function `Sys.date`: 
+    Output
+       SKIP  Object not found in the global namespace | NA, TRUE
+       SKIP  Object not found in the global namespace | 1:3, NA
+      
+       [ FAIL 1 | WARN 0 | SKIP 2 | OK 3 ] 
 

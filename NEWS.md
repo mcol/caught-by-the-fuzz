@@ -3,6 +3,8 @@
 ### New features
 
 - Add the "time" class of inputs to `test_inputs()`.
+- Add the `group` argument to print() to control how the results should be
+  grouped when printing: either by "input" (default) or by "function" (#11).
 - Add support for `show = "none"` in `print()` to output only the summary
   statistics (#13).
 

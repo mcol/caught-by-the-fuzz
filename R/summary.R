@@ -79,6 +79,8 @@ summary.cbtf <- function(object, tabulate = TRUE, ...) {
 #' @param x An object of class `cbtf`.
 #' @param show A character vector representing the subset of results to be
 #'        printed, any of "fail", "warn", "skip", "ok", "all" and "none".
+#' @param group Either `"input"` to show results grouped by test input
+#'        (default), or `"function"` to show them grouped by function name.
 #' @param ... Further arguments passed to or from other methods.
 #'        These are currently ignored.
 #'
@@ -91,12 +93,14 @@ summary.cbtf <- function(object, tabulate = TRUE, ...) {
 #' print(res)
 #' print(res, show = "all")
 #' print(res, show = "none")
+#' print(res, group = "function")
 #'
 #' @seealso [summary.cbtf]
 #'
 #' @export
-print.cbtf <- function(x, show = c("fail", "warn"), ...) {
+print.cbtf <- function(x, show = c("fail", "warn"), group = "input", ...) {
   validate_class(show, "character", from = "print")
+  validate_class(group, "character", scalar = TRUE, from = "print")
   show <- tolower(show)
   if ("none" %in% show) {
     cat(compute_summary_stats(x, verbose = FALSE), "\n")
@@ -104,17 +108,34 @@ print.cbtf <- function(x, show = c("fail", "warn"), ...) {
   }
   if ("all" %in% show)
     show <- c("fail", "warn", "skip", "ok")
+  group <- match.arg(group, c("input", "function"))
   summary.stats <- compute_summary_stats(x)
-  max.name <- max(c(0, nchar(x$funs))) + 1
-  res.size <- nchar(tocolour("FAIL")) # include ANSI formatting, if present
-  for (idx in seq_along(x$runs)) {
-    run <- x$runs[[idx]]
-    run$fun <- x$funs
-    run <- run[tolower(run$res) %in% show, ]
-    if (nrow(run) > 0) {
-      cli::cli_h3("Test input [[{idx}]]: {.strong {attributes(run)$what}}")
+  res.size <- nchar(tocolour("FAIL"))
+
+  ## Build a long-format data frame with all results
+  df <- do.call(rbind, lapply(x$runs, function(run) {
+    cbind(run, fun = x$funs, what = attr(run, "what"))
+  }))
+
+  if (group == "function") {
+    for (fun in x$funs) {
+      sub <- df[df$fun == fun & tolower(df$res) %in% show, , drop = FALSE]
+      if (nrow(sub) == 0) next
+      cli::cli_h3("Function {.strong {.code {fun}}}:")
+      msg.size <- max(nchar(sub$msg), 30)
+      cat(sprintf(" %*s  %-*s | %s\n",
+                  res.size, tocolour(sub$res), msg.size, sub$msg, sub$what),
+          sep = "")
+    }
+  } else {
+    max.name <- max(nchar(x$funs)) + 1
+    for (ii in seq_along(x$runs)) {
+      what <- attr(x$runs[[ii]], "what")
+      sub <- df[df$what == what & tolower(df$res) %in% show, , drop = FALSE]
+      if (nrow(sub) == 0) next
+      cli::cli_h3("Test input [[{ii}]]: {.strong {what}}")
       cat(sprintf("%*s  %*s  %s\n",
-                  max.name, run$fun, res.size, tocolour(run$res), run$msg),
+                  max.name, sub$fun, res.size, tocolour(sub$res), sub$msg),
           sep = "")
     }
   }
