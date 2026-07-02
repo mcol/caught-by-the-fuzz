@@ -36,13 +36,13 @@ setup_queue <- function(funs, what, timeout,
     whitelist_and_label <- function(label, msg) {
       res <- if ((label == "WARN" && ignore_warnings) ||
                  is.null(msg) ||
-                 grepl(name, msg, fixed = TRUE) ||
-                 grepl(ignore_patterns, msg)) {
+                 all(grepl(name, msg, fixed = TRUE)) ||
+                 all(grepl(ignore_patterns, msg))) {
                "OK"
              } else {
                label
              }
-      data.frame(res = res, msg = toString(msg))
+      data.frame(res = res, msg = paste(msg, collapse = " | "))
     }
 
     warnings <- NULL
@@ -51,7 +51,7 @@ setup_queue <- function(funs, what, timeout,
           do.call(fun, what)
           whitelist_and_label("WARN", warnings)
         }, warning = function(w) {
-          warnings <<- conditionMessage(w)
+          warnings <<- c(warnings, conditionMessage(w))
         }),
         error = function(e) {
           whitelist_and_label("FAIL", conditionMessage(e)[1])

@@ -117,7 +117,8 @@ get_exported_functions <- function(package, ignore_names = "",
 #'   default", which is produced when a missing argument is used without a
 #'   value being assigned to it.
 #' * If the error or warning message contains any of the patterns specified
-#'   in `ignore_patterns`.
+#'   in `ignore_patterns`. In case of multiple warnings being captured, the
+#'   result is whitelisted only if _all_ warnings match any of the patterns.
 #' * If a warning is thrown but `ignore_warnings = TRUE` is set.
 #'
 #' In all whitelisted cases, the result is "OK", and the message that
