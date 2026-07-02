@@ -10,7 +10,7 @@
 \item{x}{An object of class \code{cbtf}.}
 
 \item{show}{A character vector representing the subset of results to be
-printed, any of "fail", "warn", "skip", "ok" and "all".}
+printed, any of "fail", "warn", "skip", "ok", "all" and "none".}
 
 \item{...}{Further arguments passed to or from other methods.
 These are currently ignored.}
@@ -31,6 +31,7 @@ res <- fuzz(funs = c("list", "matrix", "mean"),
             what = test_inputs(c("numeric", "raw")))
 print(res)
 print(res, show = "all")
+print(res, show = "none")
 
 }
 \seealso{

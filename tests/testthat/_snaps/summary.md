@@ -55,3 +55,10 @@
       
        [ FAIL 0 | WARN 0 | SKIP 0 | OK 2 ] 
 
+---
+
+    Code
+      print(res, show = "none")
+    Output
+      [ FAIL 0 | WARN 0 | SKIP 0 | OK 2 ] 
+

@@ -41,6 +41,7 @@ test_that("print", {
   expect_snapshot(print(res))
   expect_snapshot(print(res, show = "all"))
   expect_snapshot(print(res, show = "skip"))
+  expect_snapshot(print(res, show = "none"))
   })
 })
 

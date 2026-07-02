@@ -78,7 +78,7 @@ summary.cbtf <- function(object, tabulate = TRUE, ...) {
 #'
 #' @param x An object of class `cbtf`.
 #' @param show A character vector representing the subset of results to be
-#'        printed, any of "fail", "warn", "skip", "ok" and "all".
+#'        printed, any of "fail", "warn", "skip", "ok", "all" and "none".
 #' @param ... Further arguments passed to or from other methods.
 #'        These are currently ignored.
 #'
@@ -90,6 +90,7 @@ summary.cbtf <- function(object, tabulate = TRUE, ...) {
 #'             what = test_inputs(c("numeric", "raw")))
 #' print(res)
 #' print(res, show = "all")
+#' print(res, show = "none")
 #'
 #' @seealso [summary.cbtf]
 #'
@@ -97,6 +98,10 @@ summary.cbtf <- function(object, tabulate = TRUE, ...) {
 print.cbtf <- function(x, show = c("fail", "warn"), ...) {
   validate_class(show, "character", from = "print")
   show <- tolower(show)
+  if ("none" %in% show) {
+    cat(compute_summary_stats(x, verbose = FALSE), "\n")
+    return(invisible())
+  }
   if ("all" %in% show)
     show <- c("fail", "warn", "skip", "ok")
   summary.stats <- compute_summary_stats(x)

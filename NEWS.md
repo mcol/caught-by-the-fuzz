@@ -3,6 +3,8 @@
 ### New features
 
 - Add the "time" class of inputs to `test_inputs()`.
+- Add support for `show = "none"` in `print()` to output only the summary
+  statistics (#13).
 
 ### Updates
 
