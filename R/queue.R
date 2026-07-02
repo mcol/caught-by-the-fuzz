@@ -51,7 +51,7 @@ setup_queue <- function(funs, what, timeout,
           do.call(fun, what)
           whitelist_and_label("WARN", warnings)
         }, warning = function(w) {
-          warnings <<- c(warnings, conditionMessage(w))
+          warnings <<- c(warnings, trimws(conditionMessage(w)))
         }),
         error = function(e) {
           whitelist_and_label("FAIL", conditionMessage(e)[1])

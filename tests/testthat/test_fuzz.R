@@ -105,6 +105,18 @@ test_that("check object returned", {
   expect_fuzz_result(res,
                      "WARN", "argument is not numeric or logical: returning NA")
 
+  ## newline in warnings
+  assign(".local_fun.", envir = .GlobalEnv,
+         function(arg) {
+           warning("warning\n")
+           arg
+         })
+  SW({
+  res <- fuzz(".local_fun.", list(1))
+  })
+  expect_fuzz_result(res,
+                     "WARN", "warning")
+
   ## multiple warnings
   assign(".local_fun.", envir = .GlobalEnv,
          function(arg) {
