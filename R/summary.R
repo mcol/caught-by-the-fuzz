@@ -100,7 +100,8 @@ summary.cbtf <- function(object, tabulate = TRUE, ...) {
 #' @export
 print.cbtf <- function(x, show = c("fail", "warn"), group = "input", ...) {
   validate_class(show, "character", from = "print")
-  validate_class(group, "character", scalar = TRUE, from = "print")
+  validate_class(group, "character", scalar = TRUE,
+                 choices = c("input", "function"), from = "print")
   show <- tolower(show)
   if ("none" %in% show) {
     cat(compute_summary_stats(x, verbose = FALSE), "\n")
@@ -108,7 +109,6 @@ print.cbtf <- function(x, show = c("fail", "warn"), group = "input", ...) {
   }
   if ("all" %in% show)
     show <- c("fail", "warn", "skip", "ok")
-  group <- match.arg(group, c("input", "function"))
   summary.stats <- compute_summary_stats(x)
   res.size <- nchar(tocolour("FAIL"))
 

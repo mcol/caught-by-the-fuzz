@@ -37,6 +37,9 @@ test_that("validate_class", {
   arg <- numeric()
   expect_error(validate_class(arg, "numeric", min = 2),
                "'arg' should be at least 2")
+  arg <- "error"
+  expect_error(validate_class(arg, "character", choices = c("c1", "c2")),
+               "'arg' should be one of 'c1', 'c2'")
 
   expect_silent(validate_class(iris, "data.frame"))
   expect_silent(validate_class(NULL, "data.frame", null.ok = TRUE))
@@ -44,6 +47,7 @@ test_that("validate_class", {
   expect_silent(validate_class("", "character"))
   expect_silent(validate_class(list(""), "list"))
   expect_silent(validate_class(2, "numeric", min = 1))
+  expect_silent(validate_class("c1", "character", choices = c("c1", "c2")))
 })
 
 test_that("fuzz_error", {
