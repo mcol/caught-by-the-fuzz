@@ -1,14 +1,14 @@
 ## Current development version
 
-### New features
+## New features
 
 - Add the "time" class of inputs to `test_inputs()`.
 - Add the `group` argument to print() to control how the results should be
-  grouped when printing: either by "input" (default) or by "function" (#11).
+  grouped when printing: either by "input" (default) or by "function" (#10).
 - Add support for `show = "none"` in `print()` to output only the summary
   statistics (#13).
 
-### Updates
+## Updates
 
 - Add more inputs in `test_inputs()`, bringing the total number of inputs from
   70 to 85.
@@ -16,8 +16,8 @@
   of arguments currently tested is shown as much as possible (#11).
 - Fix a crash in the strange case when `conditionMessage()` produces more than
   one error message (#12).
-- If multiple warnings are generated, they are all returned in a concatenated
-  string, instead of returning only the last one (#14).
+- Return multiple warnings as a concatenated string, instead of returning only
+  the last one (#14).
 
 # CBTF 0.6.0 (2026-02-13)
 
