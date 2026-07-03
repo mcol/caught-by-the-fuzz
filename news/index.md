@@ -1,6 +1,38 @@
 # Changelog
 
+## CBTF 0.7.0 (2026-07-03)
+
+### New features
+
+- Add the “time” class of inputs to
+  [`test_inputs()`](https://mcol.github.io/caught-by-the-fuzz/reference/test_inputs.md).
+- Add the `group` argument to print() to control how the results should
+  be grouped when printing: either by “input” (default) or by “function”
+  ([\#10](https://github.com/mcol/caught-by-the-fuzz/issues/10)).
+- Add support for `show = "none"` in
+  [`print()`](https://rdrr.io/r/base/print.html) to output only the
+  summary statistics
+  ([\#13](https://github.com/mcol/caught-by-the-fuzz/issues/13)).
+
+### Updates
+
+- Add more inputs in
+  [`test_inputs()`](https://mcol.github.io/caught-by-the-fuzz/reference/test_inputs.md),
+  bringing the total number of inputs from 70 to 85.
+- Use the full terminal size to display the progress report, so that the
+  list of arguments currently tested is shown as much as possible
+  ([\#11](https://github.com/mcol/caught-by-the-fuzz/issues/11)).
+- Fix a crash in the strange case when
+  [`conditionMessage()`](https://rdrr.io/r/base/conditions.html)
+  produces more than one error message
+  ([\#12](https://github.com/mcol/caught-by-the-fuzz/issues/12)).
+- Return multiple warnings as a concatenated string, instead of
+  returning only the last one
+  ([\#14](https://github.com/mcol/caught-by-the-fuzz/issues/14)).
+
 ## CBTF 0.6.0 (2026-02-13)
+
+CRAN release: 2026-02-13
 
 ### New features
 

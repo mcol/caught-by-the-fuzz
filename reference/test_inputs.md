@@ -17,13 +17,14 @@ test_inputs(use = "all", skip = "")
 
   Names of input classes to use. Valid names are "all" (default),
   "scalar", "numeric", "integer", "logical", "character", "factor",
-  "data.frame", "matrix", "array", "date", "raw", "na" and "list". A
-  vector of valid classes can be retrieved programmatically by setting
-  this argument to "help".
+  "data.frame", "matrix", "array", "date", "time", "raw", "na" and
+  "list". A vector of valid classes can be retrieved programmatically by
+  setting this argument to "help".
 
 - skip:
 
-  Names of input classes to skip.
+  Names of input classes to skip. Overrides any classes selected via the
+  `use` argument.
 
 ## Value
 
@@ -47,5 +48,5 @@ inputs2 <- test_inputs(skip = c("date", "raw", "list"))
 test_inputs("help")
 #>  [1] "all"        "scalar"     "numeric"    "integer"    "logical"   
 #>  [6] "character"  "factor"     "data.frame" "matrix"     "array"     
-#> [11] "date"       "raw"        "na"         "list"      
+#> [11] "date"       "time"       "raw"        "na"         "list"      
 ```

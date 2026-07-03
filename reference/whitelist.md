@@ -32,21 +32,22 @@ applied.
 ## Examples
 
 ``` r
+
 ## this reports a false positive result
 (res <- fuzz(funs = "matrix", what = test_inputs("scalar")))
-#> ℹ Fuzzing 1 function with 10 inputs (using 2 daemons)
+#> ℹ Fuzzing 1 function with 12 inputs (using 2 daemons)
 #> ℹ Functions will be searched in the global namespace as `package` was not specified
-#> ℹ 10 tests run  [13ms]
+#> ℹ 12 tests run  [9ms]
 #> ✖  🚨   CAUGHT BY THE FUZZ!   🚨
 #> 
-#> ── Test input [[10]]: NULL 
+#> ── Test input [[12]]: NULL 
 #>  matrix  FAIL  'data' must be of a vector type, was 'NULL'
 #> 
-#>  [ FAIL 1 | WARN 0 | SKIP 0 | OK 9 ] 
+#>  [ FAIL 1 | WARN 0 | SKIP 0 | OK 11 ] 
 
 ## with whitelisting, we can remove that
 whitelist(res, "must be of a vector type")
 #> ✔  🏃 You didn't get caught by the fuzz!
 #> 
-#>  [ FAIL 0 | WARN 0 | SKIP 0 | OK 10 ] 
+#>  [ FAIL 0 | WARN 0 | SKIP 0 | OK 12 ] 
 ```

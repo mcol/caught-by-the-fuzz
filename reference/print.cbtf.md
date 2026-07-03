@@ -1,13 +1,14 @@
 # Print the results from a fuzz run
 
 This formats the results from a fuzz run with colours and prints them to
-the terminal.
+the terminal. By default, only tests labelled as `"FAIL"` or `"WARN"`
+are displayed, but this can be controlled via the `show` argument.
 
 ## Usage
 
 ``` r
 # S3 method for class 'cbtf'
-print(x, show = c("fail", "warn"), ...)
+print(x, show = c("fail", "warn"), group = "input", ...)
 ```
 
 ## Arguments
@@ -18,8 +19,13 @@ print(x, show = c("fail", "warn"), ...)
 
 - show:
 
-  A character vector representing the subset of results be printed, any
-  of "fail", "warn", "skip", "ok" and "all".
+  A character vector representing the subset of results to be printed,
+  any of "fail", "warn", "skip", "ok", "all" and "none".
+
+- group:
+
+  Either `"input"` to show results grouped by test input (default), or
+  `"function"` to show them grouped by function name.
 
 - ...:
 
@@ -44,22 +50,25 @@ setting `options(cli.unicode = FALSE)`.
 ``` r
 res <- fuzz(funs = c("list", "matrix", "mean"),
             what = test_inputs(c("numeric", "raw")))
-#> ℹ Fuzzing 3 functions with 9 inputs (using 2 daemons)
+#> ℹ Fuzzing 3 functions with 10 inputs (using 2 daemons)
 #> ℹ Functions will be searched in the global namespace as `package` was not specified
-#> ℹ 27 tests run  [23ms]
+#> ℹ 30 tests run  [19ms]
 print(res)
 #> ✖  🚨   CAUGHT BY THE FUZZ!   🚨
 #> 
 #> ── Test input [[7]]: charToRaw("0") 
 #>    mean  WARN  argument is not numeric or logical: returning NA
 #> 
-#> ── Test input [[8]]: charToRaw("abc") 
+#> ── Test input [[8]]: charToRaw(NA_character_) 
 #>    mean  WARN  argument is not numeric or logical: returning NA
 #> 
-#> ── Test input [[9]]: raw() 
+#> ── Test input [[9]]: charToRaw("abc") 
 #>    mean  WARN  argument is not numeric or logical: returning NA
 #> 
-#>  [ FAIL 0 | WARN 3 | SKIP 0 | OK 24 ] 
+#> ── Test input [[10]]: raw() 
+#>    mean  WARN  argument is not numeric or logical: returning NA
+#> 
+#>  [ FAIL 0 | WARN 4 | SKIP 0 | OK 26 ] 
 print(res, show = "all")
 #> ✖  🚨   CAUGHT BY THE FUZZ!   🚨
 #> 
@@ -98,15 +107,32 @@ print(res, show = "all")
 #>  matrix    OK  
 #>    mean  WARN  argument is not numeric or logical: returning NA
 #> 
-#> ── Test input [[8]]: charToRaw("abc") 
+#> ── Test input [[8]]: charToRaw(NA_character_) 
 #>    list    OK  
 #>  matrix    OK  
 #>    mean  WARN  argument is not numeric or logical: returning NA
 #> 
-#> ── Test input [[9]]: raw() 
+#> ── Test input [[9]]: charToRaw("abc") 
 #>    list    OK  
 #>  matrix    OK  
 #>    mean  WARN  argument is not numeric or logical: returning NA
 #> 
-#>  [ FAIL 0 | WARN 3 | SKIP 0 | OK 24 ] 
+#> ── Test input [[10]]: raw() 
+#>    list    OK  
+#>  matrix    OK  
+#>    mean  WARN  argument is not numeric or logical: returning NA
+#> 
+#>  [ FAIL 0 | WARN 4 | SKIP 0 | OK 26 ] 
+print(res, show = "none")
+#> [ FAIL 0 | WARN 4 | SKIP 0 | OK 26 ] 
+print(res, group = "function")
+#> ✖  🚨   CAUGHT BY THE FUZZ!   🚨
+#> 
+#> ── Function `mean`: 
+#>  WARN  argument is not numeric or logical: returning NA | charToRaw("0")
+#>  WARN  argument is not numeric or logical: returning NA | charToRaw(NA_character_)
+#>  WARN  argument is not numeric or logical: returning NA | charToRaw("abc")
+#>  WARN  argument is not numeric or logical: returning NA | raw()
+#> 
+#>  [ FAIL 0 | WARN 4 | SKIP 0 | OK 26 ] 
 ```

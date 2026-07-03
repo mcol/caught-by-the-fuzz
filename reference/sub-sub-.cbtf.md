@@ -1,6 +1,7 @@
 # Extract the results for a specific test input
 
-Extract the results for a specific test input
+This extracts the raw results for a single test input by its position,
+returning the corresponding data frame from the `$runs` list.
 
 ## Usage
 
@@ -46,9 +47,9 @@ Otherwise, `FALSE`.
 ``` r
 res <- fuzz(funs = c("list", "matrix", "mean"),
             what = test_inputs(c("numeric", "raw")))
-#> ℹ Fuzzing 3 functions with 9 inputs (using 2 daemons)
+#> ℹ Fuzzing 3 functions with 10 inputs (using 2 daemons)
 #> ℹ Functions will be searched in the global namespace as `package` was not specified
-#> ℹ 27 tests run  [24ms]
+#> ℹ 30 tests run  [17ms]
 res[[6]]
 #>   res msg
 #> 1  OK    

@@ -26,9 +26,9 @@ fuzz(
 
 - funs:
 
-  A character vector of function names to test. If a `"package"`
-  attribute is set and is no `package` argument is provided, functions
-  are loaded from the namespace specified in the attribute.
+  A character vector of function names to test. If the vector has a
+  `"package"` attribute and no `package` argument is given, functions
+  are loaded from the namespace specified in that attribute.
 
 - what:
 
@@ -42,19 +42,18 @@ fuzz(
 
 - args:
 
-  A list of default values for function arguments. Each argument in the
-  list is in turn replaced by each element of `what`, then each modified
-  argument list is used to fuzz the functions in `funs`. If named
-  arguments are present, their names are used as argument names in the
-  fuzzed functions. If `NULL` (default), only the first argument of each
+  A list of arguments to pass to the functions being fuzzed. Each
+  element in the list is in turn replaced by each object in `what`, then
+  each modified argument list is used to fuzz the functions in `funs`.
+  Argument names are preserved and used as named arguments in the fuzzed
+  functions. If `NULL` (default), only the first argument of each
   function is fuzzed.
 
 - package:
 
-  A character string specifying the name of the package to search for
-  functions. If `NULL` (default), the function will first check the
-  `"package"` attribute of `funs`, and if that is not set, names will be
-  searched in the global namespace.
+  Name of the package where functions are searched. If `NULL` (default),
+  the function first checks the `"package"` attribute of `funs`, and if
+  that is not set, names are searched in the global namespace.
 
 - listify_what:
 
@@ -146,22 +145,22 @@ contain the following values:
 
 ### Multiple arguments
 
-An list of arguments to be passed to the functions being fuzzed can be
+A list of arguments to be passed to the functions being fuzzed can be
 provided via the `args` argument. Each element in that list is modified
 in turn by each object in `what` and the resulting list of arguments is
 then passed to each function via
 [`do.call()`](https://rdrr.io/r/base/do.call.html). If more arguments
-are given than the number formal arguments accepted by a function, that
-function will produce a "SKIP" result.
+are given than the number of formal arguments accepted by a function,
+that function will produce a "SKIP" result.
 
-If arguments are named, they will be passed with their name to the
+If arguments are named, they will be passed with their names to the
 fuzzed functions. If a function doesn't have a formal argument of that
 name and doesn't accept `...`, then the standard R behaviour is to
 return an "unused argument" error. This is whitelisted by default in
 `fuzz()`, and the corresponding result status is set to "OK".
 
 It is possible to define arguments that should remain unchanged while
-fuzzing by prefixing their name with `..`. These arguments will use the
+fuzzing by prefixing their names with `..`. These arguments will use the
 values assigned in `args` without modification. For example, to ensure
 that the argument `na.rm` is always set to `TRUE`, it should be
 specified as `..na.rm = TRUE` in `args`. If all elements in `args` are
@@ -183,8 +182,8 @@ processes to use, which can also be remote.
 ### Whitelisting
 
 In order to reduce the number of false positive results produced, this
-function applies the following set rules, to establish if an error or
-warning condition should ignored (whitelisting):
+function applies the following set of rules, to establish if an error or
+warning condition should be ignored (whitelisting):
 
 - If the name of the function appears in the error or warning message,
   as it is considered that the condition has been handled by the
@@ -195,7 +194,9 @@ warning condition should ignored (whitelisting):
   value being assigned to it.
 
 - If the error or warning message contains any of the patterns specified
-  in `ignore_patterns`.
+  in `ignore_patterns`. In case of multiple warnings being captured, the
+  result is whitelisted only if *all* warnings match any of the
+  patterns.
 
 - If a warning is thrown but `ignore_warnings = TRUE` is set.
 
@@ -224,55 +225,96 @@ mirai::daemons(2L)
 ## this should produce no errors
 res <- fuzz(funs = c("list", "matrix", "mean"),
             what = test_inputs(c("numeric", "raw")))
-#> ℹ Fuzzing 3 functions with 9 inputs (using 2 daemons)
+#> ℹ Fuzzing 3 functions with 10 inputs (using 2 daemons)
 #> ℹ Functions will be searched in the global namespace as `package` was not specified
-#> ℹ 27 tests run  [23ms]
+#> ℹ 30 tests run  [820ms]
 summary(res)
-#> Fuzzed 3 functions on 9 inputs:
+#> Fuzzed 3 functions on 10 inputs:
 #>         
 #>          FAIL WARN SKIP OK
-#>   list      0    0    0  9
-#>   matrix    0    0    0  9
-#>   mean      0    3    0  6
+#>   list      0    0    0 10
+#>   matrix    0    0    0 10
+#>   mean      0    4    0  6
 #> 
-#> [ FAIL 0 | WARN 3 | SKIP 0 | OK 24 ]
+#> [ FAIL 0 | WARN 4 | SKIP 0 | OK 26 ]
 
 ## display all results even for successful tests
-print(res, show_all = TRUE)
+print(res, show = "all")
 #> ✖  🚨   CAUGHT BY THE FUZZ!   🚨
 #> 
+#> ── Test input [[1]]: c(1.309605, 0.585381, -0.461072) 
+#>    list    OK  
+#>  matrix    OK  
+#>    mean    OK  
+#> 
+#> ── Test input [[2]]: c(-1, 0, NaN, 10000) 
+#>    list    OK  
+#>  matrix    OK  
+#>    mean    OK  
+#> 
+#> ── Test input [[3]]: c(Inf, -0.5, 1234) 
+#>    list    OK  
+#>  matrix    OK  
+#>    mean    OK  
+#> 
+#> ── Test input [[4]]: c(0, 0) 
+#>    list    OK  
+#>  matrix    OK  
+#>    mean    OK  
+#> 
+#> ── Test input [[5]]: c(0, NA) 
+#>    list    OK  
+#>  matrix    OK  
+#>    mean    OK  
+#> 
+#> ── Test input [[6]]: numeric() 
+#>    list    OK  
+#>  matrix    OK  
+#>    mean    OK  
+#> 
 #> ── Test input [[7]]: charToRaw("0") 
+#>    list    OK  
+#>  matrix    OK  
 #>    mean  WARN  argument is not numeric or logical: returning NA
 #> 
-#> ── Test input [[8]]: charToRaw("abc") 
+#> ── Test input [[8]]: charToRaw(NA_character_) 
+#>    list    OK  
+#>  matrix    OK  
 #>    mean  WARN  argument is not numeric or logical: returning NA
 #> 
-#> ── Test input [[9]]: raw() 
+#> ── Test input [[9]]: charToRaw("abc") 
+#>    list    OK  
+#>  matrix    OK  
 #>    mean  WARN  argument is not numeric or logical: returning NA
 #> 
-#>  [ FAIL 0 | WARN 3 | SKIP 0 | OK 24 ] 
+#> ── Test input [[10]]: raw() 
+#>    list    OK  
+#>  matrix    OK  
+#>    mean  WARN  argument is not numeric or logical: returning NA
+#> 
+#>  [ FAIL 0 | WARN 4 | SKIP 0 | OK 26 ] 
 
 ## this will catch an error (false positive)
 fuzz(funs = "matrix",  what = test_inputs("scalar"))
-#> ℹ Fuzzing 1 function with 10 inputs (using 2 daemons)
+#> ℹ Fuzzing 1 function with 12 inputs (using 2 daemons)
 #> ℹ Functions will be searched in the global namespace as `package` was not specified
-#> ℹ 10 tests run  [7ms]
+#> ℹ 12 tests run  [6ms]
 #> ✖  🚨   CAUGHT BY THE FUZZ!   🚨
 #> 
-#> ── Test input [[10]]: NULL 
+#> ── Test input [[12]]: NULL 
 #>  matrix  FAIL  'data' must be of a vector type, was 'NULL'
 #> 
-#>  [ FAIL 1 | WARN 0 | SKIP 0 | OK 9 ] 
+#>  [ FAIL 1 | WARN 0 | SKIP 0 | OK 11 ] 
 
 ## apply a whitelist pattern to remove the false positive
 fuzz(funs = "matrix",  what = test_inputs("scalar"),
      ignore_patterns = "'data' must be of a vector type")
-#> ℹ Fuzzing 1 function with 10 inputs (using 2 daemons)
+#> ℹ Fuzzing 1 function with 12 inputs (using 2 daemons)
 #> ℹ Functions will be searched in the global namespace as `package` was not specified
-#> ℹ 10 tests run  [7ms]
+#> ℹ 12 tests run  [6ms]
 #> ✔  🏃 You didn't get caught by the fuzz!
 #> 
-#>  [ FAIL 0 | WARN 0 | SKIP 0 | OK 10 ] 
+#>  [ FAIL 0 | WARN 0 | SKIP 0 | OK 12 ] 
 
 ## close the background processes
 mirai::daemons(0L)

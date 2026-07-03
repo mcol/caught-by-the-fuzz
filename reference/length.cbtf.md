@@ -1,6 +1,7 @@
 # Compute the number of tests performed
 
-Compute the number of tests performed
+This returns the total number of tests as the product of the number of
+inputs used and the number of functions tested.
 
 ## Usage
 
@@ -24,9 +25,9 @@ An integer corresponding to the number of tests performed in a run.
 ``` r
 res <- fuzz(funs = c("list", "matrix", "mean"),
             what = test_inputs(c("numeric", "raw")))
-#> ℹ Fuzzing 3 functions with 9 inputs (using 2 daemons)
+#> ℹ Fuzzing 3 functions with 10 inputs (using 2 daemons)
 #> ℹ Functions will be searched in the global namespace as `package` was not specified
-#> ℹ 27 tests run  [23ms]
+#> ℹ 30 tests run  [18ms]
 length(res)
-#> [1] 27
+#> [1] 30
 ```

@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="favicon.ico">
 <link rel="manifest" href="site.webmanifest">
 <script src="lightswitch.js"></script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="CBTF - Caught by the Fuzz!">
 <meta name="description" content="A minimal fuzz-test runner for R">
@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="index.html">CBTF</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -71,10 +71,11 @@
 <p>The <code>CBTF</code> package implements a very simple mechanism for fuzz-testing functions in the public interface of an R package.</p>
 <p>Fuzz testing helps identify functions that lack sufficient argument validation, and uncovers sets of inputs that, while valid by function signature, may cause issues within the function body.</p>
 <p>The core functionality of the package is in the <code><a href="reference/fuzz.html">fuzz()</a></code> function, which calls each provided function with a certain input and records the output produced. If an error or a warning is generated, this is captured and reported to the user, unless it matches a pattern of whitelisted messages, as specified in the <code>ignore_patterns</code> argument. The objects returned by <code><a href="reference/fuzz.html">fuzz()</a></code> can be inspected with <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> and <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>.</p>
-<p>Whitelisting can also be done after a fuzz run has been completed via the <code><a href="reference/whitelist.html">whitelist()</a></code> function, so that only messages that need to be acted upon are actually shown. Using <code><a href="reference/whitelist.html">whitelist()</a></code> has the advantage of not requiring to run the fuzzer over all functions and all inputs again.</p>
-<p>Note that <code><a href="reference/fuzz.html">fuzz()</a></code> uses the <a href="https://mirai.r-lib.org/" class="external-link"><code>mirai</code> package</a> for asynchronous operations and parallelisation, and execution occurs on persistent background processes. These can be started automatically by specifying the <code>daemons</code> option; alternatively, they can be set up manually with the <code><a href="https://mirai.r-lib.org/reference/daemons.html" class="external-link">mirai::daemons()</a></code> function; refer to the original <code>mirai</code> documentation for a complete description of its arguments and behaviour.</p>
+<p>Whitelisting can also be done after a fuzz run has been completed via the <code><a href="reference/whitelist.html">whitelist()</a></code> function, so that only messages that need to be acted upon are actually shown. Using <code><a href="reference/whitelist.html">whitelist()</a></code> has the advantage of not requiring the completion of a fuzz run of all functions over all inputs again.</p>
+<p>Note that <code><a href="reference/fuzz.html">fuzz()</a></code> relies on the <a href="https://mirai.r-lib.org/" class="external-link"><code>mirai</code> package</a> for asynchronous operations and parallelisation, and execution occurs on persistent background processes. These can be started automatically by specifying the <code>daemons</code> option; alternatively, they can be set up manually with the <code><a href="https://mirai.r-lib.org/reference/daemons.html" class="external-link">mirai::daemons()</a></code> function; refer to the original <code>mirai</code> documentation for a complete description of its arguments and behaviour.</p>
 <p>The helper function <code><a href="reference/get_exported_functions.html">get_exported_functions()</a></code> identifies the functions in the public interface of a given package, facilitating the generation of the list of functions to be fuzzed.</p>
 <p>The helper function <code><a href="reference/test_inputs.html">test_inputs()</a></code> is invoked by <code><a href="reference/fuzz.html">fuzz()</a></code> if the user doesn’t specify the set of inputs to be tested. By default it generates a large set of potentially problematic inputs, but these can be limited just to the desired classes of inputs.</p>
+<p>A write-up on the background of the development of <code>CBTF</code> is available in <a href="https://replay.geog.uni-heidelberg.de/REPLAY-website/post/2025/08/fuzzing-luminescence-to-improve-it/" class="external-link">this post on the REPLAY website</a>.</p>
 <div class="section level2">
 <h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h2>
@@ -102,6 +103,7 @@
 <span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="do">##  parse_multipart  FAIL  $ operator is invalid for atomic vectors</span></span>
 <span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="do">## </span></span>
 <span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="do">##  [ FAIL 1 | WARN 0 | SKIP 0 | OK 1 ]</span></span></code></pre></div>
+<p>For real-life application of <code>CBTF</code>, see <a href="https://github.com/R-Lum/Luminescence/issues/439" class="external-link">Luminescence issue 439</a> and the bugs linked from there.</p>
 <div class="section level3">
 <h3 id="fuzzing-multiple-arguments">Fuzzing multiple arguments<a class="anchor" aria-label="anchor" href="#fuzzing-multiple-arguments"></a>
 </h3>
@@ -169,7 +171,7 @@
 <li><code>list(x = 11, y = 22, NA)</code></li>
 <li><code>list(x = 11, y = 22, "")</code></li>
 </ul>
-<p>Sometimes it may be helpful to specify an argument ho have a fixed value, so that it remains unchanged while fuzzing. This can be done by prepending “..” to the argument name. For example, to fix argument <code>x</code> at 11, we would use <code>args = list(..x = 11, y = 22, 33)</code>, and only these inputs will be tested:</p>
+<p>Sometimes it may be helpful to specify an argument to have a fixed value, so that it remains unchanged while fuzzing. This can be done by prepending “..” to the argument name. For example, to fix argument <code>x</code> at 11, we would use <code>args = list(..x = 11, y = 22, 33)</code>, and only these inputs will be tested:</p>
 <ul>
 <li><code>list(x = 11, y = NA, 33)</code></li>
 <li><code>list(x = 11, y = "", 33)</code></li>
@@ -205,12 +207,12 @@
 <h3 id="timeouts">Timeouts<a class="anchor" aria-label="anchor" href="#timeouts"></a>
 </h3>
 <p>Long-running functions can slow down the progress of <code><a href="reference/fuzz.html">fuzz()</a></code>, so by default if a function does not produce an error within 2 seconds, it will be stopped. A timed out function returns an <code>"OK"</code> result, with the corresponding <code>$msg</code> field recording that a timeout was applied.</p>
-<p>However, the default timeout may be too short (or perhaps too long) in some applications. If desired, the maximum running time of a job (in seconds) can be controlled via the <code>timeout</code> argument of <code><a href="reference/fuzz.html">fuzz()</a></code></p>
+<p>However, the default timeout may be too short (or perhaps too long) in some applications. If desired, the maximum running time of a job (in seconds) can be controlled via the <code>timeout</code> argument of <code><a href="reference/fuzz.html">fuzz()</a></code>.</p>
 </div>
 <div class="section level3">
 <h3 id="controlling-the-inputs-tested">Controlling the inputs tested<a class="anchor" aria-label="anchor" href="#controlling-the-inputs-tested"></a>
 </h3>
-<p>By default, <code><a href="reference/fuzz.html">fuzz()</a></code> tests all the inputs produced by <code><a href="reference/test_inputs.html">test_inputs()</a></code> (currently 70 inputs). However, this can be controlled by specifying the classes that should be tested:</p>
+<p>By default, <code><a href="reference/fuzz.html">fuzz()</a></code> tests all the inputs produced by <code><a href="reference/test_inputs.html">test_inputs()</a></code> (currently 85 inputs). However, this can be controlled by specifying the classes that should be tested:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/test_inputs.html">test_inputs</a></span><span class="op">(</span>use <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"scalar"</span>, <span class="st">"numeric"</span>, <span class="st">"integer"</span>, <span class="st">"matrix"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Alternatively, one can specify the classes to be excluded:</p>
@@ -221,7 +223,7 @@
 <code class="sourceCode R"><span><span class="fu"><a href="reference/test_inputs.html">test_inputs</a></span><span class="op">(</span><span class="st">"help"</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb14"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="do">##  [1] "all"        "scalar"     "numeric"    "integer"    "logical"   </span></span>
 <span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a><span class="do">##  [6] "character"  "factor"     "data.frame" "matrix"     "array"     </span></span>
-<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a><span class="do">## [11] "date"       "raw"        "na"         "list"</span></span></code></pre></div>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a><span class="do">## [11] "date"       "time"       "raw"        "na"         "list"</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="fuzzing-list-inputs-automatically">Fuzzing list inputs automatically<a class="anchor" aria-label="anchor" href="#fuzzing-list-inputs-automatically"></a>
@@ -245,7 +247,7 @@
 <div class="section level2">
 <h2 id="funding">Funding<a class="anchor" aria-label="anchor" href="#funding"></a>
 </h2>
-<p>Development of <code>CBTF</code> is partially supported through the DFG programme “REPLAY: REProducible Luminescence Data AnalYses” <a href="https://gepris.dfg.de/gepris/projekt/528704761?language=en" class="external-link">No 528704761</a> led by Dr Sebastian Kreutzer (PI at LIAG - Institute for Applied Geophysics, Hannover, DE) and Dr Thomas Kolb (PI at Justus-Liebig-University Giessen, DE). Updates on the REPLAY project at large are available at the <a href="https://replay.geog.uni-heidelberg.de/" class="external-link">REPLAY website</a>.</p>
+<p>Development of <code>CBTF</code> is partially supported through the DFG programme “REPLAY: REProducible Luminescence Data AnalYses” <a href="https://gepris.dfg.de/project/528704761" class="external-link">No 528704761</a> led by Dr Sebastian Kreutzer (PI at LIAG - Institute for Applied Geophysics, Hannover, DE) and Dr Thomas Kolb (PI at Justus-Liebig-University Giessen, DE). Updates on the REPLAY project at large are available at the <a href="https://replay.geog.uni-heidelberg.de/" class="external-link">REPLAY website</a>.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

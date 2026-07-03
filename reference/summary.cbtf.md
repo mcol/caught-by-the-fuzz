@@ -70,16 +70,16 @@ setting `options(cli.unicode = FALSE)`.
 ``` r
 res <- fuzz(funs = c("list", "matrix", "mean"),
             what = test_inputs(c("numeric", "raw")))
-#> ℹ Fuzzing 3 functions with 9 inputs (using 2 daemons)
+#> ℹ Fuzzing 3 functions with 10 inputs (using 2 daemons)
 #> ℹ Functions will be searched in the global namespace as `package` was not specified
-#> ℹ 27 tests run  [23ms]
+#> ℹ 30 tests run  [17ms]
 summary(res)
-#> Fuzzed 3 functions on 9 inputs:
+#> Fuzzed 3 functions on 10 inputs:
 #>         
 #>          FAIL WARN SKIP OK
-#>   list      0    0    0  9
-#>   matrix    0    0    0  9
-#>   mean      0    3    0  6
+#>   list      0    0    0 10
+#>   matrix    0    0    0 10
+#>   mean      0    4    0  6
 #> 
-#> [ FAIL 0 | WARN 3 | SKIP 0 | OK 24 ]
+#> [ FAIL 0 | WARN 4 | SKIP 0 | OK 26 ]
 ```

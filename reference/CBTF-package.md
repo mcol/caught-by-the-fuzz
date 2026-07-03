@@ -49,7 +49,7 @@ The helper function
 [test_inputs](https://mcol.github.io/caught-by-the-fuzz/reference/test_inputs.md)
 is invoked by
 [fuzz](https://mcol.github.io/caught-by-the-fuzz/reference/fuzz.md) if
-the user doesn't specify the set of inputs to be tested. By default
+the user doesn't specify the set of inputs to be tested. By default it
 generates a large set of potentially problematic inputs, but these can
 be limited just to the desired classes of inputs.
 
@@ -65,3 +65,8 @@ Useful links:
 
 **Maintainer**: Marco Colombo <mar.colombo13@gmail.com>
 ([ORCID](https://orcid.org/0000-0001-6672-0623))
+
+Authors:
+
+- Marco Colombo <mar.colombo13@gmail.com>
+  ([ORCID](https://orcid.org/0000-0001-6672-0623))

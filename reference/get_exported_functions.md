@@ -17,7 +17,7 @@ get_exported_functions(package, ignore_names = "", ignore_deprecated = TRUE)
 
 - package:
 
-  Name of the package to fuzz-test.
+  Name of the package where functions are searched.
 
 - ignore_names:
 
@@ -27,7 +27,7 @@ get_exported_functions(package, ignore_names = "", ignore_deprecated = TRUE)
 
 - ignore_deprecated:
 
-  Whether deprecated function should be ignored (`TRUE` by default).
+  Whether deprecated functions should be ignored (`TRUE` by default).
 
 ## Value
 
@@ -35,7 +35,7 @@ A character vector of the names of the fuzzable functions exported from
 the given package, with the `"package"` attribute set. This can be used
 directly as the `funs` argument of
 [fuzz](https://mcol.github.io/caught-by-the-fuzz/reference/fuzz.md)
-without need to specify the `package` argument.
+without the need to specify the `package` argument.
 
 ## See also
 
