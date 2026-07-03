@@ -111,14 +111,14 @@ print.cbtf <- function(x, show = c("fail", "warn"), group = "input", ...) {
   if ("all" %in% show)
     show <- c("fail", "warn", "skip", "ok")
   summary.stats <- compute_summary_stats(x)
-  res.size <- nchar(tocolour("FAIL"))
-
-  ## Build a long-format data frame with all results
-  df <- do.call(rbind, lapply(x$runs, function(run) {
-    cbind(run, fun = x$funs, what = attr(run, "what"))
-  }))
+  res.size <- nchar(tocolour("FAIL")) # include ANSI formatting, if present
 
   if (group == "function") {
+    ## Build a long-format data frame with all results
+    df <- do.call(rbind, lapply(x$runs, function(run) {
+      cbind(run, fun = x$funs, what = attr(run, "what"))
+    }))
+
     for (fun in x$funs) {
       sub <- df[df$fun == fun & tolower(df$res) %in% show, , drop = FALSE]
       if (nrow(sub) == 0) next
@@ -129,11 +129,12 @@ print.cbtf <- function(x, show = c("fail", "warn"), group = "input", ...) {
           sep = "")
     }
   } else {
-    max.name <- max(nchar(x$funs)) + 1
+    max.name <- max(c(0, nchar(x$funs))) + 1
     for (ii in seq_along(x$runs)) {
       what <- attr(x$runs[[ii]], "what")
-      sub <- df[df$what == what & tolower(df$res) %in% show, , drop = FALSE]
-      if (nrow(sub) == 0) next
+      sub <- cbind(x$runs[[ii]], fun = x$funs)
+      sub <- sub[tolower(sub$res) %in% show, ]
+      if (nrow(sub) == 0) next()
       cli::cli_h3("Test input [[{ii}]]: {.strong {what}}")
       cat(sprintf("%*s  %*s  %s\n",
                   max.name, sub$fun, res.size, tocolour(sub$res), sub$msg),
