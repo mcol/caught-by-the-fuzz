@@ -1,3 +1,11 @@
+# Current development version
+
+## New features
+
+
+## Updates
+
+
 # CBTF 0.7.0 (2026-07-03)
 
 ## New features
