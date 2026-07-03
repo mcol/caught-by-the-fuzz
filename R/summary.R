@@ -71,7 +71,8 @@ summary.cbtf <- function(object, tabulate = TRUE, ...) {
 #' Print the results from a fuzz run
 #'
 #' This formats the results from a fuzz run with colours and prints them to
-#' the terminal.
+#' the terminal. By default, only tests labelled as `"FAIL"` or `"WARN"` are
+#' displayed, but this can be controlled via the `show` argument.
 #'
 #' The use of unicode icons in the output messages can be disabled by setting
 #' `options(cli.unicode = FALSE)`.
@@ -144,6 +145,9 @@ print.cbtf <- function(x, show = c("fail", "warn"), group = "input", ...) {
 
 #' Extract the results for a specific test input
 #'
+#' This extracts the raw results for a single test input by its position,
+#' returning the corresponding data frame from the `$runs` list.
+#'
 #' @param x An object of class `cbtf`.
 #' @param i An index between 1 and the number of test inputs used.
 #'
@@ -168,6 +172,9 @@ print.cbtf <- function(x, show = c("fail", "warn"), group = "input", ...) {
 }
 
 #' Compute the number of tests performed
+#'
+#' This returns the total number of tests as the product of the number of
+#' inputs used and the number of functions tested.
 #'
 #' @param x An object of class `cbtf`.
 #'

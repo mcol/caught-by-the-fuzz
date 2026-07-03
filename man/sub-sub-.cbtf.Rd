@@ -22,7 +22,8 @@ or an empty string if no failure occurred.}
 Otherwise, \code{FALSE}.
 }
 \description{
-Extract the results for a specific test input
+This extracts the raw results for a single test input by its position,
+returning the corresponding data frame from the \verb{$runs} list.
 }
 \examples{
 res <- fuzz(funs = c("list", "matrix", "mean"),

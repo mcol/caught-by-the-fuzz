@@ -7,7 +7,7 @@
 get_exported_functions(package, ignore_names = "", ignore_deprecated = TRUE)
 }
 \arguments{
-\item{package}{Name of the package to fuzz-test.}
+\item{package}{Name of the package where functions are searched.}
 
 \item{ignore_names}{Names of functions to ignore: these are removed from
 the names returned. This can be helpful, for example, to discard

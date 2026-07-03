@@ -25,15 +25,16 @@ returned by `fuzz()` can be inspected with `summary()` and `print()`.
 Whitelisting can also be done after a fuzz run has been completed via
 the `whitelist()` function, so that only messages that need to be acted
 upon are actually shown. Using `whitelist()` has the advantage of not
-requiring to run the fuzzer over all functions and all inputs again.
+requiring the completion of a fuzz run of all functions over all inputs
+again.
 
-Note that `fuzz()` uses the [`mirai` package](https://mirai.r-lib.org/)
-for asynchronous operations and parallelisation, and execution occurs on
-persistent background processes. These can be started automatically by
-specifying the `daemons` option; alternatively, they can be set up
-manually with the `mirai::daemons()` function; refer to the original
-`mirai` documentation for a complete description of its arguments and
-behaviour.
+Note that `fuzz()` relies on the [`mirai`
+package](https://mirai.r-lib.org/) for asynchronous operations and
+parallelisation, and execution occurs on persistent background
+processes. These can be started automatically by specifying the
+`daemons` option; alternatively, they can be set up manually with the
+`mirai::daemons()` function; refer to the original `mirai` documentation
+for a complete description of its arguments and behaviour.
 
 The helper function `get_exported_functions()` identifies the functions
 in the public interface of a given package, facilitating the generation
@@ -261,7 +262,7 @@ seconds) can be controlled via the `timeout` argument of `fuzz()`.
 ### Controlling the inputs tested
 
 By default, `fuzz()` tests all the inputs produced by `test_inputs()`
-(currently 80 inputs). However, this can be controlled by specifying the
+(currently 85 inputs). However, this can be controlled by specifying the
 classes that should be tested:
 
 ``` r

@@ -25,10 +25,10 @@ inspected with `summary()` and `print()`.
 
 Whitelisting can also be done after a fuzz run has been completed via the
 `whitelist()` function, so that only messages that need to be acted upon are
-actually shown. Using `whitelist()` has the advantage of not requiring to run
-the fuzzer over all functions and all inputs again.
+actually shown. Using `whitelist()` has the advantage of not requiring the
+completion of a fuzz run of all functions over all inputs again.
 
-Note that `fuzz()` uses the [`mirai` package](https://mirai.r-lib.org/) for
+Note that `fuzz()` relies on the [`mirai` package](https://mirai.r-lib.org/) for
 asynchronous operations and parallelisation, and execution occurs on persistent
 background processes. These can be started automatically by specifying the
 `daemons` option; alternatively, they can be set up manually with the

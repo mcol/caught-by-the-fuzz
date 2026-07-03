@@ -13,7 +13,8 @@ test_inputs(use = "all", skip = "")
 "list". A vector of valid classes can be retrieved programmatically
 by setting this argument to "help".}
 
-\item{skip}{Names of input classes to skip.}
+\item{skip}{Names of input classes to skip. Overrides any classes selected
+via the \code{use} argument.}
 }
 \value{
 A named list of inputs corresponding to the input classes selected, or

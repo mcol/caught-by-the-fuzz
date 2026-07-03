@@ -13,7 +13,8 @@
 An integer corresponding to the number of tests performed in a run.
 }
 \description{
-Compute the number of tests performed
+This returns the total number of tests as the product of the number of
+inputs used and the number of functions tested.
 }
 \examples{
 res <- fuzz(funs = c("list", "matrix", "mean"),

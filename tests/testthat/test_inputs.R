@@ -17,6 +17,8 @@ test_that("test_inputs", {
                test_inputs(use = "scalar"))
   expect_equal(test_inputs(use = c("scalar", "scalar")),
                test_inputs(use = "scalar"))
+  expect_equal(test_inputs(use = c("scalar", "matrix"), skip = "matrix"),
+               test_inputs(use = "scalar"))
   expect_equal(test_inputs(use = c("all", "scalar"), skip = "time"),
                test_inputs(skip = "time"))
   expect_equal(test_inputs(c("all", "error"), skip = "time"),

@@ -9,7 +9,8 @@
 #'        "data.frame", "matrix", "array", "date", "time", "raw", "na" and
 #'        "list". A vector of valid classes can be retrieved programmatically
 #'        by setting this argument to "help".
-#' @param skip Names of input classes to skip.
+#' @param skip Names of input classes to skip. Overrides any classes selected
+#'        via the `use` argument.
 #'
 #' @return
 #' A named list of inputs corresponding to the input classes selected, or

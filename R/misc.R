@@ -27,9 +27,9 @@
 #' @param scalar Whether to consider the argument valid only if it's a scalar
 #'        value (`FALSE` by default).
 #' @param min Minimum value considered, or `NULL`.
-#' @param choices List of accepted values, or `NULL`.
-#' @param remove_empty Discard empty elements before checking that `arg` is
-#'        empty (`FALSE` by default).
+#' @param choices Vector of accepted values, or `NULL`.
+#' @param remove_empty Whether zero-length strings should be discarded from
+#'        `arg` before checking if it is empty (`FALSE` by default).
 #'
 #' @return
 #' Nothing in case of success, otherwise an error is thrown.
@@ -159,10 +159,9 @@ compute_summary_stats <- function(object, verbose = TRUE) {
 #' Add colour formatting to a string
 #'
 #' @param res A character vector with "OK", "SKIP", "WARN" or "FAIL".
-#' @param num A numerical value: if it evaluates to a positive finite value
-#'        and `colour` is `TRUE`, then the string is coloured. The default
-#'        value (`Inf`) implies that colour is applied, but `num` is not
-#'        printed out.
+#' @param num A numerical value: if positive and `colour` is `TRUE`, then the
+#'        `res` label is coloured; if finite, the `num` is appended to the
+#'        (coloured) label.
 #' @param colour A logical value that determines if the colour should be
 #'        applied. If `FALSE`, nothing gets coloured independently of `num`.
 #'
@@ -239,7 +238,9 @@ get_element_names <- function(input, use_names) {
 #'
 #' @param what A named list of inputs.
 #' @param args A named list of arguments.
-#' @param keys A vector of argument keys (`NULL` by default).
+#' @param keys A vector of argument keys (original argument names, `NULL` by
+#'        default). Arguments with non-empty names starting with `..` are
+#'        treated as fixed (not fuzzed).
 #'
 #' @return
 #' A list of named lists with the given arguments in turn replaced by each of
@@ -252,8 +253,8 @@ get_element_names <- function(input, use_names) {
 modify_args <- function(what, args, keys = NULL) {
   ## a list label is a comma-separated concatenation of element names, with
   ## element names transformed into the form `key =` if a key was given
-  list_label <- function(vals, idx = NULL, what = NULL) {
-    vals[idx] <- what
+  list_label <- function(vals, idx = NULL, what_name = NULL) {
+    vals[idx] <- what_name
     vals[is.key] <- paste(keys[is.key], "=", vals[is.key])
     paste(vals, collapse = ", ")
   }
@@ -261,7 +262,8 @@ modify_args <- function(what, args, keys = NULL) {
   ## no arguments provided: return each element of `what` wrapped in a list
   is.null(args) && return(lapply(what, list))
 
-  ## names corresponding to the argument values
+  ## display labels for the argument values (pre-set in fuzz() from the
+  ## quoted expression); original argument names are in `keys`
   vals_names <- names(args)
   is.key <- nzchar(keys)
 
@@ -276,7 +278,8 @@ modify_args <- function(what, args, keys = NULL) {
     }
   }
 
-  ## `args` must be named after its keys, as they will be used by do.call()
+  ## `args` must be named with its (cleaned) keys, as do.call() uses them
+  ## to pass arguments to the function being called
   names(args) <- keys
 
   ## no inputs provided: return `args` without changes wrapped in a named list

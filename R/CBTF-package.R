@@ -1,6 +1,6 @@
 ##=============================================================================
 ##
-## Copyright (c) 2025 Marco Colombo
+## Copyright (c) 2025-2026 Marco Colombo
 ##
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -50,8 +50,8 @@
 #' the list of functions to be fuzzed.
 #'
 #' The helper function [test_inputs] is invoked by [fuzz] if the user doesn't
-#' specify the set of inputs to be tested. By default generates a large set of
-#' potentially problematic inputs, but these can be limited just to the
+#' specify the set of inputs to be tested. By default it generates a large set
+#' of potentially problematic inputs, but these can be limited just to the
 #' desired classes of inputs.
 #'
 "_PACKAGE"

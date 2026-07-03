@@ -23,7 +23,8 @@ No return value, called for side effects.
 }
 \description{
 This formats the results from a fuzz run with colours and prints them to
-the terminal.
+the terminal. By default, only tests labelled as \code{"FAIL"} or \code{"WARN"} are
+displayed, but this can be controlled via the \code{show} argument.
 }
 \details{
 The use of unicode icons in the output messages can be disabled by setting
