@@ -312,9 +312,8 @@ fuzz(funs, what = list(letters), listify_what = TRUE)
 
 Development of `CBTF` is partially supported through the DFG programme
 “REPLAY: REProducible Luminescence Data AnalYses” [No
-528704761](https://gepris.dfg.de/gepris/projekt/528704761?language=en)
-led by Dr Sebastian Kreutzer (PI at LIAG - Institute for Applied
-Geophysics, Hannover, DE) and Dr Thomas Kolb (PI at
-Justus-Liebig-University Giessen, DE). Updates on the REPLAY project at
-large are available at the [REPLAY
+528704761](https://gepris.dfg.de/project/528704761) led by Dr Sebastian
+Kreutzer (PI at LIAG - Institute for Applied Geophysics, Hannover, DE)
+and Dr Thomas Kolb (PI at Justus-Liebig-University Giessen, DE). Updates
+on the REPLAY project at large are available at the [REPLAY
 website](https://replay.geog.uni-heidelberg.de/).
