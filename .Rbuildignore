@@ -10,4 +10,5 @@ README.html
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^\.git$
 ^\.github$
