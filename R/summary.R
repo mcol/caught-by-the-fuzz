@@ -134,7 +134,7 @@ print.cbtf <- function(x, show = c("fail", "warn"), group = "input", ...) {
       what <- attr(x$runs[[ii]], "what")
       sub <- cbind(x$runs[[ii]], fun = x$funs)
       sub <- sub[tolower(sub$res) %in% show, ]
-      if (nrow(sub) == 0) next()
+      if (nrow(sub) == 0) next
       cli::cli_h3("Test input [[{ii}]]: {.strong {what}}")
       cat(sprintf("%*s  %*s  %s\n",
                   max.name, sub$fun, res.size, tocolour(sub$res), sub$msg),
