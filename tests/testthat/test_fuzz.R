@@ -58,6 +58,10 @@ test_that("check skipped functions", {
                      "Object not found in the global namespace")
   expect_skip_reason(fuzz(".not.found.", list(NULL), package = "CBTF"),
                      "Object not found in the 'CBTF' namespace")
+  expect_message(fuzz(".not_found_", list(NULL)),
+                 "Function name not found: `\\.not_found_`")
+  expect_message(fuzz(c(".not_found_1", ".not_found_2"), list(NULL)),
+                 "Function names not found: `\\.not_found_1` and `\\.not_found_2`")
 
   ## must use `assign` otherwise the name cannot be found by the `get` call
   assign(".local_fun.", envir = .GlobalEnv,

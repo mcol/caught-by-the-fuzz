@@ -306,6 +306,12 @@ fuzz <- function(funs, what = test_inputs(), args = NULL,
   ## fuzz the functions asynchronously
   runs <- queue$process()
 
+  ## report function names that could not be found
+  not.found <- grep("Object not found in the .* namespace", runs[[1]]$msg)
+  if (length(not.found) > 0) {
+    cli::cli_alert_warning("Function name{?s} not found: {.code {funs[not.found]}}")
+  }
+
   ## returned object
   structure(list(runs = runs,
                  funs = funs,

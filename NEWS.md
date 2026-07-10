@@ -5,6 +5,8 @@
 
 ## Updates
 
+- Report in the terminal the function names that cannot be found and are
+  consequently skipped (#15).
 
 # CBTF 0.7.0 (2026-07-03)
 
