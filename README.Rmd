@@ -44,8 +44,9 @@ specify the set of inputs to be tested. By default it generates a large set of
 potentially problematic inputs, but these can be limited just to the desired
 classes of inputs.
 
-A write-up on the background of the development of `CBTF` is available in
-[this post on the REPLAY website](https://replay.geog.uni-heidelberg.de/REPLAY-website/post/2025/08/fuzzing-luminescence-to-improve-it/).
+Two write-ups on the [background of the development of `CBTF`][post_1] and
+[further developments of `CBTF`][post_2] are available on the
+[REPLAY website][replay].
 
 ## Usage
 
@@ -238,4 +239,8 @@ Development of `CBTF` is partially supported through the DFG programme
 led by Dr Sebastian Kreutzer (PI at LIAG - Institute for Applied Geophysics,
 Hannover, DE) and Dr Thomas Kolb (PI at Justus-Liebig-University Giessen, DE).
 Updates on the REPLAY project at large are available at the
-[REPLAY website](https://replay.geog.uni-heidelberg.de/).
+[REPLAY website][replay].
+
+[post_1]: https://replay.geog.uni-heidelberg.de/post/2025/08/fuzzing-luminescence-to-improve-it/
+[post_2]: https://replay.geog.uni-heidelberg.de/post/2026/07/presentation-about-cbtf-at-user-2026/
+[replay]: https://replay.geog.uni-heidelberg.de/
