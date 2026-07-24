@@ -1,8 +1,8 @@
 pandoc: 3.8.3
-pkgdown: 2.2.0
+pkgdown: 2.2.1
 pkgdown_sha: ~
 articles: {}
-last_built: 2026-07-03T13:37Z
+last_built: 2026-07-24T10:58Z
 urls:
   reference: https://mcol.github.io/caught-by-the-fuzz/reference
   article: https://mcol.github.io/caught-by-the-fuzz/articles

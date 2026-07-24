@@ -2,6 +2,8 @@
 
 ## CBTF 0.7.0 (2026-07-03)
 
+CRAN release: 2026-07-03
+
 ### New features
 
 - Add the “time” class of inputs to

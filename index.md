@@ -51,9 +51,12 @@ if the user doesn’t specify the set of inputs to be tested. By default
 it generates a large set of potentially problematic inputs, but these
 can be limited just to the desired classes of inputs.
 
-A write-up on the background of the development of `CBTF` is available
-in [this post on the REPLAY
-website](https://replay.geog.uni-heidelberg.de/REPLAY-website/post/2025/08/fuzzing-luminescence-to-improve-it/).
+Two write-ups on the [background of the development of
+`CBTF`](https://replay.geog.uni-heidelberg.de/post/2025/08/fuzzing-luminescence-to-improve-it/)
+and [further developments of
+`CBTF`](https://replay.geog.uni-heidelberg.de/post/2026/07/presentation-about-cbtf-at-user-2026/)
+are available on the [REPLAY
+website](https://replay.geog.uni-heidelberg.de/).
 
 ## Usage
 

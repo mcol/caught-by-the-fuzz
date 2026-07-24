@@ -15,7 +15,7 @@ interrupted and the next one is started."><meta property="og:image" content="htt
 
     <a class="navbar-brand me-2" href="../index.html">CBTF</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,7 +42,7 @@ interrupted and the next one is started."><meta property="og:image" content="htt
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Fuzz-test the specified functions</h1>
-      <small class="dont-index">Source: <a href="https://github.com/mcol/caught-by-the-fuzz/blob/v0.7.0/R/fuzz.R" class="external-link"><code>R/fuzz.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/mcol/caught-by-the-fuzz/blob/main/R/fuzz.R" class="external-link"><code>R/fuzz.R</code></a></small>
       <div class="d-none name"><code>fuzz.Rd</code></div>
     </div>
 
@@ -259,7 +259,7 @@ run using the <a href="whitelist.html">whitelist</a> function.</p>
 <span class="r-in"><span>            what <span class="op">=</span> <span class="fu"><a href="test_inputs.html">test_inputs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"numeric"</span>, <span class="st">"raw"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Fuzzing 3 functions with 10 inputs (using 2 daemons)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Functions will be searched in the global namespace as `package` was not specified</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> 30 tests run  <span style="color: #B2B2B2;">[820ms]</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> 30 tests run  <span style="color: #B2B2B2;">[19ms]</span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Fuzzed 3 functions on 10 inputs:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         </span>
@@ -330,7 +330,7 @@ run using the <a href="whitelist.html">whitelist</a> function.</p>
 <span class="r-in"><span><span class="fu">fuzz</span><span class="op">(</span>funs <span class="op">=</span> <span class="st">"matrix"</span>,  what <span class="op">=</span> <span class="fu"><a href="test_inputs.html">test_inputs</a></span><span class="op">(</span><span class="st">"scalar"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Fuzzing 1 function with 12 inputs (using 2 daemons)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Functions will be searched in the global namespace as `package` was not specified</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> 12 tests run  <span style="color: #B2B2B2;">[6ms]</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> 12 tests run  <span style="color: #B2B2B2;">[9ms]</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">✖</span>  🚨   CAUGHT BY THE FUZZ!   🚨</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> ── Test input [[12]]: <span style="font-weight: bold;">NULL</span> </span>
@@ -343,7 +343,7 @@ run using the <a href="whitelist.html">whitelist</a> function.</p>
 <span class="r-in"><span>     ignore_patterns <span class="op">=</span> <span class="st">"'data' must be of a vector type"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Fuzzing 1 function with 12 inputs (using 2 daemons)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Functions will be searched in the global namespace as `package` was not specified</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> 12 tests run  <span style="color: #B2B2B2;">[6ms]</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> 12 tests run  <span style="color: #B2B2B2;">[7ms]</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span>  🏃 You didn't get caught by the fuzz!</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [ FAIL 0 | WARN 0 | SKIP 0 | <span style="color: #00BB00;">OK</span> 12 ] </span>
@@ -362,7 +362,7 @@ run using the <a href="whitelist.html">whitelist</a> function.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

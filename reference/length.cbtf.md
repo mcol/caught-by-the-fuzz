@@ -27,7 +27,7 @@ res <- fuzz(funs = c("list", "matrix", "mean"),
             what = test_inputs(c("numeric", "raw")))
 #> ℹ Fuzzing 3 functions with 10 inputs (using 2 daemons)
 #> ℹ Functions will be searched in the global namespace as `package` was not specified
-#> ℹ 30 tests run  [18ms]
+#> ℹ 30 tests run  [19ms]
 length(res)
 #> [1] 30
 ```

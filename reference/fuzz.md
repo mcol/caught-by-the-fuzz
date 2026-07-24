@@ -227,7 +227,7 @@ res <- fuzz(funs = c("list", "matrix", "mean"),
             what = test_inputs(c("numeric", "raw")))
 #> ℹ Fuzzing 3 functions with 10 inputs (using 2 daemons)
 #> ℹ Functions will be searched in the global namespace as `package` was not specified
-#> ℹ 30 tests run  [820ms]
+#> ℹ 30 tests run  [19ms]
 summary(res)
 #> Fuzzed 3 functions on 10 inputs:
 #>         
@@ -298,7 +298,7 @@ print(res, show = "all")
 fuzz(funs = "matrix",  what = test_inputs("scalar"))
 #> ℹ Fuzzing 1 function with 12 inputs (using 2 daemons)
 #> ℹ Functions will be searched in the global namespace as `package` was not specified
-#> ℹ 12 tests run  [6ms]
+#> ℹ 12 tests run  [9ms]
 #> ✖  🚨   CAUGHT BY THE FUZZ!   🚨
 #> 
 #> ── Test input [[12]]: NULL 
@@ -311,7 +311,7 @@ fuzz(funs = "matrix",  what = test_inputs("scalar"),
      ignore_patterns = "'data' must be of a vector type")
 #> ℹ Fuzzing 1 function with 12 inputs (using 2 daemons)
 #> ℹ Functions will be searched in the global namespace as `package` was not specified
-#> ℹ 12 tests run  [6ms]
+#> ℹ 12 tests run  [7ms]
 #> ✔  🏃 You didn't get caught by the fuzz!
 #> 
 #>  [ FAIL 0 | WARN 0 | SKIP 0 | OK 12 ] 

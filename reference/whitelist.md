@@ -37,7 +37,7 @@ applied.
 (res <- fuzz(funs = "matrix", what = test_inputs("scalar")))
 #> ℹ Fuzzing 1 function with 12 inputs (using 2 daemons)
 #> ℹ Functions will be searched in the global namespace as `package` was not specified
-#> ℹ 12 tests run  [9ms]
+#> ℹ 12 tests run  [10ms]
 #> ✖  🚨   CAUGHT BY THE FUZZ!   🚨
 #> 
 #> ── Test input [[12]]: NULL 
