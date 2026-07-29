@@ -179,6 +179,15 @@ already active daemons started with the
 function: this allows to control in greater detail the number of
 processes to use, which can also be remote.
 
+Note that by default, the daemons load the package being fuzzed as
+installed when they start. This means that after any corrections are
+made to the package, this must be reinstalled before the fuzzer can
+notice the changes. However, this may not be the expected behaviour when
+the package is being built with `devtools`. In this setting, it is
+recommended to start the daemons manually, then run
+`mirai::everywhere(devtools::load_all())` after any changes that need to
+be tested.
+
 ### Whitelisting
 
 In order to reduce the number of false positive results produced, this
@@ -227,7 +236,7 @@ res <- fuzz(funs = c("list", "matrix", "mean"),
             what = test_inputs(c("numeric", "raw")))
 #> ℹ Fuzzing 3 functions with 10 inputs (using 2 daemons)
 #> ℹ Functions will be searched in the global namespace as `package` was not specified
-#> ℹ 30 tests run  [19ms]
+#> ℹ 30 tests run  [20ms]
 summary(res)
 #> Fuzzed 3 functions on 10 inputs:
 #>         
@@ -298,7 +307,7 @@ print(res, show = "all")
 fuzz(funs = "matrix",  what = test_inputs("scalar"))
 #> ℹ Fuzzing 1 function with 12 inputs (using 2 daemons)
 #> ℹ Functions will be searched in the global namespace as `package` was not specified
-#> ℹ 12 tests run  [9ms]
+#> ℹ 12 tests run  [10ms]
 #> ✖  🚨   CAUGHT BY THE FUZZ!   🚨
 #> 
 #> ── Test input [[12]]: NULL 

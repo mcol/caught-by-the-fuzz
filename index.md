@@ -277,6 +277,31 @@ There are two main approaches to control parallel execution:
     mirai::daemons(0)
     ```
 
+### Quicker turnaround with `devtools`
+
+By default, the daemons load the package being fuzzed as installed when
+they start. This means that after any corrections are made to the
+package, this must be reinstalled before the fuzzer can notice the
+changes.
+
+However, this may not be the expected behaviour when the package is
+being built with `devtools`, where having to reinstall the package goes
+against the `devtools` philosophy and can unnecessarily slow down
+development, especially on larger packages.
+
+Luckily, there is a simple workaround. By starting the daemons manually,
+it’s possible to make them use the package loaded in the current
+`devtools` session:
+
+``` r
+
+## run this once
+mirai::daemons(2)
+
+## run this after any changes that need to be tested
+mirai::everywhere(devtools::load_all())
+```
+
 ### Timeouts
 
 Long-running functions can slow down the progress of

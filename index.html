@@ -204,6 +204,20 @@
 </ol>
 </div>
 <div class="section level3">
+<h3 id="quicker-turnaround-with-devtools">Quicker turnaround with <code>devtools</code>
+<a class="anchor" aria-label="anchor" href="#quicker-turnaround-with-devtools"></a>
+</h3>
+<p>By default, the daemons load the package being fuzzed as installed when they start. This means that after any corrections are made to the package, this must be reinstalled before the fuzzer can notice the changes.</p>
+<p>However, this may not be the expected behaviour when the package is being built with <code>devtools</code>, where having to reinstall the package goes against the <code>devtools</code> philosophy and can unnecessarily slow down development, especially on larger packages.</p>
+<p>Luckily, there is a simple workaround. By starting the daemons manually, it’s possible to make them use the package loaded in the current <code>devtools</code> session:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">## run this once</span></span>
+<span><span class="fu">mirai</span><span class="fu">::</span><span class="fu"><a href="https://mirai.r-lib.org/reference/daemons.html" class="external-link">daemons</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## run this after any changes that need to be tested</span></span>
+<span><span class="fu">mirai</span><span class="fu">::</span><span class="fu"><a href="https://mirai.r-lib.org/reference/everywhere.html" class="external-link">everywhere</a></span><span class="op">(</span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">load_all</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
 <h3 id="timeouts">Timeouts<a class="anchor" aria-label="anchor" href="#timeouts"></a>
 </h3>
 <p>Long-running functions can slow down the progress of <code><a href="reference/fuzz.html">fuzz()</a></code>, so by default if a function does not produce an error within 2 seconds, it will be stopped. A timed out function returns an <code>"OK"</code> result, with the corresponding <code>$msg</code> field recording that a timeout was applied.</p>
@@ -213,35 +227,35 @@
 <h3 id="controlling-the-inputs-tested">Controlling the inputs tested<a class="anchor" aria-label="anchor" href="#controlling-the-inputs-tested"></a>
 </h3>
 <p>By default, <code><a href="reference/fuzz.html">fuzz()</a></code> tests all the inputs produced by <code><a href="reference/test_inputs.html">test_inputs()</a></code> (currently 85 inputs). However, this can be controlled by specifying the classes that should be tested:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/test_inputs.html">test_inputs</a></span><span class="op">(</span>use <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"scalar"</span>, <span class="st">"numeric"</span>, <span class="st">"integer"</span>, <span class="st">"matrix"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Alternatively, one can specify the classes to be excluded:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/test_inputs.html">test_inputs</a></span><span class="op">(</span>skip <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"date"</span>, <span class="st">"raw"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>A vector of valid classes can be retrieved programmatically by setting this argument to “help”:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/test_inputs.html">test_inputs</a></span><span class="op">(</span><span class="st">"help"</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb14"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="do">##  [1] "all"        "scalar"     "numeric"    "integer"    "logical"   </span></span>
-<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a><span class="do">##  [6] "character"  "factor"     "data.frame" "matrix"     "array"     </span></span>
-<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a><span class="do">## [11] "date"       "time"       "raw"        "na"         "list"</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="do">##  [1] "all"        "scalar"     "numeric"    "integer"    "logical"   </span></span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="do">##  [6] "character"  "factor"     "data.frame" "matrix"     "array"     </span></span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a><span class="do">## [11] "date"       "time"       "raw"        "na"         "list"</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="fuzzing-list-inputs-automatically">Fuzzing list inputs automatically<a class="anchor" aria-label="anchor" href="#fuzzing-list-inputs-automatically"></a>
 </h3>
 <p>It is trivial to augment a given set of inputs with list versions of the same. This effectively doubles the number of tests run with no additional coding effort.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/fuzz.html">fuzz</a></span><span class="op">(</span><span class="va">funs</span>, what <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">letters</span><span class="op">)</span>, listify_what <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb16"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="do">## ℹ Fuzzing 2 functions with 2 inputs (using 2 daemons)</span></span>
-<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a><span class="do">## ℹ 4 tests run  [5ms]</span></span>
-<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a><span class="do">## ✖  🚨   CAUGHT BY THE FUZZ!   🚨</span></span>
-<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a><span class="do">## ── Test input [[1]]: letters</span></span>
-<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a><span class="do">##  parse_multipart  FAIL  $ operator is invalid for atomic vectors</span></span>
-<span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb16-8"><a href="#cb16-8" tabindex="-1"></a><span class="do">## ── Test input [[2]]: list(letters)</span></span>
-<span id="cb16-9"><a href="#cb16-9" tabindex="-1"></a><span class="do">##       guess_type  FAIL  a character vector argument expected</span></span>
-<span id="cb16-10"><a href="#cb16-10" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb16-11"><a href="#cb16-11" tabindex="-1"></a><span class="do">##  [ FAIL 2 | WARN 0 | SKIP 0 | OK 2 ]</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="do">## ℹ Fuzzing 2 functions with 2 inputs (using 2 daemons)</span></span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a><span class="do">## ℹ 4 tests run  [5ms]</span></span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a><span class="do">## ✖  🚨   CAUGHT BY THE FUZZ!   🚨</span></span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a><span class="do">## ── Test input [[1]]: letters</span></span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a><span class="do">##  parse_multipart  FAIL  $ operator is invalid for atomic vectors</span></span>
+<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb17-8"><a href="#cb17-8" tabindex="-1"></a><span class="do">## ── Test input [[2]]: list(letters)</span></span>
+<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a><span class="do">##       guess_type  FAIL  a character vector argument expected</span></span>
+<span id="cb17-10"><a href="#cb17-10" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb17-11"><a href="#cb17-11" tabindex="-1"></a><span class="do">##  [ FAIL 2 | WARN 0 | SKIP 0 | OK 2 ]</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
