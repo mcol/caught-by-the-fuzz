@@ -301,7 +301,7 @@ test_that("self fuzz", {
     expect_pass_message(fuzz(".local_fun.",
                              ignore_patterns = "\\[fuzz\\]"),
                         sprintf("[fuzz] '%s' should be of class %s",
-                                argname, paste(argtype, collapse = ", ")))
+                                argname, toString(argtype)))
   }
 
   test_self_fuzz("package", "character")

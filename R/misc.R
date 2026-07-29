@@ -42,7 +42,7 @@ validate_class <- function(arg, class, null.ok = FALSE, from = "fuzz",
   name <- sprintf("'%s'", all.vars(match.call())[1])
   if (missing(arg) || sum(inherits(arg, class)) == 0L ||
       (!is.list(arg) && length(arg) == 1 && (is.na(arg) || is.infinite(arg)))) {
-    fuzz_error(name, "should be of class", paste(class, collapse = ", "),
+    fuzz_error(name, "should be of class", toString(class),
                from = from)
   }
   scalar && length(arg) > 1 &&
@@ -256,7 +256,7 @@ modify_args <- function(what, args, keys = NULL) {
   list_label <- function(vals, idx = NULL, what_name = NULL) {
     vals[idx] <- what_name
     vals[is.key] <- paste(keys[is.key], "=", vals[is.key])
-    paste(vals, collapse = ", ")
+    toString(vals)
   }
 
   ## no arguments provided: return each element of `what` wrapped in a list
