@@ -7,6 +7,8 @@
 
 - Report in the terminal the function names that cannot be found and are
   consequently skipped (#15).
+- Document workaround for development with `devtools` (#19; thanks to @llrs
+  for reporting).
 
 # CBTF 0.7.0 (2026-07-03)
 

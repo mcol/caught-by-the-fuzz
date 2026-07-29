@@ -139,6 +139,14 @@ background processes (daemons) of size given by the \code{daemons} argument
 Alternatively, the function can also make use of already active daemons
 started with the \link[mirai:daemons]{mirai::daemons} function: this allows to control in
 greater detail the number of processes to use, which can also be remote.
+
+Note that by default, the daemons load the package being fuzzed as installed
+when they start. This means that after any corrections are made to the
+package, this must be reinstalled before the fuzzer can notice the changes.
+However, this may not be the expected behaviour when the package is being
+built with \code{devtools}. In this setting, it is recommended to start the
+daemons manually, then run \code{mirai::everywhere(devtools::load_all())} after
+any changes that need to be tested.
 }
 
 \subsection{Whitelisting}{

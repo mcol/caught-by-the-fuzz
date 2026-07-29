@@ -105,6 +105,14 @@ get_exported_functions <- function(package, ignore_names = "",
 #' started with the [mirai::daemons] function: this allows to control in
 #' greater detail the number of processes to use, which can also be remote.
 #'
+#' Note that by default, the daemons load the package being fuzzed as installed
+#' when they start. This means that after any corrections are made to the
+#' package, this must be reinstalled before the fuzzer can notice the changes.
+#' However, this may not be the expected behaviour when the package is being
+#' built with `devtools`. In this setting, it is recommended to start the
+#' daemons manually, then run `mirai::everywhere(devtools::load_all())` after
+#' any changes that need to be tested.
+#'
 #' ## Whitelisting
 #'
 #' In order to reduce the number of false positive results produced, this
