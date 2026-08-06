@@ -101,13 +101,16 @@ scalar_inputs <- function() {
       6i,
       NaN,
       Inf,
+      -Inf,
       NULL
   )
 }
 
 numeric_inputs <- function() {
   namify(
+      c(94.3, 1038345.2, 18.2345),
       c(1.309605, 0.585381, -0.461072),
+      c(0.9876, 0.5432, 0.2345, 0.3456),
       c(-1, 0, NaN, 1e4),
       c(Inf, -0.5, 1234),
       c(0, 0),
@@ -118,6 +121,7 @@ numeric_inputs <- function() {
 
 integer_inputs <- function() {
   namify(
+      c(2L, 5L, 123456L, 100L),
       -1:3,
       c(0L, NA),
       integer()
@@ -134,6 +138,7 @@ logical_inputs <- function() {
 
 character_inputs <- function() {
   namify(
+      LETTERS,
       "",
       "a test",
       c("", "B", ""),
@@ -148,12 +153,15 @@ factor_inputs <- function() {
       factor(c("A", NA, "7", "+")),
       factor(c("a", NA, "c", "d"), levels = letters[1:4]),
       factor(c(NA, NA, NA, NA)),
+      factor(1:4, levels = 10:1, ordered = TRUE),
+      factor(c("d", NA, "a", "b"), levels = letters[1:4], ordered = TRUE),
       factor()
   )
 }
 
 date_inputs <- function() {
   namify(
+      as.Date("2045-12-25"),
       as.Date(NA),
       as.Date(NULL),
       as.Date(0),
@@ -164,6 +172,7 @@ date_inputs <- function() {
 
 time_inputs <- function() {
   namify(
+      as.POSIXct(c(1048584960, 47764160, 1256110400, 10562745600)),
       as.POSIXct(NA),
       as.POSIXct(NULL),
       as.POSIXct("2065-01-01 00:00:00"),
@@ -175,6 +184,7 @@ time_inputs <- function() {
 
 data.frame_inputs <- function() {
   namify(
+      datasets::iris[, 3:5],
       data.frame(a = NA),
       data.frame(a = letters),
       data.frame(a = 1:10, b = NA),

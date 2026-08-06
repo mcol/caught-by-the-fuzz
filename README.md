@@ -289,7 +289,7 @@ seconds) can be controlled via the `timeout` argument of `fuzz()`.
 ### Controlling the inputs tested
 
 By default, `fuzz()` tests all the inputs produced by `test_inputs()`
-(currently 85 inputs). However, this can be controlled by specifying the
+(currently 95 inputs). However, this can be controlled by specifying the
 classes that should be tested:
 
 ``` r

@@ -5,6 +5,8 @@
 
 ## Updates
 
+- Add more inputs in `test_inputs()`, bringing the total number of inputs from
+  85 to 95.
 - Report in the terminal the function names that cannot be found and are
   consequently skipped (#15).
 - Document workaround for development with `devtools` (#19; thanks to @llrs
