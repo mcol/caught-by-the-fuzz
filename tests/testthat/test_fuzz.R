@@ -43,7 +43,7 @@ test_that("input validation", {
   expect_error(fuzz("list", list(NA), timeout = c(2, 3)),
                "'timeout' should be a single numeric value")
   expect_error(fuzz("list", list(NA), timeout = 0),
-               "'timeout' should be at least 1")
+               "'timeout' should be at least 0.5")
 })
 
 test_that("check skipped functions", {

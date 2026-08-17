@@ -256,7 +256,7 @@ fuzz <- function(funs, what = test_inputs(), args = NULL,
   validate_class(ignore_patterns, "character")
   validate_class(ignore_warnings, "logical", scalar = TRUE)
   validate_class(daemons, c("integer", "numeric"), scalar = TRUE, min = 1)
-  validate_class(timeout, c("numeric", "integer"), scalar = TRUE, min = 1)
+  validate_class(timeout, c("numeric", "integer"), scalar = TRUE, min = 0.5)
 
   ## cap the timeout so that converting to milliseconds won't overflow
   timeout <- min(timeout, 10000)

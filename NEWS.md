@@ -14,6 +14,7 @@
 - Fix incorrect whitelisting of skipped functions (#21; thanks to an anonymous
   R Journal referee for reporting).
 - Fix crash occurring when using a non-integer timeout (#23).
+- Decrease the minimum accepted timeout from 1s to 0.5s.
 
 # CBTF 0.7.0 (2026-07-03)
 
