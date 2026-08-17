@@ -13,13 +13,14 @@
   for reporting).
 - Fix incorrect whitelisting of skipped functions (#21; thanks to an anonymous
   R Journal referee for reporting).
+- Fix crash occurring when using a non-integer timeout (#23).
 
 # CBTF 0.7.0 (2026-07-03)
 
 ## New features
 
 - Add the "time" class of inputs to `test_inputs()`.
-- Add the `group` argument to print() to control how the results should be
+- Add the `group` argument to `print()` to control how the results should be
   grouped when printing: either by "input" (default) or by "function" (#10).
 - Add support for `show = "none"` in `print()` to output only the summary
   statistics (#13).

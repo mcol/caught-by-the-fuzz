@@ -126,7 +126,7 @@ setup_queue <- function(funs, what, timeout,
       res <- running[[idx]]$mirai$data
       if (mirai::is_error_value(res) && as.integer(res) == 5L) {
         res <- data.frame(res = "OK",
-                          msg = sprintf("Timed out after %d seconds", timeout))
+                          msg = sprintf("Timed out after %g seconds", timeout))
       }
 
       results[[running[[idx]]$index + 1L]] <<- res

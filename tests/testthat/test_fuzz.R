@@ -166,6 +166,12 @@ test_that("check object returned", {
   expect_fuzz_result(res,
                      "OK", "Timed out after 2 seconds")
 
+  SW({
+  res <- fuzz(".local_fun.", list(NA), timeout = 3.6)
+  })
+  expect_fuzz_result(res,
+                     "OK", "Timed out after 3.6 seconds")
+
   ## no timeouts
   assign(".local_fun.", envir = .GlobalEnv,
          function(arg) Sys.sleep(1))
