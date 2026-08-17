@@ -58,7 +58,7 @@ closed at the end, unless active daemons are already available, in
 which case the argument is ignored and the active daemons are used.}
 
 \item{timeout}{Number of seconds (2 by default) after which the function
-being fuzzed is interrupted with result status set to "OK".}
+being fuzzed is interrupted with result status set to "SKIP".}
 }
 \value{
 An object of class \code{cbtf} that stores the results obtained for each of the
@@ -86,11 +86,11 @@ contain the following values:
 \itemize{
 \item \strong{OK}: either no error or warning was produced (in which case, the \code{msg}
 entry is left blank), or it was whitelisted (in which case, the message
-received is stored in \code{msg}), or it was timed out (in which case, \code{msg}
-records that a timeout was applied).
-\item \strong{SKIP}: no test was run, either because the given name cannot be found, or
-it doesn't correspond to a function, or the function accepts no arguments,
-or more arguments were provided than the function accepts;
+received is stored in \code{msg}).
+\item \strong{SKIP}: no test was run to completion, either because the given name
+cannot be found, or it doesn't correspond to a function, or the function
+accepts no arguments, or more arguments were provided than the function
+accepts, or the function execution was interrupted by a timeout;
 the exact reason is given in \code{msg}.
 \item \strong{WARN}: a warning was thrown for which no whitelisting occurred and
 \code{ignore_warnings = FALSE}; its message is stored in \code{msg}.

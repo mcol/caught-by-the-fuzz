@@ -2,6 +2,8 @@
 
 ## New features
 
+- Report timed out tests with a `SKIP` result status instead of `OK`, so they
+  are more easily spotted.
 
 ## Updates
 

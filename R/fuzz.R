@@ -168,7 +168,7 @@ get_exported_functions <- function(package, ignore_names = "",
 #'        closed at the end, unless active daemons are already available, in
 #'        which case the argument is ignored and the active daemons are used.
 #' @param timeout Number of seconds (2 by default) after which the function
-#'        being fuzzed is interrupted with result status set to "OK".
+#'        being fuzzed is interrupted with result status set to "SKIP".
 #'
 #' @return
 #' An object of class `cbtf` that stores the results obtained for each of the
@@ -195,11 +195,11 @@ get_exported_functions <- function(package, ignore_names = "",
 #' contain the following values:
 #' * **OK**: either no error or warning was produced (in which case, the `msg`
 #'   entry is left blank), or it was whitelisted (in which case, the message
-#'   received is stored in `msg`), or it was timed out (in which case, `msg`
-#'   records that a timeout was applied).
-#' * **SKIP**: no test was run, either because the given name cannot be found, or
-#'   it doesn't correspond to a function, or the function accepts no arguments,
-#'   or more arguments were provided than the function accepts;
+#'   received is stored in `msg`).
+#' * **SKIP**: no test was run to completion, either because the given name
+#'   cannot be found, or it doesn't correspond to a function, or the function
+#'   accepts no arguments, or more arguments were provided than the function
+#'   accepts, or the function execution was interrupted by a timeout;
 #'   the exact reason is given in `msg`.
 #' * **WARN**: a warning was thrown for which no whitelisting occurred and
 #'   `ignore_warnings = FALSE`; its message is stored in `msg`.

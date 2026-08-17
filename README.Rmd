@@ -215,8 +215,11 @@ mirai::everywhere(devtools::load_all())
 
 Long-running functions can slow down the progress of `fuzz()`, so by default
 if a function does not produce an error within 2 seconds, it will be stopped.
-A timed out function returns an `"OK"` result, with the corresponding `$msg`
+
+A timed out function returns a `"SKIP"` result, with the corresponding `$msg`
 field recording that a timeout was applied.
+All skipped tests (either timed out or not executed for other reasons) can be
+shown using `print(res, show = "skip")`.
 
 However, the default timeout may be too short (or perhaps too long) in some
 applications. If desired, the maximum running time of a job (in seconds) can
