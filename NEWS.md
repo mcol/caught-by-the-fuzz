@@ -9,6 +9,8 @@
   consequently skipped (#15).
 - Document workaround for development with `devtools` (#19; thanks to @llrs
   for reporting).
+- Fix `whitelist()` reclassifying a skipped result (`SKIP`) as `OK` when a
+  supplied pattern happened to match the skip message (#21).
 
 # CBTF 0.7.0 (2026-07-03)
 

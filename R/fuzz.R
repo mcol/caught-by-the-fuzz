@@ -361,9 +361,12 @@ whitelist <- function(object, patterns) {
   joined_patterns <- paste0(patterns, collapse = "|")
   joined_patterns <- gsub("^\\|", "", joined_patterns) # remove extra |
 
-  ## apply the new whitelist patterns to errors and warnings
+  ## apply the new whitelist patterns to errors and warnings, but never to
+  ## skipped results: the guard must test the result status (`res`), not the
+  ## message text, otherwise a pattern matching a "SKIP" message reclassifies
+  ## the skipped result as "OK" (#21).
   object$runs <- lapply(object$runs, function(x) {
-    x$res[grepl(joined_patterns, x$msg) & x$msg != "SKIP"] <- "OK"
+    x$res[grepl(joined_patterns, x$msg) & x$res != "SKIP"] <- "OK"
     x
   })
   object$ignore_patterns <- setdiff(c(object$ignore_patterns, patterns), "")

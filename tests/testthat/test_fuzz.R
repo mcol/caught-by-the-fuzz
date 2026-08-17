@@ -349,6 +349,23 @@ test_that("whitelist", {
                ignore_patterns)
 })
 
+test_that("whitelist does not turn a SKIP into an OK (#21)", {
+  testthat::skip_on_cran()
+
+  ## a function that cannot be found produces a SKIP result whose message
+  ## ("Object not found in the ... namespace") may itself match a pattern the
+  ## user passes to whitelist(). Whitelisting must never reclassify a skipped
+  ## result as OK (reported by an R Journal referee, #21).
+  SW({
+  res <- fuzz(".not_found_fun.", list(NULL))
+  })
+  expect_skip_reason(res, "Object not found in the global namespace")
+
+  res.new <- whitelist(res, "not found")
+  expect_equal(res.new$runs[[1]]$res, "SKIP")
+  expect_equal(res.new$runs[[1]]$msg, "Object not found in the global namespace")
+})
+
 test_that("get_exported_functions", {
   testthat::skip_on_cran()
 
