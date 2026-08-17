@@ -347,6 +347,13 @@ test_that("whitelist", {
   })
   expect_equal(res.new$ignore_patterns,
                ignore_patterns)
+
+  ## skipped functions
+  SW({
+  res <- fuzz("nonexistent", what = list(NA))
+  })
+  expect_skip_reason(whitelist(res, "Object not found"),
+                     "Object not found in the global namespace")
 })
 
 test_that("get_exported_functions", {

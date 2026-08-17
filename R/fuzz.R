@@ -363,7 +363,7 @@ whitelist <- function(object, patterns) {
 
   ## apply the new whitelist patterns to errors and warnings
   object$runs <- lapply(object$runs, function(x) {
-    x$res[grepl(joined_patterns, x$msg) & x$msg != "SKIP"] <- "OK"
+    x$res[grepl(joined_patterns, x$msg) & x$res != "SKIP"] <- "OK"
     x
   })
   object$ignore_patterns <- setdiff(c(object$ignore_patterns, patterns), "")

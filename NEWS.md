@@ -11,6 +11,8 @@
   consequently skipped (#15).
 - Document workaround for development with `devtools` (#19; thanks to @llrs
   for reporting).
+- Fix incorrect whitelisting of skipped functions (#21; thanks to an anonymous
+  R Journal referee for reporting).
 
 # CBTF 0.7.0 (2026-07-03)
 
