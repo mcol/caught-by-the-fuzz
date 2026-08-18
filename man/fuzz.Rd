@@ -31,9 +31,10 @@ arguments with no fuzzing occurring.}
 \item{args}{A list of arguments to pass to the functions being fuzzed. Each
 element in the list is in turn replaced by each object in \code{what},
 then each modified argument list is used to fuzz the functions in
-\code{funs}. Argument names are preserved and used as named arguments in
-the fuzzed functions. If \code{NULL} (default), only the first argument of
-each function is fuzzed.}
+\code{funs}. If arguments are named, they will be passed with their names
+to the fuzzed functions. Any argument name may be prefixed by \code{..}
+to fix its value to the one provided by the user. If \code{args = NULL}
+(default), only the first argument of each function is fuzzed.}
 
 \item{package}{Name of the package where functions are searched. If \code{NULL}
 (default), the function first checks the \code{"package"} attribute of
@@ -109,36 +110,60 @@ interrupted and the next one is started.
 \subsection{Multiple arguments}{
 
 A list of arguments to be passed to the functions being fuzzed can be
-provided via the \code{args} argument. Each element in that list is modified in
+provided via the \code{args} argument. If this is left at its default of \code{NULL},
+only the first argument of each function is fuzzed.
+
+Internally, \code{args} is expanded into multiple lists, each differing by one
+element: each element in the \code{args} list is modified in
 turn by each object in \code{what} and the resulting list of arguments is then
-passed to each function via \code{do.call()}. If more arguments are given than
-the number of formal arguments accepted by a function, that function will
-produce a "SKIP" result.
+passed to each function via \code{do.call()}. Thus, for example, if \code{args} has
+length 3 and \code{what} has length 2, in general a total of 6 input lists will
+be generated and tested.
 
 If arguments are named, they will be passed with their names to the fuzzed
-functions. If a function doesn't have a formal argument of that name and
-doesn't accept \code{...}, then the standard R behaviour is to return an "unused
-argument" error. This is whitelisted by default in \code{fuzz()}, and the
+functions. This allows to fuzz arguments out of order or arguments that are
+passed via \code{...}. If a function doesn't have a formal argument of that name
+and doesn't accept \code{...}, then the standard R behaviour is to return an
+"unused argument" error. This is whitelisted by default in \code{fuzz()}, and the
 corresponding result status is set to "OK".
 
-It is possible to define arguments that should remain unchanged while
+If more arguments are given than the number of formal arguments accepted by
+a function, that function will produce a "SKIP" result.
+}
+
+\subsection{Fixed arguments}{
+
+It is possible to define arguments that should remain unchanged during
 fuzzing by prefixing their names with \code{..}. These arguments will use the
 values assigned in \code{args} without modification. For example, to ensure that
 the argument \code{na.rm} is always set to \code{TRUE}, it should be specified as
-\code{..na.rm = TRUE} in \code{args}. If all elements in \code{args} are fixed, \code{what} is
-ignored and all functions in \code{funs} will be called with the provided \code{args}
-list.
+\code{..na.rm = TRUE} in \code{args}.
+
+If all elements in \code{args} are fixed, \code{what} is ignored and all functions in
+\code{funs} will be called with the provided \code{args} list. A similar behaviour can
+be obtained by specifying no fixed arguments in \code{args} while setting
+\code{what = NULL}.
 }
 
 \subsection{Parallel execution}{
 
 The implementation uses \code{mirai} as a backend to execute tasks asynchronously
-in parallel worker processes. The function can start a pool of persistent
-background processes (daemons) of size given by the \code{daemons} argument
-(note that starting more daemons than available cores yields no benefit).
-Alternatively, the function can also make use of already active daemons
-started with the \link[mirai:daemons]{mirai::daemons} function: this allows to control in
-greater detail the number of processes to use, which can also be remote.
+in parallel worker processes. There are two main approaches to control
+parallel execution:
+\enumerate{
+\item Setting the \code{daemons} argument to an integer value (2 by default): this
+will start as many daemons as specified (and shut them down automatically
+at the end of the fuzz run). Note that there is no benefit in starting
+more daemons than the number of available cores.
+\item Manually setting up the daemons before the start of the function: this
+can be accomplished via \link[mirai:daemons]{mirai::daemons}, which allows to specify remote
+daemons as well as local ones. This also avoids the cost of starting and
+closing daemons if \code{fuzz()} were to be called multiple times. It remains
+responsibility of the user to close the daemons when no longer in use.
+When active daemons are found, the \code{daemons} argument will be ignored.
+Refer to the original \code{mirai} documentation for a complete description of
+its arguments and behaviour.
+}
 
 Note that by default, the daemons load the package being fuzzed as installed
 when they start. This means that after any corrections are made to the
@@ -172,6 +197,31 @@ was received is stored in the \verb{$msg} field (see the \emph{Value} section).
 \emph{Note:} Whitelisting can also be applied post-hoc on the results of a fuzz
 run using the \link{whitelist} function.
 }
+
+\subsection{Timeouts}{
+
+Long-running functions can slow down the progress of \code{fuzz()}, so by
+default if a function does not produce an error within 2 seconds, it
+will be stopped.
+
+A timed out function returns a \code{"SKIP"} result, with the corresponding
+\verb{$msg} field recording that a timeout was applied. All skipped tests
+(either timed out or not executed for other reasons) can be shown using
+\code{print(res, show = "skip")}.
+
+However, the default timeout may be too short (or perhaps too long) in
+some applications. If desired, the maximum running time of a job (in
+seconds) can be controlled via the \code{timeout} argument of \code{fuzz()}.
+}
+
+\subsection{Side effects}{
+
+Running the fuzzer can have the same side effects as the functions being
+called (writing files, opening plot devices, makin network calls, and so
+on). Although functions are run in separate processes, those processes may
+still create files or other artefacts in the working directory, so it may
+be useful to switch to a temporary directory before calling \code{fuzz()}.
+}
 }
 \examples{
 ## set up persistent background processes
@@ -186,11 +236,19 @@ summary(res)
 print(res, show = "all")
 
 ## this will catch an error (false positive)
-fuzz(funs = "matrix",  what = test_inputs("scalar"))
+fuzz(funs = "matrix", what = test_inputs("scalar"))
 
 ## apply a whitelist pattern to remove the false positive
-fuzz(funs = "matrix",  what = test_inputs("scalar"),
+fuzz(funs = "matrix", what = test_inputs("scalar"),
      ignore_patterns = "'data' must be of a vector type")
+
+## specify multiple arguments to fuzz
+fuzz("matrix", what = list(NA, NULL),
+     args = list(data = 1:4, nrow = 2, dimnames = NULL))
+
+## keep the `data` argument fixed
+fuzz("matrix", what = list(NA, NULL),
+     args = list(..data = 1:4, nrow = 2, dimnames = NULL))
 
 ## close the background processes
 mirai::daemons(0L)
