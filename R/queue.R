@@ -120,20 +120,17 @@ setup_queue <- function(funs, what, timeout,
     mirai::race_mirai(lapply(running, `[[`, "mirai"))
 
     ## collect the completed runs
-    rm.idx <- NULL
-    lapply(seq_along(running), function(idx) {
-      !mirai::unresolved(running[[idx]]$mirai) || return()
-      res <- running[[idx]]$mirai$data
+    done <- vapply(running, function(r) !mirai::unresolved(r$mirai), logical(1))
+    for (r in running[done]) {
+      res <- r$mirai$data
       if (mirai::is_error_value(res) && as.integer(res) == 5L) {
         res <- data.frame(res = "SKIP",
                           msg = sprintf("Timed out after %g seconds", timeout))
       }
+      results[[r$index + 1L]] <<- res
+    }
+    running[done] <<- NULL
 
-      results[[running[[idx]]$index + 1L]] <<- res
-      rm.idx <<- c(rm.idx, idx)
-    })
-
-    running[rm.idx] <<- NULL
     if (length(running)) {
       finishd <<- min(sapply(running, `[[`, "index")) %/% length(funs) + 1L
       message <<- char[[finishd]]
