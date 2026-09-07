@@ -54,9 +54,9 @@
 #' @export
 summary.cbtf <- function(object, tabulate = TRUE, ...) {
   validate_class(tabulate, "logical", scalar = TRUE, from = "summary")
-  df <- cbind(do.call(rbind, object$runs),
-              fun = rep(object$funs, length(object$runs)),
-              what = sapply(object$runs, function(x) attr(x, "what")))
+  df <- do.call(rbind, lapply(object$runs, function(run) {
+    cbind(run, fun = object$funs, what = attr(run, "what"))
+  }))
   cli::cli_text("Fuzzed {nrow(object$runs[[1]])} function{?s} ",
                 "on {length(object$runs)} input{?s}: ")
   tbl <- table(df$fun,

@@ -17,6 +17,8 @@
   R Journal referee for reporting).
 - Fix crash occurring when using a non-integer timeout (#23).
 - Decrease the minimum accepted timeout from 1s to 0.5s.
+- Fix mismatched columns in the data frame returned by `summary()` caused by
+  vector recycling (#24).
 
 # CBTF 0.7.0 (2026-07-03)
 

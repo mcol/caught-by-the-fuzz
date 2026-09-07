@@ -22,6 +22,16 @@ test_that("summary", {
                fixed = TRUE)
   expect_snapshot(summary(res))
   expect_snapshot(summary(res, tabulate = FALSE))
+
+  ## issue 24
+  SW({
+  res <- fuzz(c("mean", "median"), list(NA, NULL, 123))
+  sum <- summary(res, tabulate = FALSE)[, c("fun", "what")]
+  })
+  expect_equal(sum$fun,
+               c("mean", "median", "mean", "median", "mean", "median"))
+  expect_equal(sum$what,
+               c("NA", "NA", "NULL", "NULL", "123", "123"))
 })
 
 test_that("print", {
