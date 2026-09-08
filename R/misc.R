@@ -50,7 +50,7 @@ validate_class <- function(arg, class, null.ok = FALSE, from = "fuzz",
   if (!is.null(min) && (length(arg) == 0 || arg < min))
     fuzz_error(name, "should be at least", min, from = from)
   !is.null(choices) && !arg %in% choices &&
-    fuzz_error(name, "should be one of", toString(sQuote(choices)))
+    fuzz_error(name, "should be one of", toString(sQuote(choices)), from = from)
   if (remove_empty)
     arg <- arg[nchar(arg) > 0]
   length(arg) == 0 &&

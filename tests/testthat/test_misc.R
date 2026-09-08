@@ -38,8 +38,8 @@ test_that("validate_class", {
   expect_error(validate_class(arg, "numeric", min = 2),
                "'arg' should be at least 2")
   arg <- "error"
-  expect_error(validate_class(arg, "character", choices = c("c1", "c2")),
-               "'arg' should be one of 'c1', 'c2'")
+  expect_error(validate_class(arg, "character", choices = c("c1", "c2"), from = "ff"),
+               "[ff] 'arg' should be one of 'c1', 'c2'", fixed = TRUE)
 
   expect_silent(validate_class(iris, "data.frame"))
   expect_silent(validate_class(NULL, "data.frame", null.ok = TRUE))
