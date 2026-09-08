@@ -285,6 +285,7 @@ test_that("check classes returned", {
 
 test_that("self fuzz", {
   testthat::skip_on_cran()
+  withr::local_options(CBTF.whitelist.function.names = TRUE)
 
   ## start nested daemons
   mirai::everywhere(mirai::daemons(1, dispatcher = FALSE))
@@ -399,8 +400,10 @@ test_that("get_exported_functions", {
   expect_false("Sys.Date" %in% funs)
 
   SW({
-  expect_pass_message(fuzz("get_exported_functions"),
-                      "[get_exported_functions] 'package' should be of class character")
+  expect_fail_message(fuzz("get_exported_functions"))
+  withr::with_options(list(CBTF.whitelist.function.names = TRUE),
+                      expect_pass_message(fuzz("get_exported_functions"),
+                                          "[get_exported_functions] 'package' should be of class character"))
   assign(".local_fun.", envir = .GlobalEnv,
          function(arg) get_exported_functions(package = arg))
   expect_pass_message(fuzz(".local_fun.",

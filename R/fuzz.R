@@ -142,8 +142,6 @@ get_exported_functions <- function(package, ignore_names = "",
 #' function applies the following set of rules, to establish if an error or
 #' warning condition should be ignored (whitelisting):
 #'
-#' * If the name of the function appears in the error or warning message, as
-#'   it is considered that the condition has been handled by the developer.
 #' * If the error or warning message contains the text "is missing, with no
 #'   default", which is produced when a missing argument is used without a
 #'   value being assigned to it.
@@ -151,6 +149,11 @@ get_exported_functions <- function(package, ignore_names = "",
 #'   in `ignore_patterns`. In case of multiple warnings being captured, the
 #'   result is whitelisted only if _all_ warnings match any of the patterns.
 #' * If a warning is thrown but `ignore_warnings = TRUE` is set.
+#'
+#' If `options(CBTF.whitelist.function.name = TRUE)` is set, the following rule
+#' is also applied:
+#' * If the name of the function appears in the error or warning message, as
+#'   it is considered that the condition has been handled by the developer.
 #'
 #' In all whitelisted cases, the result is "OK", and the message that
 #' was received is stored in the `$msg` field (see the *Value* section).

@@ -123,10 +123,16 @@ fuzz("matrix", what = list(NA, NULL), args = list(1:4, 2, 2))
     ## ── Test input [[3]]: 1:4, NA, 2
     ##  matrix  FAIL  invalid 'nrow' value (too large or NA)
     ## 
+    ## ── Test input [[4]]: 1:4, NULL, 2
+    ##  matrix  FAIL  non-numeric matrix extent
+    ## 
     ## ── Test input [[5]]: 1:4, 2, NA
     ##  matrix  FAIL  invalid 'ncol' value (too large or NA)
     ## 
-    ##  [ FAIL 3 | WARN 0 | SKIP 0 | OK 3 ]
+    ## ── Test input [[6]]: 1:4, 2, NULL
+    ##  matrix  FAIL  non-numeric matrix extent
+    ## 
+    ##  [ FAIL 5 | WARN 0 | SKIP 0 | OK 1 ]
 
 If names are given to elements in `args`, they will be used in the input
 lists generated. This can be helpful to fuzz a specific argument across
@@ -151,10 +157,13 @@ fuzz("matrix", what = list(NA, NULL), args = list(1:4, 2, dimnames = NULL))
     ## ── Test input [[3]]: 1:4, NA, dimnames = NULL
     ##  matrix  FAIL  invalid 'nrow' value (too large or NA)
     ## 
+    ## ── Test input [[4]]: 1:4, NULL, dimnames = NULL
+    ##  matrix  FAIL  non-numeric matrix extent
+    ## 
     ## ── Test input [[5]]: 1:4, 2, dimnames = NA
     ##  matrix  FAIL  'dimnames' must be a list
     ## 
-    ##  [ FAIL 3 | WARN 0 | SKIP 0 | OK 3 ]
+    ##  [ FAIL 4 | WARN 0 | SKIP 0 | OK 2 ]
 
 Fuzzing is generally more effective when the values in `args` provide a
 good default for the functions being fuzzed; while an argument is being

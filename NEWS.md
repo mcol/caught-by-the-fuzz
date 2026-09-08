@@ -4,6 +4,10 @@
 
 - Report timed out tests with a `SKIP` result status instead of `OK`, so they
   are more easily spotted.
+- Disable the whitelist rule based on function names as it may lead to false
+  negatives, especially for very short function names; the rule can now be
+  activated by setting `options(CBTF.whitelist.function.names = TRUE)` (#25;
+  thanks to an anonymous R Journal referee for reporting).
 
 ## Updates
 

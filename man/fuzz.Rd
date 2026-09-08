@@ -180,8 +180,6 @@ In order to reduce the number of false positive results produced, this
 function applies the following set of rules, to establish if an error or
 warning condition should be ignored (whitelisting):
 \itemize{
-\item If the name of the function appears in the error or warning message, as
-it is considered that the condition has been handled by the developer.
 \item If the error or warning message contains the text "is missing, with no
 default", which is produced when a missing argument is used without a
 value being assigned to it.
@@ -189,6 +187,13 @@ value being assigned to it.
 in \code{ignore_patterns}. In case of multiple warnings being captured, the
 result is whitelisted only if \emph{all} warnings match any of the patterns.
 \item If a warning is thrown but \code{ignore_warnings = TRUE} is set.
+}
+
+If \code{options(CBTF.whitelist.function.name = TRUE)} is set, the following rule
+is also applied:
+\itemize{
+\item If the name of the function appears in the error or warning message, as
+it is considered that the condition has been handled by the developer.
 }
 
 In all whitelisted cases, the result is "OK", and the message that

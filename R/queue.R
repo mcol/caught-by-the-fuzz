@@ -36,7 +36,7 @@ setup_queue <- function(funs, what, timeout,
     whitelist_and_label <- function(label, msg) {
       res <- if ((label == "WARN" && ignore_warnings) ||
                  is.null(msg) ||
-                 all(grepl(name, msg, fixed = TRUE)) ||
+                 option && all(grepl(name, msg, fixed = TRUE)) ||
                  all(grepl(ignore_patterns, msg))) {
                "OK"
              } else {
@@ -67,6 +67,7 @@ setup_queue <- function(funs, what, timeout,
                 ignore_patterns = ignore_patterns,
                 ignore_warnings = ignore_warnings,
                 check_fuzzable = check_fuzzable,
+                option = isTRUE(getOption("CBTF.whitelist.function.names")),
                 fuzzer = fuzzer), envir = env)
   mirai::everywhere({}, env)
 
