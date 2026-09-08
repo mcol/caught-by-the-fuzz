@@ -19,7 +19,7 @@ function and input tested (see the \emph{Value} section in \link{fuzz}).}
 \item{msg}{The message received in case of error, warning or skip,
 or an empty string if no failure occurred.}
 \item{attr(*, "what")}{The character representation of the input tested.}
-Otherwise, \code{FALSE}.
+For an invalid index, it returns \code{NULL}.
 }
 \description{
 This extracts the raw results for a single test input by its position,

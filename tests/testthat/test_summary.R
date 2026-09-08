@@ -73,7 +73,7 @@ test_that("[[", {
                c("res", "msg"))
   expect_equal(attr(res[[1]], "what"),
                "NA")
-  expect_false(res[[0]])
-  expect_false(res[[10]])
+  expect_null(res[[0]])
+  expect_null(res[[10]])
   })
 })

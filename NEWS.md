@@ -19,6 +19,7 @@
 - Decrease the minimum accepted timeout from 1s to 0.5s.
 - Fix mismatched columns in the data frame returned by `summary()` caused by
   vector recycling (#24).
+- Make `[[` return `NULL` instead of `FALSE` if the index is not valid.
 
 # CBTF 0.7.0 (2026-07-03)
 

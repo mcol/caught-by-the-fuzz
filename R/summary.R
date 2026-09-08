@@ -160,7 +160,7 @@ print.cbtf <- function(x, show = c("fail", "warn"), group = "input", ...) {
 #' \item{msg}{The message received in case of error, warning or skip,
 #'       or an empty string if no failure occurred.}
 #' \item{attr(*, "what")}{The character representation of the input tested.}
-#' Otherwise, `FALSE`.
+#' For an invalid index, it returns `NULL`.
 #'
 #' @examples
 #' res <- fuzz(funs = c("list", "matrix", "mean"),
@@ -169,7 +169,8 @@ print.cbtf <- function(x, show = c("fail", "warn"), group = "input", ...) {
 #'
 #' @export
 `[[.cbtf` <- function(x, i) {
-  i %in% seq_along(x$runs) && return(x$runs[[i]])
+  i %in% seq_along(x$runs) || return(NULL)
+  x$runs[[i]]
 }
 
 #' Compute the number of tests performed
