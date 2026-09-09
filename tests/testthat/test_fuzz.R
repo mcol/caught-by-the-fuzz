@@ -96,6 +96,8 @@ test_that("check object returned", {
                c("", "", "invalid argument to unary operator"))
   expect_equal(res$package,
                NA)
+  expect_equal(res$ignore_patterns,
+               "")
 
   SW({
   res <- fuzz("ls", list(NA))
@@ -138,6 +140,8 @@ test_that("check object returned", {
   })
   expect_fuzz_result(res,
                      "WARN", "first warning | second warning")
+  expect_equal(res$ignore_patterns,
+               "second")
   SW({
   res <- fuzz(".local_fun.", list(1), ignore_patterns = "warning")
   })
