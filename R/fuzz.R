@@ -158,6 +158,14 @@ get_exported_functions <- function(package, ignore_names = "",
 #' In all whitelisted cases, the result is "OK", and the message that
 #' was received is stored in the `$msg` field (see the *Value* section).
 #'
+#' Additionally, if a `.cbtf` file is present in the current working
+#' directory, its contents are used as an additional source of whitelist
+#' patterns. Each non-empty line is treated as a regular expression pattern
+#' and appended to the `ignore_patterns` argument; lines starting with `#` are
+#' ignored. This is useful for sharing whitelist patterns across a project or
+#' for automatically applying known false positives without having to pass
+#' them to every `fuzz()` call.
+#'
 #' *Note:* Whitelisting can also be applied post-hoc on the results of a fuzz
 #' run using the [whitelist] function.
 #'
@@ -238,7 +246,8 @@ get_exported_functions <- function(package, ignore_names = "",
 #'       the `args` argument if not already provided.}
 #' \item{package}{a character string specifying the package name where
 #'       function names were searched, or `NA` if none was provided.}
-#' \item{ignore_patterns}{The value of the `ignore_patterns` argument.}
+#' \item{ignore_patterns}{The value of the `ignore_patterns` argument,
+#'       including the patterns found in the `.cbtf` file, if present.}
 #' \item{ignore_warnings}{The value of the `ignore_warnings` argument.}
 #'
 #' The `res` column in each of the data frames in the `$runs` field can
@@ -343,6 +352,11 @@ fuzz <- function(funs, what = test_inputs(), args = NULL,
 
   ## expand the set of inputs according to the arguments provided
   what <- modify_args(what, args, keys)
+
+  ## append whitelist patterns from a .cbtf file, if present
+  ignore_patterns <- unique(c(ignore_patterns, read_cbtf_file()))
+  if (length(ignore_patterns) > 1)
+    ignore_patterns <- setdiff(ignore_patterns, "")
 
   ## join all regular expression patterns
   joined_patterns <- paste0(c(ignore_patterns,

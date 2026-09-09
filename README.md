@@ -205,6 +205,22 @@ Note that, like in one of the examples above, whitelisting can also be
 applied post-hoc on the results of a fuzz run using the `whitelist()`
 function.
 
+### Using a `.cbtf` file
+
+Whitelist patterns can be stored in a file named `.cbtf` in the current
+working directory. Each non-empty line in this file is treated as a
+regular expression pattern and appended to the `ignore_patterns`
+argument; lines starting with `#` are ignored and can be used as
+comments. This is useful for sharing whitelist patterns across a project
+or for automatically applying known false positives without having to
+pass them to every `fuzz()` call.
+
+For example, a typical `.cbtf` file might look like this:
+
+    # known false positives
+    argument is not numeric or logical
+    returning NA
+
 ## Advanced topics
 
 ### Generated argument lists

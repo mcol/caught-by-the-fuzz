@@ -79,7 +79,8 @@ tested.
 the \code{args} argument if not already provided.}
 \item{package}{a character string specifying the package name where
 function names were searched, or \code{NA} if none was provided.}
-\item{ignore_patterns}{The value of the \code{ignore_patterns} argument.}
+\item{ignore_patterns}{The value of the \code{ignore_patterns} argument,
+including the patterns found in the \code{.cbtf} file, if present.}
 \item{ignore_warnings}{The value of the \code{ignore_warnings} argument.}
 
 The \code{res} column in each of the data frames in the \verb{$runs} field can
@@ -198,6 +199,14 @@ it is considered that the condition has been handled by the developer.
 
 In all whitelisted cases, the result is "OK", and the message that
 was received is stored in the \verb{$msg} field (see the \emph{Value} section).
+
+Additionally, if a \code{.cbtf} file is present in the current working
+directory, its contents are used as an additional source of whitelist
+patterns. Each non-empty line is treated as a regular expression pattern
+and appended to the \code{ignore_patterns} argument; lines starting with \verb{#} are
+ignored. This is useful for sharing whitelist patterns across a project or
+for automatically applying known false positives without having to pass
+them to every \code{fuzz()} call.
 
 \emph{Note:} Whitelisting can also be applied post-hoc on the results of a fuzz
 run using the \link{whitelist} function.

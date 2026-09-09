@@ -121,6 +121,24 @@ check_fuzzable <- function(fun, pkg, ignore_deprecated = TRUE, num_args = 1L) {
   fun
 }
 
+#' Read whitelist patterns from a `.cbtf` file
+#'
+#' If a `.cbtf` file is present in the current working directory, it is read
+#' and each non-empty line is treated as a whitelist pattern. Lines starting
+#' with `#` are ignored.
+#'
+#' @return
+#' A character vector of whitelist patterns, which can be empty if no `.cbtf`
+#' file is present.
+#'
+#' @noRd
+read_cbtf_file <- function() {
+  path <- ".cbtf"
+  lines <- tryCatch(trimws(readLines(path, warn = FALSE)),
+                    warning = function(w) character(0))
+  lines[nzchar(lines) & !grepl("^#", lines)]
+}
+
 #' Generate coloured summary statistics from the results
 #'
 #' This computes summary statistics from the fuzzing results, prints a

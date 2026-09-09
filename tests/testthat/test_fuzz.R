@@ -265,6 +265,33 @@ test_that("check object returned", {
                      rep("SKIP", 3), rep("Accepts only up to 2 arguments", 3))
 })
 
+test_that("using a .cbtf file", {
+  testthat::skip_on_cran()
+
+  ## create a temporary .cbtf file
+  withr::local_dir(withr::local_tempdir())
+  writeLines(c("# whitelist patterns for this project",
+               "",
+               "is not numeric or logical",
+               "# another comment",
+               "another pattern"),
+             con = ".cbtf")
+
+  SW({
+  res <- fuzz("median", list(letters))
+  })
+  expect_fuzz_result(res,
+                     "OK", "argument is not numeric or logical: returning NA")
+  expect_equal(res$ignore_patterns,
+               c("is not numeric or logical", "another pattern"))
+
+  SW({
+  res <- fuzz("median", list(letters), ignore_patterns = "pattern")
+  })
+  expect_equal(res$ignore_patterns,
+               c("pattern", "is not numeric or logical", "another pattern"))
+})
+
 test_that("check classes returned", {
   testthat::skip_on_cran()
 

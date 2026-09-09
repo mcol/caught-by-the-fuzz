@@ -12,3 +12,4 @@ README.html
 ^pkgdown$
 ^\.git$
 ^\.github$
+^\.cbtf$

@@ -97,6 +97,44 @@ test_that("check_fuzzable", {
   rm(".deprecated.", envir = .GlobalEnv)
 })
 
+test_that("read_cbtf_file", {
+  testthat::skip_on_cran()
+
+  ## move to a temporary directory
+  withr::local_dir(withr::local_tempdir())
+
+  ## no .cbtf file present
+  expect_equal(read_cbtf_file(),
+               character(0))
+
+  ## only comments or empty lines
+  writeLines(c("", "# comment"), con = ".cbtf")
+  expect_equal(read_cbtf_file(),
+               character(0))
+
+  ## create a temporary .cbtf file
+  writeLines(c("# whitelist patterns for this project",
+               "",
+               "is not numeric or logical",
+               "# another comment",
+               "another pattern"),
+             con = ".cbtf")
+
+  expect_equal(read_cbtf_file(),
+               c("is not numeric or logical", "another pattern"))
+
+  ## unreadable file
+  Sys.chmod(".cbtf", mode = "0000")
+  expect_equal(read_cbtf_file(),
+               character(0))
+
+  ## directory
+  file.remove(".cbtf")
+  dir.create(".cbtf")
+  expect_equal(read_cbtf_file(),
+               character(0))
+})
+
 test_that("tocolour", {
   testthat::skip_on_cran()
 

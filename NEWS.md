@@ -4,6 +4,8 @@
 
 - Report timed out tests with a `SKIP` result status instead of `OK`, so they
   are more easily spotted.
+- Add support for listing whitelist patterns in a `.cbtf` file in the working
+  directory (#20).
 - Disable the whitelist rule based on function names as it may lead to false
   negatives, especially for very short function names; the rule can now be
   activated by setting `options(CBTF.whitelist.function.names = TRUE)` (#25;
