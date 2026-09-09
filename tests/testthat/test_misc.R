@@ -124,6 +124,7 @@ test_that("read_cbtf_file", {
                c("is not numeric or logical", "another pattern"))
 
   ## unreadable file
+  skip_on_os("windows")
   Sys.chmod(".cbtf", mode = "0000")
   expect_equal(read_cbtf_file(),
                character(0))
