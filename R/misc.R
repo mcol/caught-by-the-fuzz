@@ -42,7 +42,8 @@ validate_class <- function(arg, class, null.ok = FALSE, from = "fuzz",
   name <- sprintf("'%s'", all.vars(match.call())[1])
   if (missing(arg) || sum(inherits(arg, class)) == 0L ||
       (!is.list(arg) && length(arg) == 1 && (is.na(arg) || is.infinite(arg)))) {
-    fuzz_error(name, "should be of class", toString(class),
+    fuzz_error(name, paste0("should be of class ", toString(class),
+                            if (null.ok) " or NULL"),
                from = from)
   }
   scalar && length(arg) > 1 &&

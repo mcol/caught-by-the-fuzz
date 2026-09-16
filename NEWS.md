@@ -26,6 +26,7 @@
 - Fix mismatched columns in the data frame returned by `summary()` caused by
   vector recycling (#24).
 - Make `[[` return `NULL` instead of `FALSE` if the index is not valid.
+- Validation error messages also indicate when `NULL` is a valid argument.
 
 # CBTF 0.7.0 (2026-07-03)
 

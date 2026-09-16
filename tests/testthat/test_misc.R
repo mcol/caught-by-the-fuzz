@@ -5,6 +5,9 @@ test_that("validate_class", {
   expect_error(validate_class(arg, "character"),
                "[fuzz] 'arg' should be of class character",
                fixed = TRUE)
+  expect_error(validate_class(arg, "character", null.ok = TRUE),
+               "[fuzz] 'arg' should be of class character or NULL",
+               fixed = TRUE)
   expect_error(validate_class(arg, "character", from = "function_name"),
                "[function_name] 'arg' should be of class character",
                fixed = TRUE)
