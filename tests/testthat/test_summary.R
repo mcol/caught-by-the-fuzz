@@ -70,10 +70,9 @@ test_that("[[", {
   expect_s3_class(res[[1]],
                   "data.frame")
   expect_equal(colnames(res[[1]]),
-               c("res", "msg"))
-  expect_equal(attr(res[[1]], "what"),
-               "NA")
+               c("res", "msg", "fun", "what"))
   expect_null(res[[0]])
+  expect_null(res[[3]])
   expect_null(res[[10]])
   })
 })

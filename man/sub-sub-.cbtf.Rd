@@ -12,18 +12,18 @@
 \item{i}{An index between 1 and the number of test inputs used.}
 }
 \value{
-If the index is valid, a data frame containing the following columns and
-attributes:
+If the index is valid, a data frame containing the following columns:
 \item{res}{One of "OK", "FAIL", "WARN" or "SKIP" for each combination of
 function and input tested (see the \emph{Value} section in \link{fuzz}).}
 \item{msg}{The message received in case of error, warning or skip,
 or an empty string if no failure occurred.}
-\item{attr(*, "what")}{The character representation of the input tested.}
+\item{fun}{The name of the tested function.}
+\item{"what"}{The character representation of the input tested.}
 For an invalid index, it returns \code{NULL}.
 }
 \description{
 This extracts the raw results for a single test input by its position,
-returning the corresponding data frame from the \verb{$runs} list.
+returning the corresponding rows from the \verb{$runs} data frame.
 }
 \examples{
 res <- fuzz(funs = c("list", "matrix", "mean"),

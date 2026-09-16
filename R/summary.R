@@ -54,11 +54,9 @@
 #' @export
 summary.cbtf <- function(object, tabulate = TRUE, ...) {
   validate_class(tabulate, "logical", scalar = TRUE, from = "summary")
-  df <- do.call(rbind, lapply(object$runs, function(run) {
-    cbind(run, fun = object$funs, what = attr(run, "what"))
-  }))
-  cli::cli_text("Fuzzed {nrow(object$runs[[1]])} function{?s} ",
-                "on {length(object$runs)} input{?s}: ")
+  df <- object$runs
+  cli::cli_text("Fuzzed {length(object$funs)} function{?s} ",
+                "on {length(unique(df$idx))} input{?s}: ")
   tbl <- table(df$fun,
                factor(df$res, levels = c("FAIL", "WARN", "SKIP", "OK")))
   if (tabulate)
@@ -113,14 +111,10 @@ print.cbtf <- function(x, show = c("fail", "warn"), group = "input", ...) {
   summary.stats <- compute_summary_stats(x)
   res.size <- nchar(tocolour("FAIL")) # include ANSI formatting, if present
 
+  df <- x$runs[tolower(x$runs$res) %in% show, ]
   if (group == "function") {
-    ## Build a long-format data frame with all results
-    df <- do.call(rbind, lapply(x$runs, function(run) {
-      cbind(run, fun = x$funs, what = attr(run, "what"))
-    }))
-
     for (fun in x$funs) {
-      sub <- df[df$fun == fun & tolower(df$res) %in% show, , drop = FALSE]
+      sub <- df[df$fun == fun, , drop = FALSE]
       if (nrow(sub) == 0) next
       cli::cli_h3("Function {.strong {.code {fun}}}:")
       msg.size <- max(nchar(sub$msg), 30)
@@ -130,12 +124,10 @@ print.cbtf <- function(x, show = c("fail", "warn"), group = "input", ...) {
     }
   } else {
     max.name <- max(c(0, nchar(x$funs))) + 1
-    for (ii in seq_along(x$runs)) {
-      what <- attr(x$runs[[ii]], "what")
-      sub <- cbind(x$runs[[ii]], fun = x$funs)
-      sub <- sub[tolower(sub$res) %in% show, ]
+    for (idx in unique(x$runs$idx)) {
+      sub <- df[df$idx == idx, , drop = FALSE]
       if (nrow(sub) == 0) next
-      cli::cli_h3("Test input [[{ii}]]: {.strong {what}}")
+      cli::cli_h3("Test input [[{idx}]]: {.strong {sub$what[1]}}")
       cat(sprintf("%*s  %*s  %s\n",
                   max.name, sub$fun, res.size, tocolour(sub$res), sub$msg),
           sep = "")
@@ -147,19 +139,19 @@ print.cbtf <- function(x, show = c("fail", "warn"), group = "input", ...) {
 #' Extract the results for a specific test input
 #'
 #' This extracts the raw results for a single test input by its position,
-#' returning the corresponding data frame from the `$runs` list.
+#' returning the corresponding rows from the `$runs` data frame.
 #'
 #' @param x An object of class `cbtf`.
 #' @param i An index between 1 and the number of test inputs used.
 #'
 #' @return
-#' If the index is valid, a data frame containing the following columns and
-#' attributes:
+#' If the index is valid, a data frame containing the following columns:
 #' \item{res}{One of "OK", "FAIL", "WARN" or "SKIP" for each combination of
 #'       function and input tested (see the *Value* section in [fuzz]).}
 #' \item{msg}{The message received in case of error, warning or skip,
 #'       or an empty string if no failure occurred.}
-#' \item{attr(*, "what")}{The character representation of the input tested.}
+#' \item{fun}{The name of the tested function.}
+#' \item{"what"}{The character representation of the input tested.}
 #' For an invalid index, it returns `NULL`.
 #'
 #' @examples
@@ -169,8 +161,10 @@ print.cbtf <- function(x, show = c("fail", "warn"), group = "input", ...) {
 #'
 #' @export
 `[[.cbtf` <- function(x, i) {
-  i %in% seq_along(x$runs) || return(NULL)
-  x$runs[[i]]
+  sub <- x$runs[x$runs$idx == i, -1]
+  nrow(sub) > 0 || return(NULL)
+  rownames(sub) <- NULL
+  sub
 }
 
 #' Compute the number of tests performed
@@ -190,5 +184,5 @@ print.cbtf <- function(x, show = c("fail", "warn"), group = "input", ...) {
 #'
 #' @export
 length.cbtf <- function(x) {
-  length(x$runs) * length(x$runs[[1]]$res)
+  nrow(x$runs)
 }

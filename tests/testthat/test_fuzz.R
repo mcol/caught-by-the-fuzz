@@ -86,13 +86,13 @@ test_that("check object returned", {
                 length(funs))
   expect_s3_class(res[[1]],
                   "data.frame")
-  expect_named(res$runs[[1]],
-               c("res", "msg"))
+  expect_named(res$runs,
+               c("idx", "res", "msg", "fun", "what"))
   expect_equal(nrow(res[[1]]),
                length(funs))
-  expect_equal(res$runs[[1]]$res,
+  expect_equal(res[[1]]$res,
                c("OK", "OK", "FAIL"))
-  expect_equal(res$runs[[1]]$msg,
+  expect_equal(res[[1]]$msg,
                c("", "", "invalid argument to unary operator"))
   expect_equal(res$package,
                NA)
@@ -252,7 +252,7 @@ test_that("check object returned", {
               listify_what = TRUE)
   })
   expect_length(res, 8)
-  expect_equal(sapply(res$runs, attr, "what"),
+  expect_equal(res$runs$what,
                c("x = NULL, TRUE", "x = NA, TRUE",
                  "x = list(NULL), TRUE", "x = list(NA), TRUE",
                  "x = 1:5, NULL", "x = 1:5, NA",

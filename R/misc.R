@@ -154,7 +154,7 @@ read_cbtf_file <- function() {
 #'
 #' @noRd
 compute_summary_stats <- function(object, verbose = TRUE) {
-  results <- unlist(lapply(object$runs, function(x) x$res))
+  results <- object$runs$res
   success <- sum(results %in% c("FAIL", "WARN")) == 0
   if (verbose) {
     use.utf8 <- cli::is_utf8_output()

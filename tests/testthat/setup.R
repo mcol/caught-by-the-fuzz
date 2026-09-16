@@ -11,21 +11,23 @@ SW <- function(expr) capture.output(suppressMessages(suppressWarnings(expr)))
 
 ## check that the `res` and `msg` fields match the expectation
 expect_fuzz_result <- function(res, exp_res, exp_msg) {
-  expect_equal(c(sapply(res$runs, function(x) x$res)),
+  expect_equal(res$runs$res,
                exp_res)
-  expect_equal(c(sapply(res$runs, function(x) x$msg)),
+  expect_equal(res$runs$msg,
                exp_msg)
 }
 
 ## check that the `what` attribute matches the expectation
 expect_what <- function(res, exp) {
-  expect_equal(sapply(res$runs, function(x) attr(x, "what")),
+  inputs <- split(res$runs$what, res$runs$idx)
+  expect_equal(unname(vapply(inputs, `[[`, character(1), 1L)),
                exp)
 }
 
 ## check that the function is skipped for the correct reason
 expect_skip_reason <- function(res, reason) {
-  expect_equal(paste(res$runs[[1]]$res, res$runs[[1]]$msg),
+  run <- res$runs
+  expect_equal(paste(run$res[run$idx == 1], run$msg[run$idx == 1]),
                paste("SKIP", reason))
 }
 
@@ -35,7 +37,7 @@ expect_pass_message <- function(res, msg = "") {
                  "You didn't get caught by the fuzz!")
   expect_output(print(res),
                 "FAIL 0 | WARN 0 | SKIP 0", fixed = TRUE)
-  expect_equal(res$runs[[length(res$runs)]]$msg, msg)
+  expect_equal(res$runs$msg[nrow(res$runs)], msg)
 }
 
 ## check that fuzzing found errors

@@ -142,15 +142,11 @@ setup_queue <- function(funs, what, timeout,
 
   ## Collect the final results
   collect_results <- function() {
-    res <- do.call(rbind, results)
-
-    ## group the results by input
-    lapply(seq_along(what), function(idx) {
-      sub <- res[(idx - 1) * length(funs) + seq_along(funs), ]
-      rownames(sub) <- NULL
-      attr(sub, "what") <- char[[idx]]
-      sub
-    })
+    n.funs <- length(funs)
+    cbind(idx = rep(seq_along(what), each = n.funs),
+          do.call(rbind, results),
+          fun = rep(funs, length(what)),
+          what = rep(char, each = n.funs))
   }
 
   environment()
