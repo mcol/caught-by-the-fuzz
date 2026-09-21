@@ -219,6 +219,18 @@ test_that("check object returned", {
   expect_fuzz_result(res,
                      "OK", "")
 
+  ## check that we don't pollute the working directory
+  SW({
+  assign(".local_fun.", envir = .GlobalEnv,
+         function(arg) {
+           write.csv(data.frame(x = arg), "sandbox.csv")
+           arg
+         })
+  res <- fuzz(".local_fun.", list(1))
+  })
+  expect_fuzz_result(res, "OK", "")
+  expect_false(file.exists("sandbox.csv"))
+
   ## test with the default inputs
   SW({
   res <- fuzz("list")

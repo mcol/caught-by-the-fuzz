@@ -15,6 +15,9 @@
   versions of the package are not compatible with this version.
 - Add the `subset()` method to filter the results of a fuzz run by message or
   function name (#16).
+- Run the fuzz tests in a temporary directory, so that the current working
+  directory is not polluted by potential function side effects (#26; thanks to
+  an anonymous R Journal referee for reporting).
 
 ## Updates
 

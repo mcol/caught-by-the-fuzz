@@ -226,13 +226,12 @@ some applications. If desired, the maximum running time of a job (in
 seconds) can be controlled via the \code{timeout} argument of \code{fuzz()}.
 }
 
-\subsection{Side effects}{
+\subsection{Sandboxing}{
 
 Running the fuzzer can have the same side effects as the functions being
-called (writing files, opening plot devices, makin network calls, and so
-on). Although functions are run in separate processes, those processes may
-still create files or other artefacts in the working directory, so it may
-be useful to switch to a temporary directory before calling \code{fuzz()}.
+called (writing files, opening plot devices, making network calls, and so
+on). To prevent those side effects from polluting the current working
+directory, tests are run within a temporary directory.
 }
 }
 \examples{

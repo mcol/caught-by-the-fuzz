@@ -184,13 +184,12 @@ get_exported_functions <- function(package, ignore_names = "",
 #' some applications. If desired, the maximum running time of a job (in
 #' seconds) can be controlled via the `timeout` argument of `fuzz()`.
 #'
-#' ## Side effects
+#' ## Sandboxing
 #'
 #' Running the fuzzer can have the same side effects as the functions being
-#' called (writing files, opening plot devices, makin network calls, and so
-#' on). Although functions are run in separate processes, those processes may
-#' still create files or other artefacts in the working directory, so it may
-#' be useful to switch to a temporary directory before calling `fuzz()`.
+#' called (writing files, opening plot devices, making network calls, and so
+#' on). To prevent those side effects from polluting the current working
+#' directory, tests are run within a temporary directory.
 #'
 #' @param funs A character vector of function names to test. If the vector has
 #'        a `"package"` attribute and no `package` argument is given, functions
@@ -332,6 +331,16 @@ fuzz <- function(funs, what = test_inputs(), args = NULL,
     on.exit(mirai::daemons(0L), add = TRUE)
     mirai::daemons(n = daemons)
   }
+
+  ## run the tasks in a temporary directory
+  sandbox <- tempfile("cbtf-sandbox")
+  dir.create(sandbox, showWarnings = FALSE)
+  mirai::everywhere({}, sandbox = sandbox, old.dir = getwd())
+  mirai::everywhere(setwd(sandbox))
+  on.exit({
+    mirai::everywhere(setwd(old.dir))
+    unlink(sandbox, recursive = TRUE, force = TRUE)
+  }, add = TRUE)
 
   ## preserve the original argument names, as names(args) will be overwritten
   ## by get_element_names() with deparsed display labels

@@ -402,15 +402,6 @@ fuzz(funs, what = list(letters), listify_what = TRUE)
     ## 
     ##  [ FAIL 2 | WARN 0 | SKIP 0 | OK 2 ]
 
-### Side effects
-
-Running the fuzzer can have the same side effects as the functions being
-called (writing files, opening plot devices, makin network calls, and so
-on). Although functions are run in separate processes, those processes
-may still create files or other artefacts in the working directory, so
-it may be useful to switch to a temporary directory before calling
-`fuzz()`.
-
 ## Funding
 
 Development of `CBTF` is partially supported through the DFG programme
