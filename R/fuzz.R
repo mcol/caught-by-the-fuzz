@@ -332,16 +332,6 @@ fuzz <- function(funs, what = test_inputs(), args = NULL,
     mirai::daemons(n = daemons)
   }
 
-  ## run the tasks in a temporary directory
-  sandbox <- tempfile("cbtf-sandbox")
-  dir.create(sandbox, showWarnings = FALSE)
-  mirai::everywhere({}, sandbox = sandbox, old.dir = getwd())
-  mirai::everywhere(setwd(sandbox))
-  on.exit({
-    mirai::everywhere(setwd(old.dir))
-    unlink(sandbox, recursive = TRUE, force = TRUE)
-  }, add = TRUE)
-
   ## preserve the original argument names, as names(args) will be overwritten
   ## by get_element_names() with deparsed display labels
   keys <- names(args)

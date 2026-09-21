@@ -28,6 +28,9 @@ setup_queue <- function(funs, what, timeout,
   message <- ""
   char <- names(what)
 
+  ## silence note raised by R CMD check
+  old.dir <- NULL
+
   ## fuzzing engine
   fuzzer <- quote({
     fun <- check_fuzzable(name, package, ignore_deprecated = FALSE, length(what))
@@ -58,6 +61,10 @@ setup_queue <- function(funs, what, timeout,
         })
   })
 
+  ## create a temporary directory
+  sandbox <- tempfile("cbtf-sandbox")
+  dir.create(sandbox, showWarnings = FALSE)
+
   ## export common data to the daemons
   ## for performance reasons, we pass only the functions we need
   env <- sapply(funs, function(x) .GlobalEnv[[x]])
@@ -67,12 +74,22 @@ setup_queue <- function(funs, what, timeout,
                 ignore_patterns = ignore_patterns,
                 ignore_warnings = ignore_warnings,
                 check_fuzzable = check_fuzzable,
+                sandbox = sandbox,
+                old.dir = getwd(),
                 option = isTRUE(getOption("CBTF.whitelist.function.names")),
                 fuzzer = fuzzer), envir = env)
   mirai::everywhere({}, env)
 
+  ## move to the temporary directory
+  mirai::everywhere(setwd(sandbox))
+
   ## Run tasks and collect the results
   process <- function() {
+    on.exit({
+      mirai::everywhere(setwd(old.dir))
+      unlink(sandbox, recursive = TRUE, force = TRUE)
+    }, add = TRUE)
+
     cli::cli_progress_bar(format = paste(
                               "{cli::pb_spin} Test input: {cli::pb_bar}|",
                               "{.timestamp {cli::pb_current}/{cli::pb_total}}",
