@@ -235,7 +235,7 @@ test_that("check object returned", {
   SW({
   mirai::daemons(0L)
   res <- fuzz(".local_fun.", list(1), daemons = 2L)
-  mirai::daemons(2L)
+  start_local_daemons()
   })
   expect_fuzz_result(res, "OK", "")
   expect_false(file.exists("sandbox.csv"))
