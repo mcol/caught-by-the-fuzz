@@ -18,7 +18,8 @@ The core functionality of the package is in \link{fuzz}, which calls each
 provided function with a certain input and records the output produced.
 If an error or a warning is generated, this is captured and reported to the
 user, unless it matches a pattern of whitelisted messages. The objects
-returned by \link{fuzz} can be inspected with \link{summary.cbtf} and \link{print.cbtf}.
+returned by \link{fuzz} can be inspected with \link{summary.cbtf} and \link{print.cbtf},
+and filtered with \link{subset.cbtf}.
 
 Whitelisting can also be done after a fuzz run has been completed via the
 \link{whitelist} function, so that only messages that need to be acted upon are

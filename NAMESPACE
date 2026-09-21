@@ -3,6 +3,7 @@
 S3method("[[",cbtf)
 S3method(length,cbtf)
 S3method(print,cbtf)
+S3method(subset,cbtf)
 S3method(summary,cbtf)
 export(fuzz)
 export(get_exported_functions)

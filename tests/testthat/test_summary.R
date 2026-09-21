@@ -51,6 +51,10 @@ test_that("print", {
   ## with failures and skips
   res <- fuzz(c("list", "median", "Sys.date"), list(NA), args = list(1:3, TRUE))
 
+  ## empty object
+  expect_message(print(subset(res, "no_matching_pattern")),
+                 "The object contains no results, probably because")
+
   expect_error(print(res, show = NA),
                "[print] 'show' should be of class character",
                fixed = TRUE)
@@ -60,6 +64,42 @@ test_that("print", {
   expect_snapshot(print(res, show = "none"))
   expect_snapshot(print(res, group = "function", show = "all"))
   })
+})
+
+test_that("subset", {
+  testthat::skip_on_cran()
+
+  SW({
+  res <- fuzz(c("list", "median"), list(letters, 1:3))
+
+  ## filter by message pattern
+  expect_output(subset(res, msg_patterns = "argument"),
+                "argument is not numeric or logical")
+
+  ## filter by function pattern
+  expect_output(subset(res, fun_patterns = "median"),
+                "argument is not numeric or logical")
+
+  ## combine both filters
+  expect_output(subset(res, msg_patterns = "argument", fun_patterns = "median"),
+                "argument is not numeric or logical")
+
+  ## group by function
+  expect_output(subset(res, msg_patterns = "argument",
+                       fun_patterns = "median", group = "function"),
+                "argument is not numeric or logical")
+  })
+
+  ## no matching messages
+  expect_silent(sub <- subset(res, msg_patterns = "xyz_no_match"))
+  expect_length(sub, 0)
+
+  expect_error(subset(res, msg_patterns = 123),
+               "[subset] 'msg_patterns' should be of class character",
+               fixed = TRUE)
+  expect_error(subset(res, fun_patterns = 123),
+               "[subset] 'fun_patterns' should be of class character",
+               fixed = TRUE)
 })
 
 test_that("[[", {

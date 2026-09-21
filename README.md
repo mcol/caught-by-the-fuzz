@@ -20,7 +20,8 @@ calls each provided function with a certain input and records the output
 produced. If an error or a warning is generated, this is captured and
 reported to the user, unless it matches a pattern of whitelisted
 messages, as specified in the `ignore_patterns` argument. The objects
-returned by `fuzz()` can be inspected with `summary()` and `print()`.
+returned by `fuzz()` can be inspected with `summary()` and `print()`,
+and filtered with `subset()`.
 
 Whitelisting can also be done after a fuzz run has been completed via
 the `whitelist()` function, so that only messages that need to be acted

@@ -102,6 +102,11 @@ print.cbtf <- function(x, show = c("fail", "warn"), group = "input", ...) {
   validate_class(group, "character", scalar = TRUE,
                  choices = c("input", "function"), from = "print")
   show <- tolower(show)
+  if (length(x) == 0) {
+    cli::cli_alert_warning(c("The object contains no results, probably because ",
+                             "a {.code subset()} pattern matched no elements"))
+    return(invisible())
+  }
   if ("none" %in% show) {
     cat(compute_summary_stats(x, verbose = FALSE), "\n")
     return(invisible())
@@ -134,6 +139,39 @@ print.cbtf <- function(x, show = c("fail", "warn"), group = "input", ...) {
     }
   }
   cat("\n", summary.stats, "\n")
+}
+
+#' Filter a `cbtf` object
+#'
+#' This filters the rows of the `$runs` data frame by applying a regular
+#' expression to the messages or to the function names, then prints the
+#' filtered result and returns it invisibly.
+#'
+#' @param x An object of class `cbtf`.
+#' @param msg_patterns Regular expression pattern to be applied to the `msg`
+#'        column. If `NULL` (default), all messages are reported.
+#' @param fun_patterns Regular expression pattern to be applied to the `fun`
+#'        column. If `NULL` (default), all functions are reported.
+#' @param ... Arguments passed to [print.cbtf].
+#'
+#' @return
+#' The filtered `cbtf` object is printed and returned invisibly.
+#'
+#' @export
+subset.cbtf <- function(x, msg_patterns = NULL, fun_patterns = NULL, ...) {
+  validate_class(x, "cbtf", from = "subset")
+  validate_class(msg_patterns, "character", null.ok = TRUE,
+                 remove_empty = TRUE, from = "subset")
+  validate_class(fun_patterns, "character", null.ok = TRUE,
+                 remove_empty = TRUE, from = "subset")
+
+  if (!is.null(msg_patterns))
+    x$runs <- x$runs[grepl(msg_patterns, x$runs$msg), ]
+  if (!is.null(fun_patterns))
+    x$runs <- x$runs[grepl(fun_patterns, x$runs$fun), ]
+  if (length(x) > 0)
+    print(x, ...)
+  invisible(x)
 }
 
 #' Extract the results for a specific test input
