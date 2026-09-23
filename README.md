@@ -191,7 +191,7 @@ warning condition should be ignored (whitelisting):
   of the patterns.
 - If a warning is thrown but `ignore_warnings = TRUE` is set.
 
-If `options(CBTF.whitelist.function.name = TRUE)` is set, the following
+If `options(CBTF.whitelist.function.names = TRUE)` is set, the following
 rule is also applied (this is not active by default as it may cause
 false negatives for very short or generic function names):
 

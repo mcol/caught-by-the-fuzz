@@ -150,8 +150,8 @@ get_exported_functions <- function(package, ignore_names = "",
 #'   result is whitelisted only if _all_ warnings match any of the patterns.
 #' * If a warning is thrown but `ignore_warnings = TRUE` is set.
 #'
-#' If `options(CBTF.whitelist.function.name = TRUE)` is set, the following rule
-#' is also applied:
+#' If `options(CBTF.whitelist.function.names = TRUE)` is set, the following
+#' rule is also applied:
 #' * If the name of the function appears in the error or warning message, as
 #'   it is considered that the condition has been handled by the developer.
 #'

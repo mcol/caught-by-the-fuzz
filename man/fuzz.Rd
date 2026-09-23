@@ -188,8 +188,8 @@ result is whitelisted only if \emph{all} warnings match any of the patterns.
 \item If a warning is thrown but \code{ignore_warnings = TRUE} is set.
 }
 
-If \code{options(CBTF.whitelist.function.name = TRUE)} is set, the following rule
-is also applied:
+If \code{options(CBTF.whitelist.function.names = TRUE)} is set, the following
+rule is also applied:
 \itemize{
 \item If the name of the function appears in the error or warning message, as
 it is considered that the condition has been handled by the developer.
