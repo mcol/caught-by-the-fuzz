@@ -75,17 +75,20 @@ setup_queue <- function(funs, what, timeout,
                 ignore_warnings = ignore_warnings,
                 check_fuzzable = check_fuzzable,
                 sandbox = sandbox,
-                old.dir = getwd(),
                 option = isTRUE(getOption("CBTF.whitelist.function.names")),
                 fuzzer = fuzzer), envir = env)
   mirai::everywhere({}, env)
 
-  ## move to the temporary directory
-  mirai::everywhere(setwd(sandbox))
+  ## record each daemon's original working directory, then move to the sandbox
+  mirai::everywhere({
+    old.dir <<- getwd()
+    setwd(sandbox)
+  })
 
   ## Run tasks and collect the results
   process <- function() {
     on.exit({
+      ## restore the original working directory and remove the sandbox
       mirai::everywhere(setwd(old.dir))
       unlink(sandbox, recursive = TRUE, force = TRUE)
     }, add = TRUE)
