@@ -5,45 +5,45 @@ test_that("input validation", {
   testthat::skip_on_cran()
 
   expect_error(fuzz(NA, NULL),
-               "'funs' should be of class character")
+               "`funs` should be of class <character>")
   expect_error(fuzz(NULL, NULL),
-               "'funs' should be of class character")
+               "`funs` should be of class <character>")
   expect_error(fuzz(what = NA),
-               "'funs' should be of class character")
+               "`funs` should be of class <character>")
   expect_error(fuzz(character(0), NULL),
-               "'funs' is an empty character")
+               "`funs` is an empty <character>")
   expect_error(fuzz("list", list()),
-               "'what' is an empty list")
+               "`what` is an empty <list>")
   expect_error(fuzz("median", args = c(NA, TRUE)),
-               "'args' should be of class list")
+               "`args` should be of class <list>")
   expect_error(fuzz("median", what = NULL, args = NULL),
-               "'what' and 'args' cannot be both NULL")
+               "`what` and `args` cannot be both NULL")
   expect_error(fuzz("list", package = letters),
-               "'package' should be a single character value")
+               "`package` should be a single <character> value")
   expect_error(fuzz("list", package = ""),
-               "'package' is an empty character")
+               "`package` is an empty <character>")
   expect_error(fuzz("list", listify_what = NULL),
-               "'listify_what' should be of class logical")
+               "`listify_what` should be of class <logical>")
   expect_error(fuzz("list", listify_what = c(TRUE, FALSE)),
-               "'listify_what' should be a single logical value")
+               "`listify_what` should be a single <logical> value")
   expect_error(fuzz("list", ignore_patterns = TRUE),
-               "'ignore_patterns' should be of class character")
+               "`ignore_patterns` should be of class <character>")
   expect_error(fuzz("list", list(NA), ignore_warnings = NA),
-               "'ignore_warnings' should be of class logical")
+               "`ignore_warnings` should be of class <logical>")
   expect_error(fuzz("list", list(NA), ignore_warnings = c(TRUE, FALSE)),
-               "'ignore_warnings' should be a single logical value")
+               "`ignore_warnings` should be a single <logical> value")
   expect_error(fuzz("list", list(NA), daemons = NA_integer_),
-               "'daemons' should be of class integer, numeric")
+               "`daemons` should be of class <integer/numeric>")
   expect_error(fuzz("list", list(NA), daemons = c(2, 3)),
-               "'daemons' should be a single numeric value")
+               "`daemons` should be a single <numeric> value")
   expect_error(fuzz("list", list(NA), daemons = 0),
-               "'daemons' should be at least 1")
+               "`daemons` should be at least 1")
   expect_error(fuzz("list", list(NA), timeout = NA_integer_),
-               "'timeout' should be of class numeric, integer")
+               "`timeout` should be of class <numeric/integer>")
   expect_error(fuzz("list", list(NA), timeout = c(2, 3)),
-               "'timeout' should be a single numeric value")
+               "`timeout` should be a single <numeric> value")
   expect_error(fuzz("list", list(NA), timeout = 0),
-               "'timeout' should be at least 0.5")
+               "`timeout` should be at least 0.5")
 })
 
 test_that("check skipped functions", {
@@ -284,6 +284,11 @@ test_that("check object returned", {
   })
   expect_fuzz_result(res,
                      rep("SKIP", 3), rep("Accepts only up to 2 arguments", 3))
+
+  ## errors
+  expect_snapshot(error = TRUE, fuzz())
+  expect_snapshot(error = TRUE, fuzz("mean", what = NULL, args = NULL))
+  expect_snapshot(error = TRUE, fuzz("mean", timeout = 0))
 })
 
 test_that("using a .cbtf file", {
@@ -343,12 +348,10 @@ test_that("self fuzz", {
   mirai::everywhere(mirai::daemons(1, dispatcher = FALSE))
 
   SW({
-  expect_output(expect_pass_message(fuzz("fuzz", list(list())),
-                                    "[fuzz] 'funs' should be of class character"),
-                "OK 1")
-  expect_output(expect_pass_message(fuzz("fuzz", list(NULL)),
-                                    "[fuzz] 'funs' should be of class character"),
-                "OK 1")
+  expect_output(expect_fail_message(fuzz("fuzz", list(list()))),
+                "FAIL 1")
+  expect_output(expect_fail_message(fuzz("fuzz", list(NULL))),
+                "FAIL 1")
 
   ## fuzz test other arguments by currying the function
   curry_fuzz_for <- function(argname) {
@@ -358,9 +361,9 @@ test_that("self fuzz", {
     assign(".local_fun.", envir = .GlobalEnv,
            curry_fuzz_for(argname))
     expect_pass_message(fuzz(".local_fun.",
-                             ignore_patterns = "\\[fuzz\\]"),
-                        sprintf("[fuzz] '%s' should be of class %s",
-                                argname, toString(argtype)))
+                             ignore_patterns = sprintf("`%s`", argname)),
+                        sprintf("`%s` should be of class <%s>",
+                                argname, paste(argtype, collapse = "/")))
   }
 
   test_self_fuzz("package", "character")
@@ -390,12 +393,11 @@ test_that("whitelist", {
   res <- fuzz("numToInts")
   })
   expect_error(whitelist(NA, NA),
-               "[whitelist] 'object' should be of class cbtf",
-               fixed = TRUE)
+               "`object` should be of class <cbtf>")
   expect_error(whitelist(res, NA),
-               "'patterns' should be of class character")
+               "`patterns` should be of class <character>")
   expect_error(whitelist(res, ""),
-               "'patterns' is an empty character")
+               "`patterns` is an empty <character>")
 
   ignore_patterns <- c("cannot be coerced to type",
                        "imaginary parts discarded in coercion",
@@ -413,28 +415,31 @@ test_that("whitelist", {
   })
   expect_skip_reason(whitelist(res, "Object not found"),
                      "Object not found in the global namespace")
+
+  ## errors
+  expect_snapshot(error = TRUE, whitelist(res, NA))
+  expect_snapshot(error = TRUE, whitelist(res, character(0)))
 })
 
 test_that("get_exported_functions", {
   testthat::skip_on_cran()
 
   expect_error(get_exported_functions(),
-               "[get_exported_functions] 'package' should be of class character",
-               fixed = TRUE)
+               "`package` should be of class <character>")
   expect_error(get_exported_functions(NA),
-               "'package' should be of class character")
+               "`package` should be of class <character>")
   expect_error(get_exported_functions(character(0)),
-               "'package' is an empty character")
+               "`package` is an empty <character>")
   expect_error(get_exported_functions("like this"),
                "there is no package called 'like this'")
   expect_error(get_exported_functions("CBTF", NA),
-               "'ignore_names' should be of class character")
+               "`ignore_names` should be of class <character>")
   expect_error(get_exported_functions("CBTF", character(0)),
-               "'ignore_names' is an empty character")
+               "`ignore_names` is an empty <character>")
   expect_error(get_exported_functions("CBTF", "ignore", NA),
-               "'ignore_deprecated' should be of class logical")
+               "`ignore_deprecated` should be of class <logical>")
   expect_error(get_exported_functions("CBTF", "ignore", c(TRUE, FALSE)),
-               "'ignore_deprecated' should be a single logical value")
+               "`ignore_deprecated` should be a single <logical> value")
 
   funs <- get_exported_functions("CBTF")
   expect_type(funs,
@@ -453,14 +458,11 @@ test_that("get_exported_functions", {
 
   SW({
   expect_fail_message(fuzz("get_exported_functions"))
-  withr::with_options(list(CBTF.whitelist.function.names = TRUE),
-                      expect_pass_message(fuzz("get_exported_functions"),
-                                          "[get_exported_functions] 'package' should be of class character"))
   assign(".local_fun.", envir = .GlobalEnv,
          function(arg) get_exported_functions(package = arg))
   expect_pass_message(fuzz(".local_fun.",
-                           ignore_patterns = "\\[get_exported_functions\\]"),
-                      "[get_exported_functions] 'package' should be of class character")
+                           ignore_patterns = "package"),
+                      "`package` should be of class <character>")
   })
 
   ## tested with mime 0.13
@@ -468,6 +470,10 @@ test_that("get_exported_functions", {
   funs <- get_exported_functions("mime")
   expect_equal(as.character(funs),
                c("guess_type", "parse_multipart"))
+
+  ## errors
+  expect_snapshot(error = TRUE, get_exported_functions("nonexistent"))
+  expect_snapshot(error = TRUE, get_exported_functions("CBTF", character(0)))
 })
 
 test_that("regression test", {

@@ -53,7 +53,7 @@
 #'
 #' @export
 summary.cbtf <- function(object, tabulate = TRUE, ...) {
-  validate_class(tabulate, "logical", scalar = TRUE, from = "summary")
+  validate_class(tabulate, "logical", scalar = TRUE)
   df <- object$runs
   cli::cli_text("Fuzzed {length(object$funs)} function{?s} ",
                 "on {length(unique(df$idx))} input{?s}: ")
@@ -98,9 +98,9 @@ summary.cbtf <- function(object, tabulate = TRUE, ...) {
 #'
 #' @export
 print.cbtf <- function(x, show = c("fail", "warn"), group = "input", ...) {
-  validate_class(show, "character", from = "print")
+  validate_class(show, "character")
   validate_class(group, "character", scalar = TRUE,
-                 choices = c("input", "function"), from = "print")
+                 choices = c("input", "function"))
   show <- tolower(show)
   if (length(x) == 0) {
     cli::cli_alert_warning(c("The object contains no results, probably because ",
@@ -159,11 +159,11 @@ print.cbtf <- function(x, show = c("fail", "warn"), group = "input", ...) {
 #'
 #' @export
 subset.cbtf <- function(x, msg_patterns = NULL, fun_patterns = NULL, ...) {
-  validate_class(x, "cbtf", from = "subset")
+  validate_class(x, "cbtf")
   validate_class(msg_patterns, "character", null.ok = TRUE,
-                 remove_empty = TRUE, from = "subset")
+                 remove_empty = TRUE)
   validate_class(fun_patterns, "character", null.ok = TRUE,
-                 remove_empty = TRUE, from = "subset")
+                 remove_empty = TRUE)
 
   if (!is.null(msg_patterns))
     x$runs <- x$runs[grepl(msg_patterns, x$runs$msg), ]

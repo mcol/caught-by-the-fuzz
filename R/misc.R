@@ -23,7 +23,6 @@
 #' @param class A character string for the candidate class or type.
 #' @param null.ok Whether a `NULL` value should be considered valid (`FALSE`
 #'        by default).
-#' @param from Name of the caller function.
 #' @param scalar Whether to consider the argument valid only if it's a scalar
 #'        value (`FALSE` by default).
 #' @param min Minimum value considered, or `NULL`.
@@ -35,37 +34,43 @@
 #' Nothing in case of success, otherwise an error is thrown.
 #'
 #' @noRd
-validate_class <- function(arg, class, null.ok = FALSE, from = "fuzz",
+validate_class <- function(arg, class, null.ok = FALSE,
                            scalar = FALSE, min = NULL, choices = NULL,
                            remove_empty = FALSE) {
   !missing(arg) && is.null(arg) && null.ok && return()
-  name <- sprintf("'%s'", all.vars(match.call())[1])
-  if (missing(arg) || sum(inherits(arg, class)) == 0L ||
-      (!is.list(arg) && length(arg) == 1 && (is.na(arg) || is.infinite(arg)))) {
-    fuzz_error(name, paste0("should be of class ", toString(class),
-                            if (null.ok) " or NULL"),
-               from = from)
-  }
-  scalar && length(arg) > 1 &&
-    fuzz_error(name, "should be a single", class(arg), "value", from = from)
-  if (!is.null(min) && (length(arg) == 0 || arg < min))
-    fuzz_error(name, "should be at least", min, from = from)
-  !is.null(choices) && !arg %in% choices &&
-    fuzz_error(name, "should be one of", toString(sQuote(choices)), from = from)
-  if (remove_empty)
-    arg <- arg[nchar(arg) > 0]
-  length(arg) == 0 &&
-    fuzz_error(name, "is an empty", class(arg), from = from)
+  call <- sys.call(-1)
+  name <- all.vars(match.call())[1]
+  ornull <- if (null.ok) " or NULL" else ""
+
+  msg <-
+    if (missing(arg) || sum(inherits(arg, class)) == 0L ||
+        (!is.list(arg) && length(arg) == 1 && (is.na(arg) || is.infinite(arg)))) {
+      "{.arg {name}} should be of class {.cls {class}}{ornull}"
+    } else if (scalar && length(arg) > 1) {
+      "{.arg {name}} should be a single {.cls {class(arg)}} value"
+    } else if (!is.null(min) && (length(arg) == 0 || arg < min)) {
+      "{.arg {name}} should be at least {.val {min}}"
+    } else if (!is.null(choices) && !all(arg %in% choices)) {
+      "{.arg {name}} should be one of {.or {.val {choices}}}{ornull}"
+    } else {
+      if (remove_empty)
+        arg <- arg[nchar(arg) > 0]
+      if (length(arg) == 0)
+        "{.arg {name}} is an empty {.cls {class(arg)}}"
+    }
+
+  !is.null(msg) && fuzz_error(msg, call = call)
 }
 
 #' @title Stop with an error message
 #'
-#' @param ... Strings that are joined together in the error message.
-#' @param from Name of the caller function.
+#' @param msg Error message formatted using cli inline markup.
+#' @param call The call to which the error is attributed.
 #'
 #' @noRd
-fuzz_error <- function(..., from = "fuzz") {
-  stop(do.call(paste, c(sprintf("[%s]", from), list(...))), call. = FALSE)
+fuzz_error <- function(msg, call = sys.call(-1)) {
+  cli::cli_abort(msg, .envir = parent.frame(),
+                 trace = data.frame(), call = call)
 }
 
 #' @title Check that a function can be fuzzed
@@ -291,8 +296,8 @@ modify_args <- function(what, args, keys = NULL) {
   if (!is.null(keys)) {
     keys <- gsub("^\\.\\.", "", keys)
     if (length(idx.fixed) == length(args) && !is.null(what)) {
-      cli::cli_alert_warning(c("'args' contains only fixed elements, ",
-                               "'what' will be ignored"))
+      cli::cli_alert_warning(c("{.arg args} contains only fixed elements, ",
+                               "{.arg what} will be ignored"))
       what <- NULL
     }
   }

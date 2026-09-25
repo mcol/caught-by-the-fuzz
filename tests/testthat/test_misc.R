@@ -3,46 +3,53 @@ test_that("validate_class", {
 
   arg <- data.frame()
   expect_error(validate_class(arg, "character"),
-               "[fuzz] 'arg' should be of class character",
-               fixed = TRUE)
+               "`arg` should be of class <character>")
   expect_error(validate_class(arg, "character", null.ok = TRUE),
-               "[fuzz] 'arg' should be of class character or NULL",
-               fixed = TRUE)
-  expect_error(validate_class(arg, "character", from = "function_name"),
-               "[function_name] 'arg' should be of class character",
-               fixed = TRUE)
+               "`arg` should be of class <character> or NULL")
   expect_error(validate_class(arg, "data.frame"),
-               "'arg' is an empty data.frame")
+               "`arg` is an empty <data.frame>")
   expect_error(validate_class(iris, "data.frame", scalar = TRUE),
-               "'iris' should be a single data.frame value")
+               "`iris` should be a single <data.frame> value")
   expect_error(validate_class(letters, "character", scalar = TRUE),
-               "'letters' should be a single character value")
+               "`letters` should be a single <character> value")
   expect_error(validate_class(letters, c("numeric", "character"), scalar = TRUE),
-               "^\\[fuzz\\] 'letters' should be a single character value$")
+               "`letters` should be a single <character> value$")
+  expect_error(validate_class(arg, c("numeric", "character")),
+               "`arg` should be of class <numeric/character>")
   arg <- "Inf"
   expect_error(validate_class(arg, "numeric"),
-               "'arg' should be of class numeric")
+               "`arg` should be of class <numeric>")
   arg <- NULL
   expect_error(validate_class(arg, "character"),
-               "'arg' should be of class character")
+               "`arg` should be of class <character>")
   arg <- ""
   expect_error(validate_class(arg, "character", remove_empty = TRUE),
-               "'arg' is an empty character")
+               "`arg` is an empty <character>")
   arg <- list()
   expect_error(validate_class(arg, "list", remove_empty = TRUE),
-               "'arg' is an empty list")
+               "`arg` is an empty <list>")
   arg <- list("")
   expect_error(validate_class(arg, "list", remove_empty = TRUE),
-               "'arg' is an empty list")
+               "`arg` is an empty <list>")
   arg <- 1
   expect_error(validate_class(arg, "numeric", min = 2),
-               "'arg' should be at least 2")
+               "`arg` should be at least 2")
   arg <- numeric()
   expect_error(validate_class(arg, "numeric", min = 2),
-               "'arg' should be at least 2")
+               "`arg` should be at least 2")
   arg <- "error"
-  expect_error(validate_class(arg, "character", choices = c("c1", "c2"), from = "ff"),
-               "[ff] 'arg' should be one of 'c1', 'c2'", fixed = TRUE)
+  expect_error(validate_class(arg, "character", choices = c("c1", "c2")),
+               '`arg` should be one of "c1" or "c2"')
+  expect_error(validate_class(arg, "character", choices = c("c1", "c2"), null.ok = TRUE),
+               '`arg` should be one of "c1" or "c2" or NULL')
+  expect_error(validate_class(arg, "character", choices = "c1", null.ok = TRUE),
+               '`arg` should be one of "c1" or NULL')
+
+  ## braces in the values are not interpreted as cli markup
+  expect_error(validate_class(1, "char{x}acter"),
+               "should be of class <char\\{x\\}acter>")
+  expect_error(validate_class("z", "character", choices = "{fun}"),
+               'should be one of "\\{fun\\}"')
 
   expect_silent(validate_class(iris, "data.frame"))
   expect_silent(validate_class(NULL, "data.frame", null.ok = TRUE))
@@ -56,10 +63,14 @@ test_that("validate_class", {
 test_that("fuzz_error", {
   testthat::skip_on_cran()
 
-  expect_error(fuzz_error("message"),
-               "[fuzz] message", fixed = TRUE)
-  expect_error(fuzz_error("part 1", "part 2", from = "function_name"),
-               "[function_name] part 1 part 2", fixed = TRUE)
+  msg <- "message"
+  expect_error(fuzz_error("{msg}"),
+               "message")
+
+  ## braces in the values are not interpreted as cli markup
+  msg <- "invalid {fun} value"
+  expect_error(fuzz_error("{msg}"),
+               "invalid \\{fun\\} value")
 })
 
 test_that("check_fuzzable", {
@@ -292,11 +303,11 @@ test_that("modify_args", {
                          names = c("NA, x = 2", "NULL, x = 2")))
   expect_message(res <- modify_args(what = namify(NA, NULL), args = namify(1, 2),
                                     keys = c("..x", "..y")),
-                 "'args' contains only fixed elements")
+                 "`args` contains only fixed elements")
   expect_equal(res,
                structure(list(list(x = 1, y = 2)),
                          names = c("x = 1, y = 2")))
   expect_no_message(modify_args(what = NULL, args = namify(1, 2),
                                 keys = c("..x", "..y")),
-                    message = "'args' contains only fixed elements")
+                    message = "`args` contains only fixed elements")
 })

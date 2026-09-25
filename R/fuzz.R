@@ -46,13 +46,13 @@
 #' @export
 get_exported_functions <- function(package, ignore_names = "",
                                    ignore_deprecated = TRUE) {
-  from <- "get_exported_functions"
-  validate_class(package, "character", from = from,
+  validate_class(package, "character",
                  scalar = TRUE, remove_empty = TRUE)
-  validate_class(ignore_names, "character", from = from)
-  validate_class(ignore_deprecated, "logical", from = from, scalar = TRUE)
+  validate_class(ignore_names, "character")
+  validate_class(ignore_deprecated, "logical", scalar = TRUE)
   funs <- tryCatch(sort(getNamespaceExports(package)),
-                   error = function(e) fuzz_error(e$message, from = from))
+                   error = function(e) e)
+  inherits(funs, "condition") && fuzz_error(conditionMessage(funs))
 
   ## keep only fuzzable functions
   keep.idx <- sapply(funs, function(x) {
@@ -309,8 +309,8 @@ fuzz <- function(funs, what = test_inputs(), args = NULL,
   validate_class(funs, "character", remove_empty = TRUE)
   validate_class(what, "list", null.ok = TRUE)
   validate_class(args, "list", null.ok = TRUE)
-  if (is.null(what) && is.null(args))
-    fuzz_error("'what' and 'args' cannot be both NULL")
+  is.null(what) && is.null(args) &&
+    fuzz_error("{.arg what} and {.arg args} cannot be both NULL")
   if (is.null(package)) {
     package <- attr(funs, "package")
   } else {
@@ -423,9 +423,8 @@ fuzz <- function(funs, what = test_inputs(), args = NULL,
 #'
 #' @export
 whitelist <- function(object, patterns) {
-  from <- "whitelist"
-  validate_class(object, "cbtf", from = from)
-  validate_class(patterns, "character", from = from, remove_empty = TRUE)
+  validate_class(object, "cbtf")
+  validate_class(patterns, "character", remove_empty = TRUE)
 
   ## join all regular expression patterns
   joined_patterns <- paste0(patterns, collapse = "|")

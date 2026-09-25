@@ -15,13 +15,14 @@ test_that("summary", {
                   "table")
 
   expect_error(summary(res, tabulate = NA),
-               "[summary] 'tabulate' should be of class logical",
-               fixed = TRUE)
+               "`tabulate` should be of class <logical>")
   expect_error(summary(res, tabulate = c(TRUE, FALSE)),
-               "[summary] 'tabulate' should be a single logical value",
-               fixed = TRUE)
+               "`tabulate` should be a single <logical> value")
   expect_snapshot(summary(res))
   expect_snapshot(summary(res, tabulate = FALSE))
+
+  ## errors
+  expect_snapshot(error = TRUE, summary(res, tabulate = "abc"))
 
   ## issue 24
   SW({
@@ -56,14 +57,19 @@ test_that("print", {
                  "The object contains no results, probably because")
 
   expect_error(print(res, show = NA),
-               "[print] 'show' should be of class character",
-               fixed = TRUE)
+               "`show` should be of class <character>")
   expect_snapshot(print(res))
   expect_snapshot(print(res, show = "all"))
   expect_snapshot(print(res, show = "skip"))
   expect_snapshot(print(res, show = "none"))
   expect_snapshot(print(res, group = "function", show = "all"))
   })
+
+  ## errors
+  expect_snapshot(error = TRUE, print(res, show = NA))
+  expect_snapshot(error = TRUE, print(res, group = 1))
+  expect_snapshot(error = TRUE, print(res, group = c("a", "b")))
+  expect_snapshot(error = TRUE, print(res, group = "bad"))
 })
 
 test_that("subset", {
@@ -95,11 +101,13 @@ test_that("subset", {
   expect_length(sub, 0)
 
   expect_error(subset(res, msg_patterns = 123),
-               "[subset] 'msg_patterns' should be of class character",
-               fixed = TRUE)
+               "`msg_patterns` should be of class <character>")
   expect_error(subset(res, fun_patterns = 123),
-               "[subset] 'fun_patterns' should be of class character",
-               fixed = TRUE)
+               "`fun_patterns` should be of class <character>")
+
+  ## errors
+  expect_snapshot(error = TRUE, subset(res, msg_patterns = 123))
+  expect_snapshot(error = TRUE, subset(res, fun_patterns = 123))
 })
 
 test_that("[[", {
@@ -114,5 +122,6 @@ test_that("[[", {
   expect_null(res[[0]])
   expect_null(res[[3]])
   expect_null(res[[10]])
+  expect_null(res[["error"]])
   })
 })

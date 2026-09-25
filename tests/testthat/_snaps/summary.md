@@ -21,6 +21,14 @@
       
       [ FAIL 0 | WARN 0 | SKIP 0 | OK 2 ]
 
+---
+
+    Code
+      summary(res, tabulate = "abc")
+    Condition
+      Error in `summary.cbtf()`:
+      ! `tabulate` should be of class <logical>
+
 # print
 
     Code
@@ -130,4 +138,52 @@
        SKIP  Object not found in the global namespace | 1:3, NA
       
        [ FAIL 1 | WARN 0 | SKIP 2 | OK 3 ] 
+
+---
+
+    Code
+      print(res, show = NA)
+    Condition
+      Error in `print.cbtf()`:
+      ! `show` should be of class <character>
+
+---
+
+    Code
+      print(res, group = 1)
+    Condition
+      Error in `print.cbtf()`:
+      ! `group` should be of class <character>
+
+---
+
+    Code
+      print(res, group = c("a", "b"))
+    Condition
+      Error in `print.cbtf()`:
+      ! `group` should be a single <character> value
+
+---
+
+    Code
+      print(res, group = "bad")
+    Condition
+      Error in `print.cbtf()`:
+      ! `group` should be one of "input" or "function"
+
+# subset
+
+    Code
+      subset(res, msg_patterns = 123)
+    Condition
+      Error in `subset.cbtf()`:
+      ! `msg_patterns` should be of class <character> or NULL
+
+---
+
+    Code
+      subset(res, fun_patterns = 123)
+    Condition
+      Error in `subset.cbtf()`:
+      ! `fun_patterns` should be of class <character> or NULL
 

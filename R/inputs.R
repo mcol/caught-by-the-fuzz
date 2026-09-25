@@ -52,9 +52,7 @@ test_inputs <- function(use = "all", skip = "") {
     use <- valid
   use <- setdiff(use[use %in% valid], skip)
   length(use) == 0 &&
-    fuzz_error("No valid tests selected, valid names are:",
-               toString(sQuote(c("all", valid), q = FALSE)),
-               from = "test_inputs")
+    fuzz_error("No valid tests selected, valid names are: {.or {.val {c('all', valid)}}}")
   unlist(lapply(use, function(x) eval(call(inputs[x]))), recursive = FALSE)
 }
 
