@@ -48,7 +48,8 @@ validate_class <- function(arg, class, null.ok = FALSE,
       "{.arg {name}} should be of class {.cls {class}}{ornull}"
     } else if (scalar && length(arg) > 1) {
       "{.arg {name}} should be a single {.cls {class(arg)}} value"
-    } else if (!is.null(min) && (length(arg) == 0 || arg < min)) {
+    } else if (!is.null(min) &&
+               (length(arg) == 0 || anyNA(arg) || any(arg < min))) {
       "{.arg {name}} should be at least {.val {min}}"
     } else if (!is.null(choices) && !all(arg %in% choices)) {
       "{.arg {name}} should be one of {.or {.val {choices}}}{ornull}"
