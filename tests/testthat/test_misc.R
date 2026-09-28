@@ -137,6 +137,12 @@ test_that("read_cbtf_file", {
   expect_equal(read_cbtf_file(),
                c("is not numeric or logical", "another pattern"))
 
+  ## invalid UTF-8line
+  writeBin(charToRaw("is not numeric or logical\ncaf\xe9\n"), ".cbtf")
+  expect_warning(expect_equal(read_cbtf_file(),
+                              "is not numeric or logical"),
+                 "Ignored 1 invalid UTF-8 line in '.cbtf' file")
+
   ## unreadable file
   skip_on_os("windows")
   Sys.chmod(".cbtf", mode = "0000")

@@ -316,6 +316,17 @@ test_that("using a .cbtf file", {
   })
   expect_equal(res$ignore_patterns,
                c("pattern", "is not numeric or logical", "another pattern"))
+
+  ## file containing invalid characters
+  writeBin(charToRaw("is not numeric or logical\ncaf\xe9\n"), ".cbtf")
+  SW({
+  expect_warning(res <- fuzz("median", list(letters)),
+                 "Ignored 1 invalid UTF-8 line in '.cbtf' file")
+  })
+  expect_equal(res$ignore_patterns,
+               "is not numeric or logical")
+  expect_fuzz_result(res,
+                     "OK", "argument is not numeric or logical: returning NA")
 })
 
 test_that("check classes returned", {

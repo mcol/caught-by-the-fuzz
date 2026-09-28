@@ -140,8 +140,15 @@ check_fuzzable <- function(fun, pkg, ignore_deprecated = TRUE, num_args = 1L) {
 #' @noRd
 read_cbtf_file <- function() {
   path <- ".cbtf"
-  lines <- tryCatch(trimws(readLines(path, warn = FALSE)),
+  lines <- tryCatch(readLines(path, warn = FALSE),
                     warning = function(w) character(0))
+  invalid <- !validUTF8(lines)
+  if (any(invalid)) {
+    cli::cli_warn(paste("Ignored {sum(invalid)} invalid UTF-8 line{?s}",
+                        "in {.file {path}} file"))
+    lines <- lines[!invalid]
+  }
+  lines <- trimws(lines)
   lines[nzchar(lines) & !grepl("^#", lines)]
 }
 
