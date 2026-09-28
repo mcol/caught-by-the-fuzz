@@ -55,9 +55,10 @@ get_exported_functions <- function(package, ignore_names = "",
   inherits(funs, "condition") && fuzz_error(conditionMessage(funs))
 
   ## keep only fuzzable functions
-  keep.idx <- sapply(funs, function(x) {
+  keep.idx <- vapply(funs, function(x) {
     is.function(check_fuzzable(x, package, ignore_deprecated))
-  })
+  }, logical(1))
+  sum(keep.idx) || fuzz_error("Package {.pkg {package}} contains no fuzzable functions")
   funs <- setdiff(funs[keep.idx], ignore_names)
   attr(funs, "package") <- package
   funs

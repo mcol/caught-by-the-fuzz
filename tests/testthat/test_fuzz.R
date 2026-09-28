@@ -432,6 +432,8 @@ test_that("get_exported_functions", {
                "`package` is an empty <character>")
   expect_error(get_exported_functions("like this"),
                "there is no package called 'like this'")
+  expect_error(get_exported_functions("datasets"),
+               "Package datasets contains no fuzzable functions")
   expect_error(get_exported_functions("CBTF", NA),
                "`ignore_names` should be of class <character>")
   expect_error(get_exported_functions("CBTF", character(0)),

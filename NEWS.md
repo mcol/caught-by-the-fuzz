@@ -36,6 +36,8 @@
 - Make `[[` return `NULL` instead of `FALSE` if the index is not valid.
 - Format errors using `cli::cli_abort()` and indicate when `NULL` is a valid
   argument.
+- Fix crash in `get_exported_functions()` if a package contains no fuzzable
+  functions.
 
 # CBTF 0.7.0 (2026-07-03)
 
