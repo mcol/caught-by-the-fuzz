@@ -319,6 +319,7 @@ fuzz <- function(funs, what = test_inputs(), args = NULL,
   }
   validate_class(listify_what, "logical", scalar = TRUE)
   validate_class(ignore_patterns, "character")
+  validate_regexp(ignore_patterns)
   validate_class(ignore_warnings, "logical", scalar = TRUE)
   validate_class(daemons, c("integer", "numeric"), scalar = TRUE, min = 1)
   validate_class(timeout, c("numeric", "integer"), scalar = TRUE, min = 0.5)
@@ -426,6 +427,7 @@ fuzz <- function(funs, what = test_inputs(), args = NULL,
 whitelist <- function(object, patterns) {
   validate_class(object, "cbtf")
   validate_class(patterns, "character", remove_empty = TRUE)
+  validate_regexp(patterns)
 
   ## join all regular expression patterns
   joined_patterns <- paste0(patterns, collapse = "|")

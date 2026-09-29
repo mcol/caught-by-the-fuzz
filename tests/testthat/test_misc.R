@@ -140,11 +140,15 @@ test_that("read_cbtf_file", {
                "# another comment",
                "another pattern"),
              con = ".cbtf")
-
   expect_equal(read_cbtf_file(),
                c("is not numeric or logical", "another pattern"))
 
-  ## invalid UTF-8line
+  ## invalid regular expression
+  writeLines("(", ".cbtf")
+  expect_equal(read_cbtf_file(),
+               character(0))
+
+  ## invalid UTF-8 line
   writeBin(charToRaw("is not numeric or logical\ncaf\xe9\n"), ".cbtf")
   expect_warning(expect_equal(read_cbtf_file(),
                               "is not numeric or logical"),

@@ -28,6 +28,8 @@ test_that("input validation", {
                "`listify_what` should be a single <logical> value")
   expect_error(fuzz("list", ignore_patterns = TRUE),
                "`ignore_patterns` should be of class <character>")
+  expect_error(fuzz("list", ignore_patterns = "[a-"),
+               "`ignore_patterns` contains an invalid regular expression")
   expect_error(fuzz("list", list(NA), ignore_warnings = NA),
                "`ignore_warnings` should be of class <logical>")
   expect_error(fuzz("list", list(NA), ignore_warnings = c(TRUE, FALSE)),
@@ -327,6 +329,15 @@ test_that("using a .cbtf file", {
                "is not numeric or logical")
   expect_fuzz_result(res,
                      "OK", "argument is not numeric or logical: returning NA")
+
+  ## file containing invalid regular expressions
+  withr::local_dir(withr::local_tempdir())
+  writeLines(c("is not numeric or logical", "("), con = ".cbtf")
+  SW({
+  res <- fuzz("median", list(letters))
+  })
+  expect_equal(res$ignore_patterns,
+               "is not numeric or logical")
 })
 
 test_that("check classes returned", {
@@ -409,6 +420,18 @@ test_that("whitelist", {
                "`patterns` should be of class <character>")
   expect_error(whitelist(res, ""),
                "`patterns` is an empty <character>")
+
+  ## invalid regular expressions used to throw an error dumping the whole
+  ## pattern, or "TRE pattern compilation error 'Out of memory'" for a huge one
+  expect_error(whitelist(res, "[a-"),
+               "`patterns` contains an invalid",
+               fixed = TRUE)
+  expect_error(whitelist(res, c("cannot be coerced", "(")),
+               "`patterns` contains an invalid",
+               fixed = TRUE)
+  expect_error(whitelist(res, strrep("a", 20000)),
+               "`patterns` contains an invalid",
+               fixed = TRUE)
 
   ignore_patterns <- c("cannot be coerced to type",
                        "imaginary parts discarded in coercion",

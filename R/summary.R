@@ -166,6 +166,11 @@ subset.cbtf <- function(x, msg_patterns = NULL, fun_patterns = NULL, ...) {
                  remove_empty = TRUE)
 
   if (!is.null(msg_patterns))
+    validate_regexp(msg_patterns)
+  if (!is.null(fun_patterns))
+    validate_regexp(fun_patterns)
+
+  if (!is.null(msg_patterns))
     x$runs <- x$runs[grepl(msg_patterns, x$runs$msg), ]
   if (!is.null(fun_patterns))
     x$runs <- x$runs[grepl(fun_patterns, x$runs$fun), ]

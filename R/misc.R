@@ -63,6 +63,52 @@ validate_class <- function(arg, class, null.ok = FALSE,
   !is.null(msg) && fuzz_error(msg, call = call)
 }
 
+#' @title Validate that regular expressions are valid
+#'
+#' @param patterns Argument to validate.
+#' @param error Whether to throw an error if any of the regular expressions is
+#'        invalid (`TRUE` by default). If `FALSE`, invalid expressions are
+#'        discarded silently.
+#' @param name Name to report in case of error. If specified, it is reported
+#'        as is; otherwise, it is inferred from the name of the argument.
+#'
+#' @return
+#' The subset of `patterns` that compiles, unless an invalid expression is
+#' found and `error = TRUE`, in which case an error is thrown.
+#'
+#' @noRd
+validate_regexp <- function(patterns, error = TRUE, name = NULL) {
+  call <- sys.call(-1)
+  argname <- all.vars(match.call())[1]
+  label <- name %||% "{.arg {argname}}"
+
+  check <- function(pattern) {
+    reason <- NULL
+    withCallingHandlers(tryCatch(grep(pattern, ""), error = function(e) NULL),
+                        warning = function(w) {
+                          reason <<- sub("^TRE pattern compilation error '(.*)'$",
+                                         "\\1", conditionMessage(w))
+                          invokeRestart("muffleWarning")
+                        })
+    reason
+  }
+
+  valid <- character(0)
+  for (pat in patterns) {
+    reason <- check(pat)
+    if (is.null(reason)) {
+      valid <- c(valid, pat)
+    } else if (error) {
+      if (reason == "Out of memory")
+        reason <- "Too long to be compiled"
+      expr <- if (nchar(pat) > 75) paste(substr(pat, 1, 75), "\u2026") else pat
+      fuzz_error(paste(label, "contains an invalid regular expression",
+                       "{.val {expr}}: {reason}"), call = call)
+    }
+  }
+  valid
+}
+
 #' @title Stop with an error message
 #'
 #' @param msg Error message formatted using cli inline markup.
@@ -150,7 +196,9 @@ read_cbtf_file <- function() {
     lines <- lines[!invalid]
   }
   lines <- trimws(lines)
-  lines[nzchar(lines) & !grepl("^#", lines)]
+  lines <- lines[nzchar(lines) & !grepl("^#", lines)]
+  validate_regexp(lines, name = cli::format_inline("The {.file {path}} file"),
+                  error = FALSE)
 }
 
 #' Generate coloured summary statistics from the results

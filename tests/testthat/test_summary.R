@@ -105,6 +105,18 @@ test_that("subset", {
   expect_error(subset(res, fun_patterns = 123),
                "`fun_patterns` should be of class <character>")
 
+  ## invalid regular expressions used to throw an error dumping the whole
+  ## pattern, or "TRE pattern compilation error 'Out of memory'" for a huge one
+  expect_error(subset(res, msg_patterns = "[a-"),
+               "`msg_patterns` contains an invalid",
+               fixed = TRUE)
+  expect_error(subset(res, fun_patterns = c("median", "(")),
+               "`fun_patterns` contains an invalid",
+               fixed = TRUE)
+  expect_error(subset(res, msg_patterns = strrep("a", 20000)),
+               "`msg_patterns` contains an invalid",
+               fixed = TRUE)
+
   ## errors
   expect_snapshot(error = TRUE, subset(res, msg_patterns = 123))
   expect_snapshot(error = TRUE, subset(res, fun_patterns = 123))
