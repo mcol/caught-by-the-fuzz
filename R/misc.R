@@ -174,6 +174,32 @@ check_fuzzable <- function(fun, pkg, ignore_deprecated = TRUE, num_args = 1L) {
   fun
 }
 
+#' @title Turn an error value returned by a worker into a fuzz result
+#'
+#' @param res The error value returned by a `mirai` object.
+#' @param timeout Timeout length.
+#'
+#' @return
+#' A one-row data frame with the `res` and `msg` fields describing the reason
+#' why the test could not be completed.
+#'
+#' @noRd
+classify_error_value <- function(res, timeout) {
+  msg <-
+    if (mirai::is_mirai_error(res))
+      sprintf("CBTF: the test could not be evaluated (%s)",
+              conditionMessage(res))
+    else if (mirai::is_mirai_interrupt(res))
+      "CBTF: the test was interrupted"
+    else if (as.integer(res) == 5L)
+      sprintf("Timed out after %g seconds", timeout)
+    else if (as.integer(res) == 19L)
+      "CBTF: a mirai worker process died unexpectedly"
+    else
+      sprintf("CBTF: unexpected mirai error (code %s)", as.integer(res))
+  data.frame(res = "SKIP", msg = msg)
+}
+
 #' Read whitelist patterns from a `.cbtf` file
 #'
 #' If a `.cbtf` file is present in the current working directory, it is read

@@ -118,6 +118,33 @@ test_that("check_fuzzable", {
   rm(".deprecated.", envir = .GlobalEnv)
 })
 
+test_that("classify_error_value", {
+  testthat::skip_on_cran()
+
+  .make_error <- function(val = "", extra_class = NULL, message = NULL) {
+    structure(val, class = c(extra_class, "errorValue", "try-error"),
+              message = message)
+  }
+
+  expect_equal(classify_error_value(.make_error("Error: worker error",
+                                                extra_class = "miraiError",
+                                                message = "worker error"), 2),
+               data.frame(res = "SKIP",
+                          msg = "CBTF: the test could not be evaluated (worker error)"))
+  expect_equal(classify_error_value(.make_error(extra_class = "miraiInterrupt"), 2),
+               data.frame(res = "SKIP",
+                          msg = "CBTF: the test was interrupted"))
+  expect_equal(classify_error_value(.make_error(5L), 2),
+               data.frame(res = "SKIP",
+                          msg = "Timed out after 2 seconds"))
+  expect_equal(classify_error_value(.make_error(19L), 2),
+               data.frame(res = "SKIP",
+                          msg = "CBTF: a mirai worker process died unexpectedly"))
+  expect_equal(classify_error_value(.make_error(20L), 2),
+               data.frame(res = "SKIP",
+                          msg = "CBTF: unexpected mirai error (code 20)"))
+})
+
 test_that("read_cbtf_file", {
   testthat::skip_on_cran()
 

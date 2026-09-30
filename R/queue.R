@@ -144,10 +144,8 @@ setup_queue <- function(funs, what, timeout,
     done <- vapply(running, function(r) !mirai::unresolved(r$mirai), logical(1))
     for (r in running[done]) {
       res <- r$mirai$data
-      if (mirai::is_error_value(res) && as.integer(res) == 5L) {
-        res <- data.frame(res = "SKIP",
-                          msg = sprintf("Timed out after %g seconds", timeout))
-      }
+      if (mirai::is_error_value(res))
+        res <- classify_error_value(res, timeout)
       results[[r$index + 1L]] <<- res
     }
     running[done] <<- NULL

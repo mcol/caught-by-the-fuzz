@@ -256,7 +256,8 @@ get_exported_functions <- function(package, ignore_names = "",
 #' * **SKIP**: no test was run to completion, either because the given name
 #'   cannot be found, or it doesn't correspond to a function, or the function
 #'   accepts no arguments, or more arguments were provided than the function
-#'   accepts, or the function execution was interrupted by a timeout;
+#'   accepts, or the function execution timed out, or the test could not be
+#'   completed because the worker process died or was otherwise interrupted;
 #'   the exact reason is given in `msg`.
 #' * **WARN**: a warning was thrown for which no whitelisting occurred and
 #'   `ignore_warnings = FALSE`; its message is stored in `msg`.
