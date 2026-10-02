@@ -21,6 +21,9 @@ setup_queue <- function(funs, what, timeout,
                         package, ignore_patterns, ignore_warnings) {
   n_tasks <- length(funs) * length(what)
   daemons <- mirai::info()[["connections"]]
+  daemons > 0 || fuzz_error(paste("No live daemons available to run the tests,",
+                                  "restart them with {.code mirai::daemons()}"))
+
   results <- vector(mode = "list", length = n_tasks)
   running <- list()
   current <- 0L

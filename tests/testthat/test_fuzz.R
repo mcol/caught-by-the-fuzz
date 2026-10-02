@@ -297,15 +297,19 @@ test_that("worker dying during a fuzz run", {
   testthat::skip_on_cran()
   testthat::skip_on_os("windows")
 
-  mirai::daemons(0L)
   on.exit(start_local_daemons(), add = TRUE)
   assign(".local_fun.", envir = .GlobalEnv,
          value = function(arg) tools::pskill(Sys.getpid(), tools::SIGKILL))
+
   SW({
-  res <- fuzz(".local_fun.", list(NA), daemons = 2L)
+  res <- fuzz(".local_fun.", list(NA, NA))
   })
   expect_skip_reason(res, "CBTF: a mirai worker process died unexpectedly")
-  expect_equal(res$runs$fun, ".local_fun.")
+  expect_equal(res$runs$fun,
+               rep(".local_fun.", 2))
+  expect_true(mirai::daemons_set())
+  expect_equal(mirai::info()[["connections"]], 0)
+  expect_snapshot(error = TRUE, fuzz("mean", list(NA)))
 })
 
 test_that("using a .cbtf file", {
