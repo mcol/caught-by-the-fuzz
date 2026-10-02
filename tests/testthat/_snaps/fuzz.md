@@ -30,7 +30,7 @@
       i Fuzzing 1 function with 1 input (using 0 daemons)
       i Functions will be searched in the global namespace as `package` was not specified
     Condition
-      Error in `setup_queue()`:
+      Error in `fuzz()`:
       ! No live daemons available to run the tests, restart them with `mirai::daemons()`
 
 # whitelist
