@@ -69,7 +69,7 @@ setup_queue <- function(funs, what, timeout,
   sandbox <- tempfile("cbtf-sandbox")
   dir.create(sandbox, showWarnings = FALSE)
 
-  ## export common data to the daemons
+  ## common data to export to the daemons
   ## for performance reasons, we pass only the functions we need
   env <- sapply(funs, function(x) .GlobalEnv[[x]])
   env[vapply(env, is.null, logical(1))] <- NULL
@@ -81,13 +81,12 @@ setup_queue <- function(funs, what, timeout,
                 sandbox = sandbox,
                 option = isTRUE(getOption("CBTF.whitelist.function.names")),
                 fuzzer = fuzzer), envir = env)
-  mirai::everywhere({}, env)
 
   ## record each daemon's original working directory, then move to the sandbox
   mirai::everywhere({
     old.dir <<- getwd()
     setwd(sandbox)
-  })
+  }, env)
 
   ## Run tasks and collect the results
   process <- function() {
