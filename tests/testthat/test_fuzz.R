@@ -539,4 +539,9 @@ test_that("regression test", {
   expect_pass_message(fuzz("median", list(NA),
                            timeout = .Machine$integer.max))
   ))
+
+  ## issue 27
+  SW({
+  expect_pass_message(fuzz(c("median", ""), list(NA)))
+  })
 })

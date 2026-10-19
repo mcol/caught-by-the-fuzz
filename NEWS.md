@@ -39,6 +39,8 @@
 - Fix crash in `get_exported_functions()` if a package contains no fuzzable
   functions.
 - Validate the regular expression patterns provided to avoid possible crashes.
+- Fix crash in `fuzz()` if `funs` contains an empty string among other strings
+  (#27).
 
 # CBTF 0.7.0 (2026-07-03)
 
