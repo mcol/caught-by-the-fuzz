@@ -383,45 +383,22 @@ test_that("check classes returned", {
 
 test_that("self fuzz", {
   testthat::skip_on_cran()
-  withr::local_options(CBTF.whitelist.function.names = TRUE)
 
   ## start nested daemons
   mirai::everywhere(mirai::daemons(1, dispatcher = FALSE))
 
   SW({
-  expect_output(expect_fail_message(fuzz("fuzz", list(list()))),
-                "FAIL 1")
-  expect_output(expect_fail_message(fuzz("fuzz", list(NULL))),
-                "FAIL 1")
-
-  ## fuzz test other arguments by currying the function
-  curry_fuzz_for <- function(argname) {
-    function(arg) do.call(fuzz, setNames(list("list", arg), c("funs", argname)))
-  }
-  test_self_fuzz <- function(argname, argtype) {
-    assign(".local_fun.", envir = .GlobalEnv,
-           curry_fuzz_for(argname))
-    expect_pass_message(fuzz(".local_fun.",
-                             ignore_patterns = sprintf("`%s`", argname)),
-                        sprintf("`%s` should be of class <%s>",
-                                argname, paste(argtype, collapse = "/")))
-  }
-
-  test_self_fuzz("package", "character")
-  test_self_fuzz("listify_what", "logical")
-  test_self_fuzz("ignore_patterns", "character")
-  test_self_fuzz("ignore_warnings", "logical")
-  test_self_fuzz("daemons", c("integer", "numeric"))
-  test_self_fuzz("timeout", c("numeric", "integer"))
-
-  ## as `what` expects a list argument, we can't use curry_fuzz_for()
-  assign(".local_fun.", envir = .GlobalEnv,
-         function(arg) fuzz("list", what = list(arg)))
-  ## Windows CI produces: "Timed out after 2 seconds"
-  if (.Platform$OS.type != "windows") {
-  expect_pass_message(fuzz(".local_fun."))
-  }
+  res <- fuzz("fuzz", what = test_inputs(),
+              args = list(funs = "list", what = list(NULL), args = NULL,
+                          package = NULL, listify_what = FALSE,
+                          ignore_patterns = "", ignore_warnings = FALSE,
+                          daemons = 2L, timeout = 2),
+              ignore_patterns = c("should be of class", "should be a",
+                                  "is an empty", "cannot be both NULL"))
   })
+  expect_equal(unique(res$runs$res),
+               "OK")
+  expect_snapshot(res$runs)
 
   ## shut down nested daemons
   mirai::everywhere(mirai::daemons(0))
