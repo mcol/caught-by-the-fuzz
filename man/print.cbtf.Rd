@@ -4,7 +4,7 @@
 \alias{print.cbtf}
 \title{Print the results from a fuzz run}
 \usage{
-\method{print}{cbtf}(x, show = c("fail", "warn"), group = "input", ...)
+\method{print}{cbtf}(x, show = c("fail", "warn"), group = "input", hide_what = FALSE, ...)
 }
 \arguments{
 \item{x}{An object of class \code{cbtf}.}
@@ -14,6 +14,9 @@ printed, any of "fail", "warn", "skip", "ok", "all" and "none".}
 
 \item{group}{Either \code{"input"} to show results grouped by test input
 (default), or \code{"function"} to show them grouped by function name.}
+
+\item{hide_what}{Whether the column of inputs should be hidden when
+\code{group = "function"} (\code{FALSE} by default).}
 
 \item{...}{Further arguments passed to or from other methods.
 These are currently ignored.}

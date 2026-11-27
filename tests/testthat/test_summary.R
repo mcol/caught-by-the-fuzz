@@ -63,6 +63,7 @@ test_that("print", {
   expect_snapshot(print(res, show = "skip"))
   expect_snapshot(print(res, show = "none"))
   expect_snapshot(print(res, group = "function", show = "all"))
+  expect_snapshot(print(res, group = "function", hide_what = TRUE))
   })
 
   ## errors
@@ -70,6 +71,8 @@ test_that("print", {
   expect_snapshot(error = TRUE, print(res, group = 1))
   expect_snapshot(error = TRUE, print(res, group = c("a", "b")))
   expect_snapshot(error = TRUE, print(res, group = "bad"))
+  expect_snapshot(error = TRUE, print(res, group = "function", hide_what = NA))
+  expect_snapshot(error = TRUE, print(res, group = "function", hide_what = c(TRUE, FALSE)))
 })
 
 test_that("subset", {

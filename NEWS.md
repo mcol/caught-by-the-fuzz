@@ -18,6 +18,8 @@
 - Run the fuzz tests in a temporary directory, so that the current working
   directory is not polluted by potential function side effects (#26; thanks to
   an anonymous R Journal referee for reporting).
+- Add the `hide_what` argument to `print()` to remove the visual clutter from
+  long argument lists when `group = "function"` is used (#29).
 
 ## Updates
 

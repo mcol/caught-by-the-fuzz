@@ -80,6 +80,8 @@ summary.cbtf <- function(object, tabulate = TRUE, ...) {
 #'        printed, any of "fail", "warn", "skip", "ok", "all" and "none".
 #' @param group Either `"input"` to show results grouped by test input
 #'        (default), or `"function"` to show them grouped by function name.
+#' @param hide_what Whether the column of inputs should be hidden when
+#'        `group = "function"` (`FALSE` by default).
 #' @param ... Further arguments passed to or from other methods.
 #'        These are currently ignored.
 #'
@@ -97,7 +99,8 @@ summary.cbtf <- function(object, tabulate = TRUE, ...) {
 #' @seealso [summary.cbtf]
 #'
 #' @export
-print.cbtf <- function(x, show = c("fail", "warn"), group = "input", ...) {
+print.cbtf <- function(x, show = c("fail", "warn"), group = "input",
+                       hide_what = FALSE, ...) {
   validate_class(show, "character")
   validate_class(group, "character", scalar = TRUE,
                  choices = c("input", "function"))
@@ -118,12 +121,16 @@ print.cbtf <- function(x, show = c("fail", "warn"), group = "input", ...) {
 
   df <- x$runs[tolower(x$runs$res) %in% show, ]
   if (group == "function") {
+    validate_class(hide_what, "logical", scalar = TRUE)
+    if (hide_what)
+      df$what <- ""
+    fmt.string <- paste0(" %*s  %-*s", if (hide_what) "" else " | ", "%s\n")
     for (fun in x$funs) {
       sub <- df[df$fun == fun, , drop = FALSE]
       if (nrow(sub) == 0) next
       cli::cli_h3("Function {.strong {.code {fun}}}:")
       msg.size <- max(nchar(sub$msg), 30)
-      cat(sprintf(" %*s  %-*s | %s\n",
+      cat(sprintf(fmt.string,
                   res.size, tocolour(sub$res), msg.size, sub$msg, sub$what),
           sep = "")
     }

@@ -142,6 +142,19 @@
 ---
 
     Code
+      print(res, group = "function", hide_what = TRUE)
+    Message
+      x      CAUGHT BY THE FUZZ!    
+      
+      -- Function `median`: 
+    Output
+       FAIL  missing value where TRUE/FALSE needed
+      
+       [ FAIL 1 | WARN 0 | SKIP 2 | OK 3 ] 
+
+---
+
+    Code
       print(res, show = NA)
     Condition
       Error in `print.cbtf()`:
@@ -170,6 +183,26 @@
     Condition
       Error in `print.cbtf()`:
       ! `group` should be one of "input" or "function"
+
+---
+
+    Code
+      print(res, group = "function", hide_what = NA)
+    Message
+      x      CAUGHT BY THE FUZZ!    
+    Condition
+      Error in `print.cbtf()`:
+      ! `hide_what` should be of class <logical>
+
+---
+
+    Code
+      print(res, group = "function", hide_what = c(TRUE, FALSE))
+    Message
+      x      CAUGHT BY THE FUZZ!    
+    Condition
+      Error in `print.cbtf()`:
+      ! `hide_what` should be a single <logical> value
 
 # subset
 
