@@ -40,7 +40,8 @@ setup_queue <- function(funs, what, timeout,
     fun <- check_fuzzable(name, package, ignore_deprecated = FALSE, length(what))
     is.character(fun) && return(data.frame(res = "SKIP", msg = fun))
 
-    whitelist_and_label <- function(label, msg) {
+    whitelist_and_label <- function(label, cond = NULL) {
+      msg <- if (is.null(cond)) warnings else conditionMessage(cond)[1]
       res <- if ((label == "WARN" && ignore_warnings) ||
                  is.null(msg) ||
                  option && all(grepl(name, msg, fixed = TRUE)) ||
@@ -56,12 +57,12 @@ setup_queue <- function(funs, what, timeout,
     tryCatch(
         withCallingHandlers({
           do.call(fun, what)
-          whitelist_and_label("WARN", warnings)
+          whitelist_and_label("WARN")
         }, warning = function(w) {
           warnings <<- c(warnings, trimws(conditionMessage(w)))
         }),
         error = function(e) {
-          whitelist_and_label("FAIL", conditionMessage(e)[1])
+          whitelist_and_label("FAIL", e)
         })
   })
 
