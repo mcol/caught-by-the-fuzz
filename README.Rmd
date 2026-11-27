@@ -113,6 +113,28 @@ fuzzing multiple functions simultaneously). Additionally, some code paths may
 only be reached through combinations of invalid values that would otherwise
 remain unexplored.
 
+### Inspecting the results
+
+The `print()` method by default shows the individual failing and warning
+results, grouped by test input by default, as already shown above. However,
+the output produced can be customised.
+
+Setting `group = "function"` groups the results by function instead; adding
+`hide_what = TRUE` removes the input column to keep the output compact, which
+can be particularly helful in cases when the argument lists are long and would
+wrap in the terminal output (not the case here):
+```{r}
+print(res, group = "function", hide_what = TRUE)
+```
+
+The objects returned by `fuzz()` can also be inspected with `summary()`, which
+reports the tabulation of results and the unique messages generated during the
+fuzz run:
+
+```{r}
+summary(res)
+```
+
 ## Whitelisting
 
 In order to reduce the number of false positive results produced, `fuzz()`
@@ -147,7 +169,7 @@ Whitelist patterns can be stored in a file named `.cbtf` in the current working
 directory. Each non-empty line in this file is treated as a regular expression
 pattern and appended to the `ignore_patterns` argument; lines starting with `#`
 are ignored and can be used as comments. This is useful for sharing whitelist
-patterns across a project or for automatically applying known false positives
+patterns within a project or for automatically applying known false positives
 without having to pass them to every `fuzz()` call.
 
 For example, a typical `.cbtf` file might look like this:

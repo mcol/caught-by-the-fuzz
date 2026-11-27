@@ -158,13 +158,10 @@ fuzz("matrix", what = list(NA, NULL), args = list(1:4, 2, dimnames = NULL))
     ## ── Test input [[3]]: 1:4, NA, dimnames = NULL
     ##  matrix  FAIL  invalid 'nrow' value (too large or NA)
     ## 
-    ## ── Test input [[4]]: 1:4, NULL, dimnames = NULL
-    ##  matrix  FAIL  non-numeric matrix extent
-    ## 
     ## ── Test input [[5]]: 1:4, 2, dimnames = NA
     ##  matrix  FAIL  'dimnames' must be a list
     ## 
-    ##  [ FAIL 4 | WARN 0 | SKIP 0 | OK 2 ]
+    ##  [ FAIL 3 | WARN 0 | SKIP 0 | OK 3 ]
 
 Fuzzing is generally more effective when the values in `args` provide a
 good default for the functions being fuzzed; while an argument is being
@@ -175,6 +172,53 @@ However, this is not strictly necessary (and may not be achievable when
 fuzzing multiple functions simultaneously). Additionally, some code
 paths may only be reached through combinations of invalid values that
 would otherwise remain unexplored.
+
+### Inspecting the results
+
+The `print()` method by default shows the individual failing and warning
+results, grouped by test input by default, as already shown above.
+However, the output produced can be customised.
+
+Setting `group = "function"` groups the results by function instead;
+adding `hide_what = TRUE` removes the input column to keep the output
+compact, which can be particularly helful in cases when the argument
+lists are long and would wrap in the terminal output (not the case
+here):
+
+``` r
+print(res, group = "function", hide_what = TRUE)
+```
+
+    ## ✖  🚨   CAUGHT BY THE FUZZ!   🚨
+    ## 
+    ## ── Function `guess_type`:
+    ##  FAIL  a character vector argument expected
+    ## 
+    ## ── Function `parse_multipart`:
+    ##  FAIL  $ operator is invalid for atomic vectors
+    ## 
+    ##  [ FAIL 2 | WARN 0 | SKIP 0 | OK 0 ]
+
+The objects returned by `fuzz()` can also be inspected with `summary()`,
+which reports the tabulation of results and the unique messages
+generated during the fuzz run:
+
+``` r
+summary(res)
+```
+
+    ## Fuzzed 2 functions on 1 input:
+    ##                  
+    ##                   FAIL WARN SKIP OK
+    ##   guess_type         1    0    0  0
+    ##   parse_multipart    1    0    0  0
+    ## 
+    ## Unique messages:
+    ##    num  res   msg
+    ##      1  FAIL  $ operator is invalid for atomic vectors
+    ##      1  FAIL  a character vector argument expected
+    ## 
+    ## [ FAIL 2 | WARN 0 | SKIP 0 | OK 0 ]
 
 ## Whitelisting
 
@@ -212,7 +256,7 @@ Whitelist patterns can be stored in a file named `.cbtf` in the current
 working directory. Each non-empty line in this file is treated as a
 regular expression pattern and appended to the `ignore_patterns`
 argument; lines starting with `#` are ignored and can be used as
-comments. This is useful for sharing whitelist patterns across a project
+comments. This is useful for sharing whitelist patterns within a project
 or for automatically applying known false positives without having to
 pass them to every `fuzz()` call.
 
