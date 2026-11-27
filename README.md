@@ -158,10 +158,13 @@ fuzz("matrix", what = list(NA, NULL), args = list(1:4, 2, dimnames = NULL))
     ## ── Test input [[3]]: 1:4, NA, dimnames = NULL
     ##  matrix  FAIL  invalid 'nrow' value (too large or NA)
     ## 
+    ## ── Test input [[4]]: 1:4, NULL, dimnames = NULL
+    ##  matrix  FAIL  non-numeric matrix extent
+    ## 
     ## ── Test input [[5]]: 1:4, 2, dimnames = NA
     ##  matrix  FAIL  'dimnames' must be a list
     ## 
-    ##  [ FAIL 3 | WARN 0 | SKIP 0 | OK 3 ]
+    ##  [ FAIL 4 | WARN 0 | SKIP 0 | OK 2 ]
 
 Fuzzing is generally more effective when the values in `args` provide a
 good default for the functions being fuzzed; while an argument is being
@@ -219,6 +222,24 @@ summary(res)
     ##      1  FAIL  a character vector argument expected
     ## 
     ## [ FAIL 2 | WARN 0 | SKIP 0 | OK 0 ]
+
+The `subset()` method can be used to filter the results by the returned
+message or the function name:
+
+``` r
+subset(res, "operator is invalid")
+```
+
+    ## ✖  🚨   CAUGHT BY THE FUZZ!   🚨
+    ## 
+    ## ── Test input [[1]]: TRUE
+    ##  parse_multipart  FAIL  $ operator is invalid for atomic vectors
+    ## 
+    ##  [ FAIL 1 | WARN 0 | SKIP 0 | OK 0 ]
+
+The filtered results are printed and returned invisibly, so assigning
+the result allows it to be inspected further with `print()` or
+`summary()`.
 
 ## Whitelisting
 

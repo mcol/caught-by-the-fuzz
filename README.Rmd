@@ -135,6 +135,15 @@ fuzz run:
 summary(res)
 ```
 
+The `subset()` method can be used to filter the results by the returned
+message or the function name:
+```{r}
+subset(res, "operator is invalid")
+```
+
+The filtered results are printed and returned invisibly, so assigning the
+result allows it to be inspected further with `print()` or `summary()`.
+
 ## Whitelisting
 
 In order to reduce the number of false positive results produced, `fuzz()`
