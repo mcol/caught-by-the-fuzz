@@ -41,6 +41,8 @@
 - Validate the regular expression patterns provided to avoid possible crashes.
 - Fix crash in `fuzz()` if `funs` contains an empty string among other strings
   (#27).
+- Update the progress bar after each completed test, so that it advances also
+  when using a single daemon (#28).
 
 # CBTF 0.7.0 (2026-07-03)
 

@@ -105,8 +105,10 @@ setup_queue <- function(funs, what, timeout,
 
     ## process all the tasks
     tic <- Sys.time()
-    while (run_tasks()) {
+    while (TRUE) {
+      more <- run_tasks()
       cli::cli_progress_update(set = finishd)
+      if (!more) break
     }
     elapsed <- difftime(Sys.time(), tic, units = "secs")
     elapsed <- if (elapsed < 1) paste0(round(elapsed * 1000), "ms")
@@ -153,10 +155,14 @@ setup_queue <- function(funs, what, timeout,
     }
     running[done] <<- NULL
 
-    if (length(running)) {
-      finishd <<- min(sapply(running, `[[`, "index")) %/% length(funs) + 1L
-      message <<- char[[finishd]]
+    ## show the input being processed next, or the last one if we are done
+    next.idx <- if (length(running)) {
+      min(vapply(running, `[[`, integer(1), "index"))
+    } else {
+      current
     }
+    finishd <<- min(next.idx %/% length(funs) + 1L, length(what))
+    message <<- char[[finishd]]
 
     length(running) || current < n_tasks
   }
