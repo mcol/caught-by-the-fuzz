@@ -172,9 +172,9 @@ print.cbtf <- function(x, show = c("fail", "warn"), group = "input",
 #' filtered result and returns it invisibly.
 #'
 #' @param x An object of class `cbtf`.
-#' @param msg_patterns Regular expression pattern to be applied to the `msg`
+#' @param msg_patterns Regular expression patterns to be applied to the `msg`
 #'        column. If `NULL` (default), all messages are reported.
-#' @param fun_patterns Regular expression pattern to be applied to the `fun`
+#' @param fun_patterns Regular expression patterns to be applied to the `fun`
 #'        column. If `NULL` (default), all functions are reported.
 #' @param ... Arguments passed to [print.cbtf].
 #'
@@ -190,9 +190,9 @@ subset.cbtf <- function(x, msg_patterns = NULL, fun_patterns = NULL, ...) {
                  remove_empty = TRUE)
 
   if (!is.null(msg_patterns))
-    validate_regexp(msg_patterns)
+    msg_patterns <- paste0(validate_regexp(msg_patterns), collapse = "|")
   if (!is.null(fun_patterns))
-    validate_regexp(fun_patterns)
+    fun_patterns <- paste0(validate_regexp(fun_patterns), collapse = "|")
 
   if (!is.null(msg_patterns))
     x$runs <- x$runs[grepl(msg_patterns, x$runs$msg), ]

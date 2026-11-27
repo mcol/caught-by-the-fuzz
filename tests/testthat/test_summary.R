@@ -99,6 +99,14 @@ test_that("subset", {
   expect_output(subset(res, msg_patterns = "argument", fun_patterns = "median"),
                 "argument is not numeric or logical")
 
+  ## join patterns
+  out <- capture.output(subset(res, fun_patterns = c("median", "list"),
+                               show = "all"))
+  expect_equal(grep("list", out),
+               c(1, 3))
+  expect_equal(grep("median", out),
+               c(2, 4))
+
   ## group by function
   expect_output(subset(res, msg_patterns = "argument",
                        fun_patterns = "median", group = "function"),

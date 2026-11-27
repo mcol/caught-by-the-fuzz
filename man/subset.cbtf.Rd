@@ -9,10 +9,10 @@
 \arguments{
 \item{x}{An object of class \code{cbtf}.}
 
-\item{msg_patterns}{Regular expression pattern to be applied to the \code{msg}
+\item{msg_patterns}{Regular expression patterns to be applied to the \code{msg}
 column. If \code{NULL} (default), all messages are reported.}
 
-\item{fun_patterns}{Regular expression pattern to be applied to the \code{fun}
+\item{fun_patterns}{Regular expression patterns to be applied to the \code{fun}
 column. If \code{NULL} (default), all functions are reported.}
 
 \item{...}{Arguments passed to \link{print.cbtf}.}
