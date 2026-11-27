@@ -21,6 +21,12 @@ test_that("summary", {
   expect_snapshot(summary(res))
   expect_snapshot(summary(res, tabulate = FALSE))
 
+  ## summary of unique messages
+  SW({
+  res <- fuzz(c("median", "Sys.date"), list(NA, letters))
+  })
+  expect_snapshot(summary(res))
+
   ## errors
   expect_snapshot(error = TRUE, summary(res, tabulate = "abc"))
 

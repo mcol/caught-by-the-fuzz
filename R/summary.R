@@ -61,6 +61,23 @@ summary.cbtf <- function(object, tabulate = TRUE, ...) {
                factor(df$res, levels = c("FAIL", "WARN", "SKIP", "OK")))
   if (tabulate)
     print(tbl)
+
+  ## summarize messages, if any
+  sub <- df[nzchar(df$msg), c("res", "msg")]
+  if (nrow(sub) > 0) {
+    sub <- stats::aggregate(n ~ res + msg, transform(sub, n = 1), sum)
+    sub <- sub[order(-sub$n, sub$res), ]
+
+    sub$msg <- strtrim(sub$msg, max(cli::console_width() - 15, 20, na.rm = TRUE))
+    res.size <- nchar(tocolour("FAIL")) # include ANSI formatting, if present
+
+    cat("\nUnique messages:\n")
+    cat("   num  res   msg\n")
+    cat(sprintf(" %5d  %-*s  %s",
+                sub$n, res.size, tocolour(sub$res), sub$msg),
+        sep = "\n")
+  }
+
   cat("\n", compute_summary_stats(object, verbose = FALSE), "\n", sep = "")
   invisible(structure(df[, c("fun", "what", "res", "msg")],
                       summary_table = tbl))

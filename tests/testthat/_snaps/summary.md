@@ -24,6 +24,25 @@
 ---
 
     Code
+      summary(res)
+    Message
+      Fuzzed 2 functions on 2 inputs:
+    Output
+                
+                 FAIL WARN SKIP OK
+        Sys.date    0    0    2  0
+        median      0    1    0  1
+      
+      Unique messages:
+         num  res   msg
+           2  SKIP  Object not found in the global namespace
+           1  WARN  argument is not numeric or logical: returning NA
+      
+      [ FAIL 0 | WARN 1 | SKIP 2 | OK 1 ]
+
+---
+
+    Code
       summary(res, tabulate = "abc")
     Condition
       Error in `summary.cbtf()`:
